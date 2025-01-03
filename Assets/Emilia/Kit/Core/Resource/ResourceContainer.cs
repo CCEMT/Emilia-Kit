@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Emilia.Kit
 {
-    [CreateAssetMenu(fileName = "ResourceContainer", menuName = "Emilia/Node/ResourceContainer")]
+    [CreateAssetMenu(fileName = "ResourceContainer", menuName = "Emilia/Kit/ResourceContainer")]
     public class ResourceContainer : ScriptableObject
     {
         [LabelText("资源文件夹列表")]
