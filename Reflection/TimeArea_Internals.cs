@@ -416,6 +416,11 @@ namespace Emilia.Reflection.Editor
         {
             base.BeginViewGUI();
         }
+        
+        public void EndViewGUI_Internals()
+        {
+            base.EndViewGUI();
+        }
 
         public void HandleZoomAndPanEvents_Internals(Rect area)
         {
