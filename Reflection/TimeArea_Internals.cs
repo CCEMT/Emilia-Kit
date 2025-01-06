@@ -187,11 +187,6 @@ namespace Emilia.Reflection.Editor
             set => upDirection = (YDirection) value;
         }
 
-        public void SetDrawRectHack_Internals(Rect r)
-        {
-            SetDrawRectHack(r);
-        }
-
         public Vector2 scale_Internals => scale;
 
         public Vector2 translation_Internals => translation;
@@ -267,22 +262,6 @@ namespace Emilia.Reflection.Editor
         {
             get => shownAreaInsideMargins;
             set => shownAreaInsideMargins = value;
-        }
-
-        public Rect shownAreaInsideMarginsInternal_Internals
-        {
-            get => shownAreaInsideMarginsInternal;
-            set => shownAreaInsideMarginsInternal = value;
-        }
-
-        public float GetWidthInsideMargins_Internals(float widthWithMargins, bool substractSliderWidth = false)
-        {
-            return GetWidthInsideMargins(widthWithMargins, substractSliderWidth);
-        }
-
-        public float GetHeightInsideMargins_Internals(float heightWithMargins, bool substractSliderHeight = false)
-        {
-            return GetHeightInsideMargins(heightWithMargins, substractSliderHeight);
         }
 
         public Matrix4x4 drawingToViewMatrix_Internals => drawingToViewMatrix;
