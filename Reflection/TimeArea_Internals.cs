@@ -24,5 +24,10 @@ namespace Emilia.Reflection.Editor
         {
             return base.FormatTickTime(time, frameRate, (TimeFormat) timeFormat);
         }
+
+        public string FormatTime_Internals(float time, float frameRate, TimeFormat_Internals timeFormat)
+        {
+            return base.FormatTickTime(time, frameRate, (TimeFormat) timeFormat);
+        }
     }
 }
