@@ -5,7 +5,7 @@ namespace Emilia.Reflection.Editor
 {
     public abstract class TreeViewDataSource_Internal : TreeViewDataSource
     {
-        protected TreeViewDataSource_Internal(TreeViewController treeView) : base(treeView) { }
+        protected TreeViewDataSource_Internal(TreeViewController_Internals treeView) : base(treeView) { }
 
         public override List<int> GetNewSelection(TreeViewItem clickedItem, TreeViewSelectState selectState)
         {
