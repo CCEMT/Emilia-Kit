@@ -338,17 +338,17 @@ namespace Emilia.Reflection.Editor
 
         public void SetTickMarkerRanges_Internals()
         {
-            base.SetTickMarkerRanges();
+            SetTickMarkerRanges();
         }
 
         public void DrawMajorTicks_Internals(Rect position, float frameRate)
         {
-            base.DrawMajorTicks(position, frameRate);
+            DrawMajorTicks(position, frameRate);
         }
 
         public void TimeRuler_Internals(Rect position, float frameRate)
         {
-            base.TimeRuler(position, frameRate);
+            TimeRuler(position, frameRate);
         }
 
         public void TimeRuler_Internals(Rect position,
@@ -358,7 +358,7 @@ namespace Emilia.Reflection.Editor
             float alpha,
             TimeFormat_Internals timeFormatInternals)
         {
-            base.TimeRuler(position, frameRate, labels, useEntireHeight, alpha, (TimeFormat) timeFormatInternals);
+            TimeRuler(position, frameRate, labels, useEntireHeight, alpha, (TimeFormat) timeFormatInternals);
         }
 
         public static void DrawPlayhead_Internals(float x, float yMin, float yMax, float thickness, float alpha)
@@ -388,7 +388,7 @@ namespace Emilia.Reflection.Editor
 
         public float FrameToPixel_Internals(float i, float frameRate, Rect rect)
         {
-            return this.FrameToPixel(i, frameRate, rect, this.shownArea);
+            return FrameToPixel(i, frameRate, rect, shownArea);
         }
 
         public float TimeField_Internals(Rect rect, int id, float time, float frameRate, TimeFormat_Internals timeFormat)
@@ -418,72 +418,72 @@ namespace Emilia.Reflection.Editor
 
         public string FormatValue_Internals(float value)
         {
-            return base.FormatValue(value);
+            return FormatValue(value);
         }
 
         public float SnapTimeToWholeFPS_Internals(float time, float frameRate)
         {
-            return base.SnapTimeToWholeFPS(time, frameRate);
+            return SnapTimeToWholeFPS(time, frameRate);
         }
 
         public void DrawTimeOnSlider_Internals(float time, Color c, float maxTime, float leftSidePadding = 0.0f, float rightSidePadding = 0.0f)
         {
-            base.DrawTimeOnSlider(time, c, maxTime, leftSidePadding, rightSidePadding);
+            DrawTimeOnSlider(time, c, maxTime, leftSidePadding, rightSidePadding);
         }
 
         public void BeginViewGUI_Internals()
         {
-            base.BeginViewGUI();
+            BeginViewGUI();
         }
 
         public void EndViewGUI_Internals()
         {
-            base.EndViewGUI();
+            EndViewGUI();
         }
 
         public void HandleZoomAndPanEvents_Internals(Rect area)
         {
-            base.HandleZoomAndPanEvents(area);
+            HandleZoomAndPanEvents(area);
         }
 
         public void SetScaleFocused_Internals(Vector2 focalPoint, Vector2 newScale)
         {
-            base.SetScaleFocused(focalPoint, newScale);
+            SetScaleFocused(focalPoint, newScale);
         }
 
         public void SetScaleFocused_Internals(Vector2 focalPoint, Vector2 newScale, bool lockHorizontal, bool lockVertical)
         {
-            base.SetScaleFocused(focalPoint, newScale, lockHorizontal, lockVertical);
+            SetScaleFocused(focalPoint, newScale, lockHorizontal, lockVertical);
         }
 
         public void SetTransform_Internals(Vector2 newTranslation, Vector2 newScale)
         {
-            base.SetTransform(newTranslation, newScale);
+            SetTransform(newTranslation, newScale);
         }
 
         public void EnforceScaleAndRange_Internals()
         {
-            base.EnforceScaleAndRange();
+            EnforceScaleAndRange();
         }
 
         public float PixelToTime_Internals(float pixelX, Rect rect)
         {
-            return base.PixelToTime(pixelX, rect);
+            return PixelToTime(pixelX, rect);
         }
 
         public float TimeToPixel_Internals(float time, Rect rect)
         {
-            return base.TimeToPixel(time, rect);
+            return TimeToPixel(time, rect);
         }
 
         public float PixelDeltaToTime_Internals(Rect rect)
         {
-            return base.PixelDeltaToTime(rect);
+            return PixelDeltaToTime(rect);
         }
 
         public void UpdateZoomScale_Internals(float fMaxScaleValue, float fMinScaleValue)
         {
-            base.UpdateZoomScale(fMaxScaleValue, fMinScaleValue);
+            UpdateZoomScale(fMaxScaleValue, fMinScaleValue);
         }
     }
 }
