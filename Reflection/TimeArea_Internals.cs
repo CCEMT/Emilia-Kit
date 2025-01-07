@@ -27,6 +27,12 @@ namespace Emilia.Reflection.Editor
             Negative,
         }
 
+        public int areaControlID_Internals
+        {
+            get => areaControlID;
+            set => areaControlID = value;
+        }
+
         public bool hRangeLocked_Internals
         {
             get => hRangeLocked;
@@ -187,9 +193,22 @@ namespace Emilia.Reflection.Editor
             set => upDirection = (YDirection) value;
         }
 
-        public Vector2 scale_Internals => scale;
+        public void SetDrawRectHack_Internals(Rect r)
+        {
+            SetDrawRectHack(r);
+        }
 
-        public Vector2 translation_Internals => translation;
+        public Vector2 scale_Internals
+        {
+            get => this.m_Scale;
+            set => this.m_Scale = value;
+        }
+
+        public Vector2 translation_Internals
+        {
+            get => this.m_Translation;
+            set => this.m_Translation = value;
+        }
 
         public float margin_Internals
         {
@@ -416,7 +435,7 @@ namespace Emilia.Reflection.Editor
         {
             base.BeginViewGUI();
         }
-        
+
         public void EndViewGUI_Internals()
         {
             base.EndViewGUI();
