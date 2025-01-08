@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Emilia.Reflection.Editor
 {
-    public class TreeViewDragging_Internal : TreeViewDragging
+    public class TreeViewDragging_Internal : TreeViewDragging, ITreeViewDragging_Internal
     {
         public enum DropPosition_Internal
         {

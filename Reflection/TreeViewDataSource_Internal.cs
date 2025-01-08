@@ -3,7 +3,7 @@ using UnityEditor.IMGUI.Controls;
 
 namespace Emilia.Reflection.Editor
 {
-    public  class TreeViewDataSource_Internal : TreeViewDataSource
+    public class TreeViewDataSource_Internal : TreeViewDataSource, ITreeViewDataSource_Internal
     {
         public TreeViewDataSource_Internal(TreeViewController_Internals treeView) : base(treeView) { }
 
