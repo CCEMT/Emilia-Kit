@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEditor.IMGUI.Controls;
 using UnityEngine;
 
@@ -6,7 +7,62 @@ namespace Emilia.Reflection.Editor
 {
     public class TreeViewDataSource_Internal : TreeViewDataSource, ITreeViewDataSource_Internal
     {
-        public TreeViewItem root_Internal => root;
+        public TreeViewItem root_Internal
+        {
+            get => root;
+            set => this.m_RootItem = value;
+        }
+
+        public IList<TreeViewItem> rows_Internal
+        {
+            get => m_Rows;
+            set => this.m_Rows = value;
+        }
+
+        public bool needRefreshRows_Internal
+        {
+            get => this.m_NeedRefreshRows;
+            set => this.m_NeedRefreshRows = value;
+        }
+
+        public TreeViewItem fakeItem_Internal
+        {
+            get => m_FakeItem;
+            set => m_FakeItem = value;
+        }
+
+        public Action onVisibleRowsChanged_Internal
+        {
+            get => onVisibleRowsChanged;
+            set => onVisibleRowsChanged = value;
+        }
+
+        public bool showRootItem_Internal
+        {
+            get => showRootItem;
+            set => showRootItem = value;
+        }
+
+        public bool rootIsCollapsable_Internal
+        {
+            get => rootIsCollapsable;
+            set => rootIsCollapsable = value;
+        }
+
+        public bool alwaysAddFirstItemToSearchResult_Internal
+        {
+            get => alwaysAddFirstItemToSearchResult;
+            set => alwaysAddFirstItemToSearchResult = value;
+        }
+
+        public List<int> expandedIDs_Internal
+        {
+            get => expandedIDs;
+            set => expandedIDs = value;
+        }
+
+        public bool isInitialized_Internal => isInitialized;
+
         public int rowCount_Internal => rowCount;
 
         public override int rowCount => rowCountOverride_Internal;
@@ -451,6 +507,16 @@ namespace Emilia.Reflection.Editor
         public void OnSearchChanged_Internal()
         {
             OnSearchChanged();
+        }
+
+        public void GetVisibleItemsRecursive_Internal(TreeViewItem item, List<TreeViewItem> visibleItems)
+        {
+            GetVisibleItemsRecursive(item, visibleItems);
+        }
+
+        public void SearchRecursive_Internal(TreeViewItem item, string search, List<TreeViewItem> searchResult)
+        {
+            SearchRecursive(item, search, searchResult);
         }
     }
 }
