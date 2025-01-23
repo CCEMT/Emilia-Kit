@@ -321,7 +321,7 @@ namespace Emilia.Reflection.Editor
 
         public virtual List<int> GetNewSelection_Internal(TreeViewItem clickedItem, TreeViewSelectState_Internals selectState)
         {
-            return default;
+            return base.GetNewSelection(clickedItem, selectState.value);
         }
 
         public override void OnExpandedStateChanged()

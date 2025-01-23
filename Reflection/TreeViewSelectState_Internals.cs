@@ -5,16 +5,18 @@ namespace Emilia.Reflection.Editor
 {
     public struct TreeViewSelectState_Internals
     {
-        private TreeViewSelectState value;
+        private TreeViewSelectState _value;
 
-        public List<int> selectedIDs => value.selectedIDs;
-        public int lastClickedID => value.lastClickedID;
-        public bool keepMultiSelection => value.keepMultiSelection;
-        public bool useShiftAsActionKey => value.useShiftAsActionKey;
+        public List<int> selectedIDs => this._value.selectedIDs;
+        public int lastClickedID => this._value.lastClickedID;
+        public bool keepMultiSelection => this._value.keepMultiSelection;
+        public bool useShiftAsActionKey => this._value.useShiftAsActionKey;
+
+        public TreeViewSelectState value => this._value;
 
         public TreeViewSelectState_Internals(TreeViewSelectState value)
         {
-            this.value = value;
+            this._value = value;
         }
     }
 }
