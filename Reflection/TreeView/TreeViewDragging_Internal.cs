@@ -111,7 +111,7 @@ namespace Emilia.Reflection.Editor
 
         public override DragAndDropVisualMode DoDrag(TreeViewItem parentItem, TreeViewItem targetItem, bool perform, DropPosition dropPosition)
         {
-            return DoDrag_Internal(parentItem, targetItem, perform,(DropPosition_Internal) dropPosition);
+            return DoDrag_Internal(parentItem, targetItem, perform, (DropPosition_Internal) dropPosition);
         }
 
         public virtual DragAndDropVisualMode DoDrag_Internal(TreeViewItem parentItem, TreeViewItem targetItem, bool perform, DropPosition_Internal dropPosition)
@@ -126,7 +126,7 @@ namespace Emilia.Reflection.Editor
 
         public void DragCleanup_Internal(bool revertExpanded)
         {
-            DragCleanup(revertExpanded);
+            base.DragCleanup(revertExpanded);
         }
 
         protected override void HandleAutoExpansion(int itemControlID, TreeViewItem targetItem, Rect targetItemRect)
@@ -136,7 +136,7 @@ namespace Emilia.Reflection.Editor
 
         public virtual void HandleAutoExpansion_Internal(int itemControlID, TreeViewItem targetItem, Rect targetItemRect)
         {
-            HandleAutoExpansion(itemControlID, targetItem, targetItemRect);
+            base.HandleAutoExpansion(itemControlID, targetItem, targetItemRect);
         }
 
         public void GetPreviousAndNextItemsIgnoringDraggedItems_Internal(int targetRow, DropPosition_Internal dropPosition, out TreeViewItem previousItem, out TreeViewItem nextItem)
