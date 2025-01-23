@@ -111,10 +111,10 @@ namespace Emilia.Reflection.Editor
 
         public override DragAndDropVisualMode DoDrag(TreeViewItem parentItem, TreeViewItem targetItem, bool perform, DropPosition dropPosition)
         {
-            return DoDrag_Internal(parentItem, targetItem, perform, dropPosition);
+            return DoDrag_Internal(parentItem, targetItem, perform,(DropPosition_Internal) dropPosition);
         }
 
-        public virtual DragAndDropVisualMode DoDrag_Internal(TreeViewItem parentItem, TreeViewItem targetItem, bool perform, DropPosition dropPosition)
+        public virtual DragAndDropVisualMode DoDrag_Internal(TreeViewItem parentItem, TreeViewItem targetItem, bool perform, DropPosition_Internal dropPosition)
         {
             return default;
         }
