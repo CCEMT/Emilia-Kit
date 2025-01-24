@@ -8,6 +8,9 @@ namespace Emilia.Reflection.Editor
 {
     public class TreeViewController_Internals : TreeViewController
     {
+        public static double kSlowSelectTimeout_Internal => kSlowSelectTimeout;
+        public static float kSpaceForScrollBar_Internal => kSpaceForScrollBar;
+
         public TreeViewController_Internals(EditorWindow editorWindow, TreeViewState treeViewState) : base(editorWindow, treeViewState) { }
 
         public Action<int[]> selectionChangedCallback_Internal
@@ -180,7 +183,41 @@ namespace Emilia.Reflection.Editor
             set => useScrollView = value;
         }
 
-        public Rect visibleRect_Internal => visibleRect;
+        public bool grabKeyboardFocus_Internal
+        {
+            get => m_GrabKeyboardFocus;
+            set => m_GrabKeyboardFocus = value;
+        }
+
+        public Rect totalRect_Internal
+        {
+            get => m_TotalRect;
+            set => m_TotalRect = value;
+        }
+
+        public Rect visibleRect_Internal
+        {
+            get => this.m_VisibleRect;
+            set => this.m_VisibleRect = value;
+        }
+
+        public Rect contentRect_Internal
+        {
+            get => m_ContentRect;
+            set => m_ContentRect = value;
+        }
+
+        public bool hadFocusLastEvent_Internal
+        {
+            get => m_HadFocusLastEvent;
+            set => m_HadFocusLastEvent = value;
+        }
+
+        public int m_KeyboardControlID_Internal
+        {
+            get => m_KeyboardControlID;
+            set => m_KeyboardControlID = value;
+        }
 
         public bool IsSelected_Internal(int id)
         {
