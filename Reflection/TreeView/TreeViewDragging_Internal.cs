@@ -10,9 +10,9 @@ namespace Emilia.Reflection.Editor
     {
         public enum DropPosition_Internal
         {
-            Above,
+            Upon,
             Below,
-            Upon
+            Above,
         }
 
         public struct DropData_Internal
