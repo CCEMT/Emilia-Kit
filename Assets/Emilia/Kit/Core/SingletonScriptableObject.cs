@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿#if UNITY_EDITOR
+using System.Linq;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -28,3 +29,4 @@ namespace Emilia.Kit
         }
     }
 }
+#endif
