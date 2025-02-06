@@ -1,10 +1,11 @@
-﻿using System;
+﻿#if UNITY_EDITOR
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using UnityEngine;
 
-namespace GameFrame
+namespace Emilia.Kit
 {
     public static class UnityLogUtility
     {
@@ -44,3 +45,4 @@ namespace GameFrame
         }
     }
 }
+#endif

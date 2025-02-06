@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if UNITY_EDITOR
+using System;
 using Sirenix.OdinInspector;
 
 namespace Emilia.Kit
@@ -9,3 +10,4 @@ namespace Emilia.Kit
         public abstract string title { get; }
     }
 }
+#endif

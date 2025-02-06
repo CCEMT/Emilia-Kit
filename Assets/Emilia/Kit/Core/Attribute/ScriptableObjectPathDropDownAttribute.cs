@@ -1,8 +1,9 @@
 using System;
+using System.Diagnostics;
 
 namespace Emilia.Kit
 {
-    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
+    [Conditional("UNITY_EDITOR"),AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
     public class ScriptableObjectPathDropDownAttribute : Attribute
     {
         private Type _type;
