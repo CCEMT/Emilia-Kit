@@ -8,5 +8,10 @@ namespace Emilia.Reflection.Editor
         {
             return GUIUtility.RoundToPixelGrid(value);
         }
+        
+        public static int GetPermanentControlID_Internals()
+        {
+            return GUIUtility.GetPermanentControlID();
+        }
     }
 }
