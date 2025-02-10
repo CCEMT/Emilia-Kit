@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace Emilia.Kit
 {
@@ -20,11 +21,19 @@ namespace Emilia.Kit
         {
             bool isHandled = false;
 
-            for (var i = 0; i < this._manipulators.Count; i++)
+            int count = this._manipulators.Count;
+
+            for (var i = 0; i < count; i++)
             {
                 GUIEventManipulator manipulator = this._manipulators[i];
                 isHandled = manipulator.HandleEvent(userData);
                 if (isHandled) break;
+            }
+
+            for (var i = 0; i < count; i++)
+            {
+                GUIEventManipulator manipulator = this._manipulators[i];
+                manipulator.Overlay(Event.current, userData);
             }
 
             return isHandled;
