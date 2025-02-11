@@ -7,13 +7,15 @@ namespace Emilia.Kit
     {
         private List<GUIEventManipulator> _manipulators = new List<GUIEventManipulator>();
 
-        private void AddManipulator(GUIEventManipulator manipulator)
+        public void AddManipulator(GUIEventManipulator manipulator)
         {
+            if (this._manipulators.Contains(manipulator)) return;
             this._manipulators.Add(manipulator);
         }
 
         public void RemoveManipulator(GUIEventManipulator manipulator)
         {
+            if (this._manipulators.Contains(manipulator) == false) return;
             this._manipulators.Remove(manipulator);
         }
 
