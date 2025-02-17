@@ -44,6 +44,7 @@ namespace Emilia.Variables.Editor
             }
 
             string createContent = GetCreateContent(types);
+            string createFromPoolContent = GetCreateFromPoolContent(types);
             string convertContext = GetConvertContent(types);
             string equalContent = GetEqualContent(equalTypes);
             string notEqualContent = GetNotEqualContent(notEqualTypes);
@@ -58,6 +59,7 @@ namespace Emilia.Variables.Editor
 
             string template = VariableGenerateSetting.TemplateText;
             template = template.Replace(VariableGenerateSetting.CreateIdentifier, createContent);
+            template = template.Replace(VariableGenerateSetting.CreateFromPoolIdentifier, createFromPoolContent);
             template = template.Replace(VariableGenerateSetting.ConvertIdentifier, convertContext);
             template = template.Replace(VariableGenerateSetting.EqualIdentifier, equalContent);
             template = template.Replace(VariableGenerateSetting.NotEqualIdentifier, notEqualContent);
@@ -90,7 +92,24 @@ namespace Emilia.Variables.Editor
                 Type genericType = GetVariableGenericTypeType(type);
                 if (genericType == null) continue;
 
-                content += $"\t\t\t {{typeof({genericType.FullName}), () => new {type.FullName}()}},\n";
+                content += $"\t\t\t {{typeof({GetTypeFullName(genericType)}), () => new {type.FullName}()}},\n";
+            }
+
+            return content;
+        }
+
+        public static string GetCreateFromPoolContent(Type[] types)
+        {
+            string content = "";
+            int amount = types.Length;
+            for (int i = 0; i < amount; i++)
+            {
+                Type type = types[i];
+                if (type.IsAbstract) continue;
+                Type genericType = GetVariableGenericTypeType(type);
+                if (genericType == null) continue;
+
+                content += $"\t\t\t {{typeof({GetTypeFullName(genericType)}), () => Emilia.Reference.ReferencePool.Acquire<{type.FullName}>()}},\n";
             }
 
             return content;
@@ -131,6 +150,35 @@ namespace Emilia.Variables.Editor
                 type = type.BaseType;
             }
             return null;
+        }
+
+        public static string GetTypeFullName(Type type)
+        {
+            string genericTypeFullName = GetGenericTypeFullName(type);
+            if (string.IsNullOrEmpty(genericTypeFullName) == false) return genericTypeFullName;
+            return type.FullName;
+        }
+
+        public static string GetGenericTypeFullName(Type genericType)
+        {
+            if (genericType.IsGenericType == false) return string.Empty;
+
+            Type[] genericArguments = genericType.GetGenericArguments();
+            if (genericArguments.Length == 0) return string.Empty;
+
+            string genericContent = "";
+            for (int j = 0; j < genericArguments.Length; j++)
+            {
+                Type argument = genericArguments[j];
+                if (argument.IsGenericParameter) continue;
+                genericContent += argument.FullName;
+                if (j < genericArguments.Length - 1) genericContent += ", ";
+            }
+
+            string genericTypeName = genericType.Name;
+            if (genericTypeName.Contains("`")) genericTypeName = genericTypeName.Substring(0, genericTypeName.IndexOf("`", StringComparison.Ordinal));
+
+            return $"{genericType.Namespace}.{genericTypeName}<{genericContent}>";
         }
 
         public static string GetEqualContent(List<Type> types)

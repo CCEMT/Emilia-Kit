@@ -22,7 +22,9 @@ namespace Emilia.Variables
 			 {typeof(UnityEngine.GameObject), () => new Emilia.Variables.VariableGameObject()},
 			 {typeof(System.Int16), () => new Emilia.Variables.VariableInt16()},
 			 {typeof(System.Int32), () => new Emilia.Variables.VariableInt32()},
+			 {typeof(System.Collections.Generic.List<System.Int32>), () => new Emilia.Variables.VariableInt32List()},
 			 {typeof(System.Int64), () => new Emilia.Variables.VariableInt64()},
+			 {typeof(System.Collections.Generic.List<System.Int64>), () => new Emilia.Variables.VariableInt64List()},
 			 {typeof(System.Object), () => new Emilia.Variables.VariableObject()},
 			 {typeof(UnityEngine.Quaternion), () => new Emilia.Variables.VariableQuaternion()},
 			 {typeof(UnityEngine.Rect), () => new Emilia.Variables.VariableRect()},
@@ -37,6 +39,38 @@ namespace Emilia.Variables
 			 {typeof(UnityEngine.Vector2), () => new Emilia.Variables.VariableVector2()},
 			 {typeof(UnityEngine.Vector3), () => new Emilia.Variables.VariableVector3()},
 			 {typeof(UnityEngine.Vector4), () => new Emilia.Variables.VariableVector4()},
+
+        };
+        
+        private static Dictionary<Type, Func<Variable>> variableCreateFromPool = new Dictionary<Type, Func<Variable>>() {
+			 {typeof(System.Boolean), () => Emilia.Reference.ReferencePool.Acquire<Emilia.Variables.VariableBoolean>()},
+			 {typeof(System.Byte), () => Emilia.Reference.ReferencePool.Acquire<Emilia.Variables.VariableByte>()},
+			 {typeof(System.Byte[]), () => Emilia.Reference.ReferencePool.Acquire<Emilia.Variables.VariableByteArray>()},
+			 {typeof(System.Char), () => Emilia.Reference.ReferencePool.Acquire<Emilia.Variables.VariableChar>()},
+			 {typeof(System.Char[]), () => Emilia.Reference.ReferencePool.Acquire<Emilia.Variables.VariableCharArray>()},
+			 {typeof(UnityEngine.Color), () => Emilia.Reference.ReferencePool.Acquire<Emilia.Variables.VariableColor>()},
+			 {typeof(System.Decimal), () => Emilia.Reference.ReferencePool.Acquire<Emilia.Variables.VariableDecimal>()},
+			 {typeof(System.Double), () => Emilia.Reference.ReferencePool.Acquire<Emilia.Variables.VariableDouble>()},
+			 {typeof(UnityEngine.GameObject), () => Emilia.Reference.ReferencePool.Acquire<Emilia.Variables.VariableGameObject>()},
+			 {typeof(System.Int16), () => Emilia.Reference.ReferencePool.Acquire<Emilia.Variables.VariableInt16>()},
+			 {typeof(System.Int32), () => Emilia.Reference.ReferencePool.Acquire<Emilia.Variables.VariableInt32>()},
+			 {typeof(System.Collections.Generic.List<System.Int32>), () => Emilia.Reference.ReferencePool.Acquire<Emilia.Variables.VariableInt32List>()},
+			 {typeof(System.Int64), () => Emilia.Reference.ReferencePool.Acquire<Emilia.Variables.VariableInt64>()},
+			 {typeof(System.Collections.Generic.List<System.Int64>), () => Emilia.Reference.ReferencePool.Acquire<Emilia.Variables.VariableInt64List>()},
+			 {typeof(System.Object), () => Emilia.Reference.ReferencePool.Acquire<Emilia.Variables.VariableObject>()},
+			 {typeof(UnityEngine.Quaternion), () => Emilia.Reference.ReferencePool.Acquire<Emilia.Variables.VariableQuaternion>()},
+			 {typeof(UnityEngine.Rect), () => Emilia.Reference.ReferencePool.Acquire<Emilia.Variables.VariableRect>()},
+			 {typeof(System.SByte), () => Emilia.Reference.ReferencePool.Acquire<Emilia.Variables.VariableSByte>()},
+			 {typeof(System.Single), () => Emilia.Reference.ReferencePool.Acquire<Emilia.Variables.VariableSingle>()},
+			 {typeof(System.String), () => Emilia.Reference.ReferencePool.Acquire<Emilia.Variables.VariableString>()},
+			 {typeof(UnityEngine.Transform), () => Emilia.Reference.ReferencePool.Acquire<Emilia.Variables.VariableTransform>()},
+			 {typeof(System.UInt16), () => Emilia.Reference.ReferencePool.Acquire<Emilia.Variables.VariableUInt16>()},
+			 {typeof(System.UInt32), () => Emilia.Reference.ReferencePool.Acquire<Emilia.Variables.VariableUInt32>()},
+			 {typeof(System.UInt64), () => Emilia.Reference.ReferencePool.Acquire<Emilia.Variables.VariableUInt64>()},
+			 {typeof(UnityEngine.Object), () => Emilia.Reference.ReferencePool.Acquire<Emilia.Variables.VariableUnityObject>()},
+			 {typeof(UnityEngine.Vector2), () => Emilia.Reference.ReferencePool.Acquire<Emilia.Variables.VariableVector2>()},
+			 {typeof(UnityEngine.Vector3), () => Emilia.Reference.ReferencePool.Acquire<Emilia.Variables.VariableVector3>()},
+			 {typeof(UnityEngine.Vector4), () => Emilia.Reference.ReferencePool.Acquire<Emilia.Variables.VariableVector4>()},
 
         };
 

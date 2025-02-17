@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   filePath:
     _folder: {fileID: 102900000, guid: 0884dddc700640f7b694cb7d3f50f5c8, type: 3}
-    folderPath: Assets/Emilia/Frame/Variable
+    folderPath: Assets/Emilia/Kit/Variable
