@@ -8,6 +8,7 @@ namespace Emilia.Variables.Editor
     public class VariableGenerateSetting : ScriptableObject
     {
         public const string CreateIdentifier = "#CREATE#";
+        public const string CreateFromPoolIdentifier = "#CREATE_FROM_POOL#";
         public const string ConvertIdentifier = "#CONVERT#";
         public const string EqualIdentifier = "#EQUAL#";
         public const string NotEqualIdentifier = "#NOT_EQUAL#";
@@ -36,6 +37,10 @@ namespace Emilia.Variables
     {
         private static Dictionary<Type, Func<Variable>> variableCreate = new Dictionary<Type, Func<Variable>>() {
 #CREATE#
+        };
+        
+        private static Dictionary<Type, Func<Variable>> variableCreateFromPool = new Dictionary<Type, Func<Variable>>() {
+#CREATE_FROM_POOL#
         };
 
         private static Dictionary<ConvertMatching, Func<Variable, Variable>> variableConvert = new Dictionary<ConvertMatching, Func<Variable, Variable>>() {
