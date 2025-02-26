@@ -7,13 +7,14 @@ Emilia系列库的通用工具包
 * 引用池实现
 * Odin拓展
 * 编辑器通用工具类
+* 数据结构实现
+* OpenScript实现 可以通过Type找到对应的脚本文件
+* Reflection实现 无反射直接访问内置或私有成员或类
+* Odin序列化拓展实现 根据Tag进行序列化
 * 第三方库Roslyn
 * 第三方库UnityHook
 * 第三方库AutomaticGraphLayout
 * 第三方库定点数
-* OpenScript 可以通过Type找到对应的脚本文件
-* Reflection 无反射直接访问内置或私有成员或类
-* Odin根据Tag进行序列化
 
 ## DataBuildPipeline（数据构建管线）
 
