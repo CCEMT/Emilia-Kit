@@ -21,29 +21,7 @@ namespace Emilia.FixMath
         private uint[] mt = new uint[N];
         private int mti = N + 1;
 
-        /**
-         *  @brief Static instance of {@link TSRandom} with seed 1.
-         **/
-        public static TSRandom instance;
-
-        internal static void Init()
-        {
-            instance = New(1);
-        }
-
-        /**
-         *  @brief Generates a new instance based on a given seed.
-         **/
-        public static TSRandom New(int seed)
-        {
-            TSRandom r = new TSRandom(seed);
-            return r;
-        }
-
-        private TSRandom()
-        {
-            init_genrand((uint) DateTime.Now.Millisecond);
-        }
+        private TSRandom() { }
 
         private TSRandom(int seed)
         {
@@ -73,9 +51,9 @@ namespace Emilia.FixMath
         /**
          *  @brief Returns a random integer.
          **/
-        public static int CallNext()
+        public int CallNext()
         {
-            return instance.Next();
+            return this.Next();
         }
 
         /**
@@ -116,17 +94,17 @@ namespace Emilia.FixMath
         /**
          *  @brief Returns a integer between a min value [inclusive] and a max value [exclusive].
          **/
-        public static int Range(int minValue, int maxValue)
+        public int Range(int minValue, int maxValue)
         {
-            return instance.Next(minValue, maxValue);
+            return this.Next(minValue, maxValue);
         }
 
         /**
          *  @brief Returns a {@link FP} between a min value [inclusive] and a max value [inclusive].
          **/
-        public static FP Range(float minValue, float maxValue)
+        public FP Range(float minValue, float maxValue)
         {
-            return instance.Next(minValue, maxValue);
+            return this.Next(minValue, maxValue);
         }
 
         /**
@@ -140,12 +118,12 @@ namespace Emilia.FixMath
         /**
          *  @brief Returns a {@link FP} between 0.0 [inclusive] and 1.0 [inclusive].
          **/
-        public static FP value => instance.NextFP();
+        public FP value => this.NextFP();
 
         /**
          *  @brief Returns a random {@link TSVector} representing a point inside a sphere with radius 1.
          **/
-        public static TSVector insideUnitSphere => new(value, value, value);
+        public TSVector insideUnitSphere => new(value, value, value);
 
         private float NextFloat()
         {
