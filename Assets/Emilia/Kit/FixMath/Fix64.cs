@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using UnityEngine;
 
 namespace Emilia.FixMath
 {
@@ -10,7 +9,6 @@ namespace Emilia.FixMath
     [Serializable]
     public partial struct FP : IEquatable<FP>, IComparable<FP>
     {
-        [SerializeField]
         public long _serializedValue;
 
         public const long MAX_VALUE = long.MaxValue;
@@ -144,7 +142,7 @@ namespace Emilia.FixMath
         public static FP Round(FP value)
         {
             var fractionalPart = value._serializedValue & 0x00000000FFFFFFFF;
-            var integralPart = Floor(value);
+            FP integralPart = Floor(value);
             if (fractionalPart < 0x80000000)
             {
                 return integralPart;
@@ -413,7 +411,7 @@ namespace Emilia.FixMath
 
             if (yl == 0)
             {
-                return MAX_VALUE;
+                return MaxValue;
                 //throw new DivideByZeroException();
             }
 
@@ -617,16 +615,16 @@ namespace Emilia.FixMath
         {
             bool flipHorizontal, flipVertical;
             var clampedL = ClampSinValue(x._serializedValue, out flipHorizontal, out flipVertical);
-            var clamped = new FP(clampedL);
+            FP clamped = new FP(clampedL);
 
             // Find the two closest values in the LUT and perform linear interpolation
             // This is what kills the performance of this function on x86 - x64 is fine though
-            var rawIndex = FastMul(clamped, LutInterval);
-            var roundedIndex = Round(rawIndex);
+            FP rawIndex = FastMul(clamped, LutInterval);
+            FP roundedIndex = Round(rawIndex);
             var indexError = 0; //FastSub(rawIndex, roundedIndex);
 
-            var nearestValue = new FP(SinLut[flipHorizontal ? SinLut.Length - 1 - (int) roundedIndex : (int) roundedIndex]);
-            var secondNearestValue = new FP(SinLut[flipHorizontal ? SinLut.Length - 1 - (int) roundedIndex - Sign(indexError) : (int) roundedIndex + Sign(indexError)]);
+            FP nearestValue = new FP(SinLut[flipHorizontal ? SinLut.Length - 1 - (int) roundedIndex : (int) roundedIndex]);
+            FP secondNearestValue = new FP(SinLut[flipHorizontal ? SinLut.Length - 1 - (int) roundedIndex - Sign(indexError) : (int) roundedIndex + Sign(indexError)]);
 
             var delta = FastMul(indexError, FastAbs(FastSub(nearestValue, secondNearestValue)))._serializedValue;
             var interpolatedValue = nearestValue._serializedValue + (flipHorizontal ? -delta : delta);
@@ -736,15 +734,15 @@ namespace Emilia.FixMath
                 clampedPi = PI_OVER_2 - (clampedPi - PI_OVER_2);
             }
 
-            var clamped = new FP(clampedPi);
+            FP clamped = new FP(clampedPi);
 
             // Find the two closest values in the LUT and perform linear interpolation
-            var rawIndex = FastMul(clamped, LutInterval);
-            var roundedIndex = Round(rawIndex);
-            var indexError = FastSub(rawIndex, roundedIndex);
+            FP rawIndex = FastMul(clamped, LutInterval);
+            FP roundedIndex = Round(rawIndex);
+            FP indexError = FastSub(rawIndex, roundedIndex);
 
-            var nearestValue = new FP(TanLut[(int) roundedIndex]);
-            var secondNearestValue = new FP(TanLut[(int) roundedIndex + Sign(indexError)]);
+            FP nearestValue = new FP(TanLut[(int) roundedIndex]);
+            FP secondNearestValue = new FP(TanLut[(int) roundedIndex + Sign(indexError)]);
 
             var delta = FastMul(indexError, FastAbs(FastSub(nearestValue, secondNearestValue)))._serializedValue;
             var interpolatedValue = nearestValue._serializedValue + delta;
@@ -770,21 +768,21 @@ namespace Emilia.FixMath
             }
 
             FP result;
-            var two = (FP) 2;
-            var three = (FP) 3;
+            FP two = (FP) 2;
+            FP three = (FP) 3;
 
             bool invert = z > One;
             if (invert) z = One / z;
 
             result = One;
-            var term = One;
+            FP term = One;
 
-            var zSq = z * z;
-            var zSq2 = zSq * two;
-            var zSqPlusOne = zSq + One;
-            var zSq12 = zSqPlusOne * two;
-            var dividend = zSq2;
-            var divisor = zSqPlusOne * three;
+            FP zSq = z * z;
+            FP zSq2 = zSq * two;
+            FP zSqPlusOne = zSq + One;
+            FP zSq12 = zSqPlusOne * two;
+            FP dividend = zSq2;
+            FP divisor = zSqPlusOne * three;
 
             for (var i = 2; i < 30; ++i)
             {
@@ -828,7 +826,7 @@ namespace Emilia.FixMath
                 return -PiOver2;
             }
             FP atan;
-            var z = y / x;
+            FP z = y / x;
 
             FP sm = EN2 * 28;
             // Deal with overflow
@@ -878,7 +876,7 @@ namespace Emilia.FixMath
 
             if (x.RawValue == 0) return PiOver2;
 
-            var result = Atan(Sqrt(One - x * x) / x);
+            FP result = Atan(Sqrt(One - x * x) / x);
             return x.RawValue < 0 ? result + Pi : result;
         }
 
@@ -1034,7 +1032,7 @@ namespace Emilia.FixMath
 
         internal static void GenerateAcosLut()
         {
-            using (var writer = new StreamWriter("Fix64AcosLut.cs"))
+            using (StreamWriter writer = new StreamWriter("Fix64AcosLut.cs"))
             {
                 writer.Write(
                     @"namespace TrueSync {
@@ -1063,7 +1061,7 @@ namespace Emilia.FixMath
 
         internal static void GenerateSinLut()
         {
-            using (var writer = new StreamWriter("Fix64SinLut.cs"))
+            using (StreamWriter writer = new StreamWriter("Fix64SinLut.cs"))
             {
                 writer.Write(
                     @"namespace FixMath.NET {
@@ -1092,7 +1090,7 @@ namespace Emilia.FixMath
 
         internal static void GenerateTanLut()
         {
-            using (var writer = new StreamWriter("Fix64TanLut.cs"))
+            using (StreamWriter writer = new StreamWriter("Fix64TanLut.cs"))
             {
                 writer.Write(
                     @"namespace FixMath.NET {

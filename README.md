@@ -14,7 +14,7 @@ Emilia系列库的通用工具包
 * 第三方库Roslyn
 * 第三方库UnityHook
 * 第三方库AutomaticGraphLayout
-* 第三方库定点数
+* 第三方库TrueSync的定点数实现
 
 ## DataBuildPipeline（数据构建管线）
 
