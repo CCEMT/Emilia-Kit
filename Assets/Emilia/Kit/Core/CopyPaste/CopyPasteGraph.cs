@@ -106,6 +106,14 @@ namespace Emilia.Kit
         }
 
         /// <summary>
+        /// 添加Pack
+        /// </summary>
+        public void AddPacks(IEnumerable<ICopyPastePack> packs)
+        {
+            foreach (ICopyPastePack pack in packs) AddPack(pack);
+        }
+
+        /// <summary>
         /// 移除Pack
         /// </summary>
         public void RemovePack(ICopyPastePack pack)
@@ -137,6 +145,14 @@ namespace Emilia.Kit
                 CopyPasteNode node = removeNode.output[i];
                 node.input.Remove(removeNode);
             }
+        }
+
+        /// <summary>
+        /// 移除Pack
+        /// </summary>
+        public void RemovePacks(IEnumerable<ICopyPastePack> packs)
+        {
+            foreach (ICopyPastePack pack in packs) RemovePack(pack);
         }
     }
 }
