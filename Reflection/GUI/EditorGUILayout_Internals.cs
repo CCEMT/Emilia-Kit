@@ -5,7 +5,11 @@ namespace Emilia.Reflection.Editor
 {
     public static class EditorGUILayout_Internals
     {
-        public static Rect LastRect_Internals => EditorGUILayout.s_LastRect;
+        public static Rect LastRect_Internals
+        {
+            get => EditorGUILayout.s_LastRect;
+            set => EditorGUILayout.s_LastRect = value;
+        }
 
         public static Rect BeginHorizontal_Internals(GUIContent content, GUIStyle style, params GUILayoutOption[] options)
         {
