@@ -6,9 +6,9 @@ namespace Emilia.Reflection.Editor
     public static class EditorGUI_Internals
     {
         public static float MiniLabelW_Internal => EditorGUI.kMiniLabelW;
-        public static float SpacingSubLabel => EditorGUI.kSpacingSubLabel;
+        public static float SpacingSubLabel_Internal => EditorGUI.kSpacingSubLabel;
 
-        public static float SingleLineHeight => EditorGUI.kSingleLineHeight;
+        public static float SingleLineHeight_Internal => EditorGUI.kSingleLineHeight;
 
         public static bool IsEditingTextField_Internal()
         {
