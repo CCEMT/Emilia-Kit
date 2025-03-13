@@ -25,6 +25,15 @@ namespace Emilia.Reflection.Editor
             EditorGUI.DragNumberValue(dragHotZone, id, isDouble, ref doubleVal, ref longVal, dragSensitivity);
         }
 
+        public static double DelayedDoubleField_Internal(
+            Rect position,
+            GUIContent label,
+            double value,
+            GUIStyle style)
+        {
+            return EditorGUI.DelayedDoubleFieldInternal(position, label, value, style);
+        }
+
         public static int DelayedIntField_Internal(
             Rect position,
             GUIContent label,
