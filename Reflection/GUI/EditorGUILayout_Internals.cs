@@ -26,5 +26,44 @@ namespace Emilia.Reflection.Editor
         {
             return EditorGUILayout.BeginScrollView(scrollPosition, alwaysShowHorizontal, alwaysShowVertical, horizontalScrollbar, verticalScrollbar, options);
         }
+
+        public static Vector2 BeginVerticalScrollView(
+            Vector2 scrollPosition,
+            params GUILayoutOption[] options)
+        {
+            return EditorGUILayout.BeginVerticalScrollView(scrollPosition, options);
+        }
+
+        public static Vector2 BeginVerticalScrollView(
+            Vector2 scrollPosition,
+            bool alwaysShowVertical,
+            GUIStyle verticalScrollbar,
+            GUIStyle background,
+            params GUILayoutOption[] options)
+        {
+            return EditorGUILayout.BeginVerticalScrollView(scrollPosition, alwaysShowVertical, verticalScrollbar, background, options);
+        }
+
+        public static Vector2 BeginHorizontalScrollView(
+            Vector2 scrollPosition,
+            params GUILayoutOption[] options)
+        {
+            return EditorGUILayout.BeginHorizontalScrollView(scrollPosition, options);
+        }
+
+        public static Vector2 BeginHorizontalScrollView(
+            Vector2 scrollPosition,
+            bool alwaysShowHorizontal,
+            GUIStyle horizontalScrollbar,
+            GUIStyle background,
+            params GUILayoutOption[] options)
+        {
+            return EditorGUILayout.BeginHorizontalScrollView(scrollPosition, alwaysShowHorizontal, horizontalScrollbar, background, options);
+        }
+
+        public static void EndScrollView(bool handleScrollWheel)
+        {
+            EditorGUILayout.EndScrollView(handleScrollWheel);
+        }
     }
 }
