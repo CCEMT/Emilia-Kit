@@ -82,7 +82,7 @@ namespace Emilia.Kit.Editor
                 window.Close();
             }
         }
-        
+
         public static EditorWindow FindEditorWindowOfType(Type type)
         {
             Object[] results = Resources.FindObjectsOfTypeAll(type);

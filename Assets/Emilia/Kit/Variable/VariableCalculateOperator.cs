@@ -6,7 +6,7 @@ namespace Emilia.Variables
     {
         [LabelText("赋值=")]
         Set,
-        
+
         [LabelText("加+")]
         Add,
 

@@ -308,7 +308,7 @@ namespace Emilia.Kit.Editor
 
         private delegate TReturn MethodCaller<in TTarget, out TReturn>(TTarget target, object[] args);
 
-        private delegate T CtorInvoker<out T>(object[] parameters); 
+        private delegate T CtorInvoker<out T>(object[] parameters);
 
         /// <summary>
         /// A dynamic reflection extensions library that emits IL to set/get fields/properties, call methods and invoke constructors
