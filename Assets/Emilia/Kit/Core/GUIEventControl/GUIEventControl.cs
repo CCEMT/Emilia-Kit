@@ -31,5 +31,15 @@ namespace Emilia.Kit
 
             return isHandled;
         }
+
+        public void AddManipulator(GUIEventManipulator manipulator)
+        {
+            this._manipulators.Add(manipulator);
+        }
+
+        public void RemoveManipulator(GUIEventManipulator manipulator)
+        {
+            this._manipulators.Remove(manipulator);
+        }
     }
 }

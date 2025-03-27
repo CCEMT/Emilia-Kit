@@ -20,7 +20,7 @@ namespace Emilia.Kit.Editor
 
         private Dictionary<object, PropertyTree> _propertyTrees = new Dictionary<object, PropertyTree>();
 
-        public void DrawTargetCheck(object target,Action<PropertyTree, InspectorProperty> onCheck = null)
+        public void DrawTargetCheck(object target, Action<PropertyTree, InspectorProperty> onCheck = null)
         {
             if (target == null) return;
             PropertyTree propertyTree = GetPropertyTree(target);

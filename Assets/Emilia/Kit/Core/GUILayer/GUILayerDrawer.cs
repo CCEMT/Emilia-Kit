@@ -7,7 +7,7 @@ namespace Emilia.Kit
     public class GUILayerDrawer
     {
         private List<IGUILayer> _layers = new List<IGUILayer>();
-        
+
         private List<IGUILayer> _layersToAdd = new List<IGUILayer>();
         private List<IGUILayer> _layersToRemove = new List<IGUILayer>();
 
@@ -42,7 +42,7 @@ namespace Emilia.Kit
                     IGUILayer layer = this._layersToRemove[i];
                     this._layers.Remove(layer);
                 }
-                
+
                 this._layersToRemove.Clear();
             }
 
