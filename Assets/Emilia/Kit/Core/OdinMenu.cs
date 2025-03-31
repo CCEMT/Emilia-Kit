@@ -27,10 +27,7 @@ namespace Emilia.Kit
             title = name;
         }
 
-        public bool HasItem(string name)
-        {
-            return items.ContainsKey(name);
-        }
+        public bool HasItem(string name) => items.ContainsKey(name);
 
         public void AddItem(string name, Action action)
         {
@@ -47,10 +44,7 @@ namespace Emilia.Kit
             items[name] = menuItem;
         }
 
-        public OdinEditorWindow ShowInPopup()
-        {
-            return ShowInPopup(defaultWidth);
-        }
+        public OdinEditorWindow ShowInPopup() => ShowInPopup(defaultWidth);
 
         public OdinEditorWindow ShowInPopup(float width)
         {
@@ -64,7 +58,7 @@ namespace Emilia.Kit
             return customGenericSelector.ShowInPopup(rect, width);
         }
 
-        GenericSelector<Action> GetSelector()
+        private GenericSelector<Action> GetSelector()
         {
             IEnumerable<GenericSelectorItem<Action>> customCollection = items.Keys.Select(itemName =>
                 new GenericSelectorItem<Action>($"{itemName}", () => items[itemName].action(items[itemName].userData)));
@@ -78,6 +72,11 @@ namespace Emilia.Kit
             };
 
             return customGenericSelector;
+        }
+
+        public void Clear()
+        {
+            items.Clear();
         }
     }
 }
