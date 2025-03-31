@@ -24,15 +24,23 @@ namespace Emilia.Kit.Editor
             }
         }
 
+        public static void Refresh(IEditorAssetWindow window)
+        {
+            _windows[window.id] = window;
+        }
+
         public static void OpenWindow(Type windowType, string id, object arg = null)
         {
             if (_windows.TryGetValue(id, out IEditorAssetWindow editorAssetWindow))
             {
-                EditorWindow editorWindow = editorAssetWindow as EditorWindow;
-                if (editorWindow != null)
+                if (editorAssetWindow.id == id)
                 {
-                    editorAssetWindow.OnReOpen(arg);
-                    return;
+                    EditorWindow editorWindow = editorAssetWindow as EditorWindow;
+                    if (editorWindow != null)
+                    {
+                        editorAssetWindow.OnReOpen(arg);
+                        return;
+                    }
                 }
             }
 
