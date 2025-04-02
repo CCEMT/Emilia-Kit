@@ -1,4 +1,5 @@
-﻿using Emilia.Reflection.Editor;
+﻿#if UNITY_EDITOR
+using Emilia.Reflection.Editor;
 using UnityEditor;
 using UnityEngine;
 
@@ -88,3 +89,4 @@ namespace Emilia.Kit
         }
     }
 }
+#endif
