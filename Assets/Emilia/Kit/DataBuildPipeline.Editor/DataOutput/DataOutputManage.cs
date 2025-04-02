@@ -25,20 +25,41 @@ namespace Emilia.DataBuildPipeline.Editor
 
         public List<IDataOutput> GetFinalizeBuildDisposeList(IBuildArgs buildArgs)
         {
-            string pipelineName = buildArgs.pipelineName;
-            List<IDataOutput> dataOutputs = new List<IDataOutput>();
-            int amount = this._dataOutputs.Count;
-            for (var i = 0; i < amount; i++)
+            Type argsType = buildArgs.GetType();
+
+            Dictionary<int, IDataOutput> dataOutputMap = new Dictionary<int, IDataOutput>();
+            List<IDataOutput> dataOutputList = new List<IDataOutput>();
+
+            while (argsType != typeof(IBuildArgs))
             {
-                IDataOutput dataOutput = this._dataOutputs[i];
-                Type type = dataOutput.GetType();
-                BuildPipelineAttribute attribute = type.GetCustomAttribute<BuildPipelineAttribute>();
-                if (attribute == null) continue;
-                if (attribute.pipelineName != pipelineName) continue;
-                dataOutputs.Add(dataOutput);
+                int amount = this._dataOutputs.Count;
+                for (var i = 0; i < amount; i++)
+                {
+                    IDataOutput dataOutput = this._dataOutputs[i];
+                    Type type = dataOutput.GetType();
+                    
+                    BuildPipelineAttribute attribute = type.GetCustomAttribute<BuildPipelineAttribute>();
+                    if (attribute == null) continue;
+                    
+                    if (attribute.argsType != argsType) continue;
+                    
+                    int priority = 0;
+                    BuildSequenceAttribute sequenceAttribute = type.GetCustomAttribute<BuildSequenceAttribute>();
+                    if (sequenceAttribute != null) priority = sequenceAttribute.priority;
+                    
+                    if (dataOutputMap.TryAdd(priority, dataOutput) == false) continue;
+                    
+                    dataOutputList.Add(dataOutput);
+                }
             }
 
-            return dataOutputs;
+            dataOutputList.Sort((a, b) => {
+                BuildSequenceAttribute attributeA = a.GetType().GetCustomAttribute<BuildSequenceAttribute>();
+                BuildSequenceAttribute attributeB = b.GetType().GetCustomAttribute<BuildSequenceAttribute>();
+                return attributeA.priority.CompareTo(attributeB.priority);
+            });
+
+            return dataOutputList;
         }
     }
 }

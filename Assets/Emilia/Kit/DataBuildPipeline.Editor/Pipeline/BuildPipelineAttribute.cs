@@ -5,11 +5,11 @@ namespace Emilia.DataBuildPipeline.Editor
     [AttributeUsage(AttributeTargets.Class)]
     public class BuildPipelineAttribute : Attribute
     {
-        public string pipelineName;
+        public Type argsType;
 
-        public BuildPipelineAttribute(string pipelineName)
+        public BuildPipelineAttribute(Type argsType)
         {
-            this.pipelineName = pipelineName;
+            this.argsType = argsType;
         }
     }
 }

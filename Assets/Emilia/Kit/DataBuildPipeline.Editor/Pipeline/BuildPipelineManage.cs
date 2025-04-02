@@ -8,7 +8,7 @@ namespace Emilia.DataBuildPipeline.Editor
 {
     public class BuildPipelineManage : BuildSingleton<BuildPipelineManage>
     {
-        private Dictionary<string, Type> pipelines = new Dictionary<string, Type>();
+        private Dictionary<Type, Type> pipelines = new Dictionary<Type, Type>();
 
         public BuildPipelineManage()
         {
@@ -21,13 +21,13 @@ namespace Emilia.DataBuildPipeline.Editor
 
                 BuildPipelineAttribute attribute = type.GetCustomAttribute<BuildPipelineAttribute>();
                 if (attribute == null) continue;
-                this.pipelines.Add(attribute.pipelineName, type);
+                this.pipelines.Add(attribute.argsType, type);
             }
         }
 
-        public IBuildPipeline GetPipeline(string pipelineName)
+        public IBuildPipeline GetPipeline(Type argsType)
         {
-            if (this.pipelines.TryGetValue(pipelineName, out Type type) == false) return default;
+            if (this.pipelines.TryGetValue(argsType, out Type type) == false) return default;
             IBuildPipeline pipeline = Activator.CreateInstance(type) as IBuildPipeline;
             return pipeline;
         }

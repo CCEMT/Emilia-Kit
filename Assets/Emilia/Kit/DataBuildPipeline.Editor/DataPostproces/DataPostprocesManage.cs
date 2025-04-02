@@ -25,27 +25,41 @@ namespace Emilia.DataBuildPipeline.Editor
 
         public List<IDataPostproces> GetDataPostproces(IBuildArgs buildArgs)
         {
-            string pipelineName = buildArgs.pipelineName;
-            List<IDataPostproces> list = new List<IDataPostproces>();
+            Type argsType = buildArgs.GetType();
 
-            var amount = this._postprocessList.Count;
-            for (var i = 0; i < amount; i++)
+            Dictionary<int, IDataPostproces> dataPostprocesMap = new Dictionary<int, IDataPostproces>();
+            List<IDataPostproces> dataPostprocesList = new List<IDataPostproces>();
+
+            while (argsType != typeof(IBuildArgs))
             {
-                IDataPostproces postproces = this._postprocessList[i];
-                Type type = postproces.GetType();
-                BuildPipelineAttribute attribute = type.GetCustomAttribute<BuildPipelineAttribute>();
-                if (attribute == null) continue;
-                if (attribute.pipelineName != pipelineName) continue;
-                list.Add(postproces);
+                int amount = this._postprocessList.Count;
+                for (var i = 0; i < amount; i++)
+                {
+                    IDataPostproces postproces = this._postprocessList[i];
+                    Type type = postproces.GetType();
+                    
+                    BuildPipelineAttribute attribute = type.GetCustomAttribute<BuildPipelineAttribute>();
+                    if (attribute == null) continue;
+                    
+                    if (attribute.argsType != argsType) continue;
+                    
+                    int priority = 0;
+                    BuildSequenceAttribute sequenceAttribute = type.GetCustomAttribute<BuildSequenceAttribute>();
+                    if (sequenceAttribute != null) priority = sequenceAttribute.priority;
+                    
+                    if (dataPostprocesMap.TryAdd(priority, postproces) == false) continue;
+                    
+                    dataPostprocesList.Add(postproces);
+                }
             }
 
-            list.Sort((a, b) => {
+            dataPostprocesList.Sort((a, b) => {
                 BuildSequenceAttribute attributeA = a.GetType().GetCustomAttribute<BuildSequenceAttribute>();
                 BuildSequenceAttribute attributeB = b.GetType().GetCustomAttribute<BuildSequenceAttribute>();
                 return attributeA.priority.CompareTo(attributeB.priority);
             });
 
-            return list;
+            return dataPostprocesList;
         }
     }
 }
