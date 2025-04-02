@@ -34,7 +34,7 @@ DataBuildPipeline设计之初是构建从Editor数据到Runtime数据的流水�
 DataBuildUtility.Build(BuildArgs)
 ~~~
 
-**BuildPipelineAttribute**：为构建部件(管线，IDataCollect,IDataDetection等)指定构建管线的名称
+**BuildPipelineAttribute**：为构建部件(管线，IDataCollect,IDataDetection等)指定构建管线的参数类型
 
 **BuildSequenceAttribute**：指定该部件在当前流程的优先级
 
@@ -75,11 +75,9 @@ public class TestBuildContainer : BuildContainer
 }
 
 //构建管线
-[BuildPipeline(PipelineName)]//指定管线名称
+[BuildPipeline(typeof(TestBuildArgs))]//指定管线名称
 public class TestBuildPipeline : UniversalBuildPipeline
 {
-    public const string PipelineName = "Flow";
-
     private TestBuildArgs testBuildArgs;
 
     protected override void RunInitialize()
@@ -100,7 +98,7 @@ public class TestBuildPipeline : UniversalBuildPipeline
 }
 
 //数据检测
-[BuildPipeline(TestBuildPipeline.PipelineName), BuildSequence(1000)]//指定管线名称
+[BuildPipeline(typeof(TestBuildArgs)), BuildSequence(1000)]//指定管线名称
 public class TestDataDetection : IDataDetection
 {
     public bool Detection(IBuildContainer buildContainer, IBuildArgs buildArgs)
@@ -112,7 +110,7 @@ public class TestDataDetection : IDataDetection
 }
 
 //数据构建
-[BuildPipeline(TestBuildPipeline.PipelineName), BuildSequence(1000)]//指定管线名称
+[BuildPipeline(typeof(TestBuildArgs)), BuildSequence(1000)]//指定管线名称
 public class TestDataBuild : IDataBuild
 {
     public void Build(IBuildContainer buildContainer, Action onFinished)
@@ -126,7 +124,7 @@ public class TestDataBuild : IDataBuild
 }
 
 //数据输出
-[BuildPipeline(TestBuildPipeline.PipelineName), BuildSequence(1000)]//指定管线名称
+[BuildPipeline(typeof(TestBuildArgs)), BuildSequence(1000)]//指定管线名称
 public class TestDataOutput : IDataOutput
 {
     public void Output(IBuildContainer buildContainer, IBuildArgs buildArgs, Action onFinished)
@@ -145,3 +143,5 @@ public class TestDataOutput : IDataOutput
     }
 }
 ~~~
+
+收集数据处理器的时候（IDataBuild,IDataPostproces,IDataOutput）会根据当前指定的参数类型进行收集，如果父类也有指定的处理器也会一并收集，当它们的优先级一样时，优先使用子类的处理器

@@ -26,27 +26,42 @@ namespace Emilia.DataBuildPipeline.Editor
 
         public List<IDataBuild> GetDataBuildList(IBuildArgs buildArgs)
         {
-            string pipelineName = buildArgs.pipelineName;
-            List<IDataBuild> list = new List<IDataBuild>();
+            Type argsType = buildArgs.GetType();
+            Dictionary<int, IDataBuild> dataBuildMap = new Dictionary<int, IDataBuild>();
+            List<IDataBuild> dataBuildList = new List<IDataBuild>();
 
-            int amount = this._dataBuilds.Count;
-            for (int i = 0; i < amount; i++)
+            while (argsType != typeof(IBuildArgs))
             {
-                IDataBuild build = this._dataBuilds[i];
-                Type type = build.GetType();
-                BuildPipelineAttribute attribute = type.GetCustomAttribute<BuildPipelineAttribute>();
-                if (attribute == null) continue;
-                if (attribute.pipelineName != pipelineName) continue;
-                list.Add(build);
+                int amount = this._dataBuilds.Count;
+                for (int i = 0; i < amount; i++)
+                {
+                    IDataBuild build = this._dataBuilds[i];
+                    Type type = build.GetType();
+                    
+                    BuildPipelineAttribute attribute = type.GetCustomAttribute<BuildPipelineAttribute>();
+                    if (attribute == null) continue;
+                    
+                    if (attribute.argsType != argsType) continue;
+
+                    int priority = 0;
+                    BuildSequenceAttribute sequenceAttribute = type.GetCustomAttribute<BuildSequenceAttribute>();
+                    if (sequenceAttribute != null) priority = sequenceAttribute.priority;
+
+                    if (dataBuildMap.TryAdd(priority, build) == false) continue;
+                    
+                    dataBuildList.Add(build);
+                }
+
+                argsType = argsType.BaseType;
             }
 
-            list.Sort((a, b) => {
+            dataBuildList.Sort((a, b) => {
                 BuildSequenceAttribute attributeA = a.GetType().GetCustomAttribute<BuildSequenceAttribute>();
                 BuildSequenceAttribute attributeB = b.GetType().GetCustomAttribute<BuildSequenceAttribute>();
                 return attributeA.priority.CompareTo(attributeB.priority);
             });
 
-            return list;
+            return dataBuildList;
         }
     }
 }

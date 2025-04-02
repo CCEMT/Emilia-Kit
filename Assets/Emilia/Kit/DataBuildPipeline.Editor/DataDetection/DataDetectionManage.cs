@@ -25,18 +25,23 @@ namespace Emilia.DataBuildPipeline.Editor
 
         public List<IDataDetection> GetDataDetectionList(IBuildArgs buildArgs)
         {
-            string pipelineName = buildArgs.pipelineName;
+            Type argsType = buildArgs.GetType();
             List<IDataDetection> list = new List<IDataDetection>();
 
-            int amount = this._detections.Count;
-            for (int i = 0; i < amount; i++)
+            while (argsType != typeof(IBuildArgs))
             {
-                IDataDetection detection = this._detections[i];
-                Type type = detection.GetType();
-                BuildPipelineAttribute attribute = type.GetCustomAttribute<BuildPipelineAttribute>();
-                if (attribute == null) continue;
-                if (attribute.pipelineName != pipelineName) continue;
-                list.Add(detection);
+                int amount = this._detections.Count;
+                for (int i = 0; i < amount; i++)
+                {
+                    IDataDetection detection = this._detections[i];
+                    Type type = detection.GetType();
+                    BuildPipelineAttribute attribute = type.GetCustomAttribute<BuildPipelineAttribute>();
+                    if (attribute == null) continue;
+                    if (attribute.argsType != argsType) continue;
+                    list.Add(detection);
+                }
+
+                argsType = argsType.BaseType;
             }
 
             return list;
