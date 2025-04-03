@@ -28,7 +28,7 @@ namespace Emilia.DataBuildPipeline.Editor
             Type argsType = buildArgs.GetType();
             List<IDataDetection> list = new List<IDataDetection>();
 
-            while (argsType != typeof(IBuildArgs))
+            while (argsType != typeof(object))
             {
                 int amount = this._detections.Count;
                 for (int i = 0; i < amount; i++)

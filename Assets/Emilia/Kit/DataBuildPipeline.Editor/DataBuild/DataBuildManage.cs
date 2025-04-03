@@ -30,7 +30,7 @@ namespace Emilia.DataBuildPipeline.Editor
             Dictionary<int, IDataBuild> dataBuildMap = new Dictionary<int, IDataBuild>();
             List<IDataBuild> dataBuildList = new List<IDataBuild>();
 
-            while (argsType != typeof(IBuildArgs))
+            while (argsType != typeof(object))
             {
                 int amount = this._dataBuilds.Count;
                 for (int i = 0; i < amount; i++)
