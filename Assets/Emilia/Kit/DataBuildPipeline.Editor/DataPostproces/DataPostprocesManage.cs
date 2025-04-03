@@ -30,7 +30,7 @@ namespace Emilia.DataBuildPipeline.Editor
             Dictionary<int, IDataPostproces> dataPostprocesMap = new Dictionary<int, IDataPostproces>();
             List<IDataPostproces> dataPostprocesList = new List<IDataPostproces>();
 
-            while (argsType != typeof(IBuildArgs))
+            while (argsType != typeof(object))
             {
                 int amount = this._postprocessList.Count;
                 for (var i = 0; i < amount; i++)
@@ -51,6 +51,8 @@ namespace Emilia.DataBuildPipeline.Editor
                     
                     dataPostprocesList.Add(postproces);
                 }
+                
+                argsType = argsType.BaseType;
             }
 
             dataPostprocesList.Sort((a, b) => {

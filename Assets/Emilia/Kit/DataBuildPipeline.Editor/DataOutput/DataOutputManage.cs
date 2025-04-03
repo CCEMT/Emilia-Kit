@@ -30,7 +30,7 @@ namespace Emilia.DataBuildPipeline.Editor
             Dictionary<int, IDataOutput> dataOutputMap = new Dictionary<int, IDataOutput>();
             List<IDataOutput> dataOutputList = new List<IDataOutput>();
 
-            while (argsType != typeof(IBuildArgs))
+            while (argsType != typeof(object))
             {
                 int amount = this._dataOutputs.Count;
                 for (var i = 0; i < amount; i++)
@@ -51,6 +51,8 @@ namespace Emilia.DataBuildPipeline.Editor
                     
                     dataOutputList.Add(dataOutput);
                 }
+                
+                argsType = argsType.BaseType;
             }
 
             dataOutputList.Sort((a, b) => {
