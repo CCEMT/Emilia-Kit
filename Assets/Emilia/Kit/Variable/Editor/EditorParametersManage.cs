@@ -23,7 +23,7 @@ namespace Emilia.Variables.Editor
         public Variable value;
     }
 
-    [Serializable, HideMonoScript, SelectionValidateObject]
+    [Serializable, HideMonoScript]
     public class EditorParametersManage : TitleAsset
     {
         public override string title => "参数列表";
