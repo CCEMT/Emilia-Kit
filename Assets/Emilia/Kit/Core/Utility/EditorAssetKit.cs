@@ -52,6 +52,26 @@ namespace Emilia.Kit
             }
             return preferences;
         }
+        
+        public static List<T> LoadAssetAtPath<T>(string path) where T : ScriptableObject
+        {
+            List<T> loads = new List<T>();
+
+            string dataPath = $"{dataParentPath}/";
+            string fullPath = $"{dataPath}{path}";
+            if (Directory.Exists(fullPath) == false) return loads;
+            string[] files = Directory.GetFiles(fullPath, "*.asset", SearchOption.AllDirectories);
+            int lenght = files.Length;
+            for (int i = 0; i < lenght; i++)
+            {
+                string filePath = files[i];
+                string unityPath = filePath.Replace(dataPath, "");
+                T asset = AssetDatabase.LoadAssetAtPath<T>(unityPath);
+                loads.Add(asset);
+            }
+
+            return loads;
+        }
 
         public static void SaveAssetIntoObject(Object childAsset, Object masterAsset)
         {
@@ -74,7 +94,7 @@ namespace Emilia.Kit
 
         public static bool DeleteAsset(Object target)
         {
-            if (target == default) return false;
+            if (target == null) return false;
             string path = AssetDatabase.GetAssetPath(target);
             return AssetDatabase.DeleteAsset(path);
         }
@@ -87,6 +107,13 @@ namespace Emilia.Kit
             if (prefabStage != null) return prefabStage.prefabContentsRoot;
             if (PrefabUtility.IsPartOfPrefabInstance(gameObject)) return PrefabUtility.GetCorrespondingObjectFromOriginalSource(gameObject);
             return null;
+        }
+        
+        public static void Save(this Object target, bool isRefresh = false)
+        {
+            EditorUtility.SetDirty(target);
+            AssetDatabase.SaveAssets();
+            if (isRefresh) AssetDatabase.Refresh();
         }
     }
 }
