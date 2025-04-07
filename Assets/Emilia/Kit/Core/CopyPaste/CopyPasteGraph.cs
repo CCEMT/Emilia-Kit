@@ -154,6 +154,22 @@ namespace Emilia.Kit
         {
             foreach (ICopyPastePack pack in packs) RemovePack(pack);
         }
+        
+        /// <summary>
+        /// 获取所有的Pack
+        /// </summary>
+        public List<ICopyPastePack> GetAllPacks()
+        {
+            List<ICopyPastePack> packs = new List<ICopyPastePack>();
+            int amount = this.nodes.Count;
+            for (int i = 0; i < amount; i++)
+            {
+                CopyPasteNode node = nodes[i];
+                packs.Add(node.pack);
+            }
+
+            return packs;
+        }
     }
 }
 #endif
