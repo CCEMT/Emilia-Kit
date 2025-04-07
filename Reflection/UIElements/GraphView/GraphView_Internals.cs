@@ -11,25 +11,32 @@ namespace Emilia.Reflection.Editor
             get => m_Zoomer;
             set => m_Zoomer = value;
         }
-        
+
         public float minScale_Internal
         {
             get => m_MinScale;
             set => m_MinScale = value;
         }
-        
+
         public float maxScale_Internal
         {
             get => m_MaxScale;
             set => m_MaxScale = value;
         }
-        
+
         public string clipboard_Internal
         {
             get => clipboard;
             set => clipboard = value;
         }
+
+        public string SerializedDataMimeType_Internal => m_SerializedDataMimeType;
         
+        public string GetSerializedData_Internal()
+        {
+            return clipboard.StartsWith(SerializedDataMimeType_Internal) ? clipboard.Substring(SerializedDataMimeType_Internal.Length + 1) : clipboard;
+        }
+
         public void UpdatePersistedViewTransform_Internals()
         {
             UpdatePersistedViewTransform();
