@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if UNITY_EDITOR
+using System;
 using System.Collections.Generic;
 using Sirenix.Utilities;
 using UnityEditor;
@@ -48,3 +49,4 @@ namespace Emilia.Kit
         }
     }
 }
+#endif
