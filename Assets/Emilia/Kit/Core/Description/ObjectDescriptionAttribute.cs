@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if UNITY_EDITOR
+using System;
 
 namespace Emilia.Kit
 {
@@ -12,3 +13,4 @@ namespace Emilia.Kit
         }
     }
 }
+#endif

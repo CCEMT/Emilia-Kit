@@ -1,4 +1,5 @@
-﻿using Emilia.Reflection.Editor;
+﻿#if UNITY_EDITOR
+using Emilia.Reflection.Editor;
 using UnityEngine;
 
 namespace Emilia.Kit
@@ -136,3 +137,4 @@ namespace Emilia.Kit
         public virtual void Overlay(Event evt, GUIOverlayControl overlayControl, object userData) { }
     }
 }
+#endif
