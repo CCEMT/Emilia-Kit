@@ -25,6 +25,13 @@ namespace Emilia.Kit.Editor
             typeCache[typeString] = type;
             return type;
         }
+        
+        public static Type[] GetDirectInterfaces(Type type)
+        {
+            Type[] currentInterfaces = type.GetInterfaces();
+            Type[] baseInterfaces = type.BaseType?.GetInterfaces() ?? Array.Empty<Type>();
+            return currentInterfaces.Except(baseInterfaces).ToArray();
+        }
 
         public static T GetAttribute<T>(Type type) where T : Attribute
         {
