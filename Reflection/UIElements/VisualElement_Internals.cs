@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using UnityEditor;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Emilia.Reflection.Editor
@@ -48,6 +49,20 @@ namespace Emilia.Reflection.Editor
         public static void AddStyleSheetPath_Internal(this VisualElement visualElement, string path)
         {
             visualElement.AddStyleSheetPath(path);
+        }
+
+        public static Rect? GetElementPanelOwnerObjectScreenPosition_Internal(this VisualElement visualElement)
+        {
+            GUIView ownerObject = visualElement.elementPanel.ownerObject as GUIView;
+            if (ownerObject == null) return null;
+            return ownerObject.screenPosition;
+        }
+
+        public static Rect? GetElementPanelOwnerObjectWindowPosition_Internal(this VisualElement visualElement)
+        {
+            GUIView ownerObject = visualElement.elementPanel.ownerObject as GUIView;
+            if (ownerObject == null) return null;
+            return ownerObject.windowPosition;
         }
     }
 }
