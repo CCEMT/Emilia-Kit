@@ -15,7 +15,7 @@ namespace Emilia.Kit
         /// <summary>
         /// 开始粘贴
         /// </summary>
-        public void StartPaste(object userData)
+        public List<object> StartPaste(object userData)
         {
             Undo.IncrementCurrentGroup();
 
@@ -28,6 +28,7 @@ namespace Emilia.Kit
                 if (node.input.Count == 0) nodeQueue.Enqueue(node);
             }
 
+            List<object> pasteContents = new List<object>();
             List<CopyPasteNode> successNodes = new List<CopyPasteNode>();
 
             while (nodeQueue.Count > 0)
@@ -43,6 +44,7 @@ namespace Emilia.Kit
                     CopyPasteContext copyPasteContext = new CopyPasteContext();
                     copyPasteContext.userData = userData;
                     copyPasteContext.dependency = GetInputPack(node);
+                    copyPasteContext.pasteContent = pasteContents;
 
                     node.pack.Paste(copyPasteContext);
                     successNodes.Add(node);
@@ -63,6 +65,8 @@ namespace Emilia.Kit
 
             Undo.CollapseUndoOperations(Undo.GetCurrentGroup());
             Undo.IncrementCurrentGroup();
+
+            return pasteContents;
         }
 
         private List<ICopyPastePack> GetInputPack(CopyPasteNode node)
@@ -154,7 +158,7 @@ namespace Emilia.Kit
         {
             foreach (ICopyPastePack pack in packs) RemovePack(pack);
         }
-        
+
         /// <summary>
         /// 获取所有的Pack
         /// </summary>

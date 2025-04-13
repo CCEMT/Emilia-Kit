@@ -14,6 +14,11 @@ namespace Emilia.Kit
         /// 依赖的Pack
         /// </summary>
         public List<ICopyPastePack> dependency;
+
+        /// <summary>
+        /// 粘贴的内容
+        /// </summary>
+        public List<object> pasteContent;
     }
 }
 #endif
