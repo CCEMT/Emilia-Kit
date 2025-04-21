@@ -9,12 +9,15 @@ namespace Emilia.Kit
         public static bool Search(string target, string input, bool nullResult = true, bool ignoreCase = true)
         {
             if (string.IsNullOrEmpty(input)) return nullResult;
+            if (string.IsNullOrEmpty(target)) return false;
 
-            if (ignoreCase == false) return Bdt(target, input);
+            string searchTarget = ignoreCase ? target.ToLower() : target;
+            string searchInput = ignoreCase ? input.ToLower() : input;
 
-            target = target.ToLower();
-            input = input.ToLower();
-            return Bdt(target, input);
+            if (Bdt(searchTarget, searchInput)) return true;
+
+            string pinYin = PinYinConverterUtility.ConvertToAllSpell(searchTarget);
+            return Bdt(pinYin, searchInput);
         }
 
         /// <summary>
