@@ -72,6 +72,26 @@ namespace Emilia.Kit
 
             return loads;
         }
+        
+        public static List<T> LoadAtPath<T>(string path, string searchPattern) where T : Object
+        {
+            List<T> loads = new List<T>();
+
+            string dataPath = $"{dataParentPath}/";
+            string fullPath = $"{dataPath}{path}";
+            if (Directory.Exists(fullPath) == false) return loads;
+            string[] files = Directory.GetFiles(fullPath, searchPattern, SearchOption.AllDirectories);
+            int lenght = files.Length;
+            for (int i = 0; i < lenght; i++)
+            {
+                string filePath = files[i];
+                string unityPath = filePath.Replace(dataPath, "");
+                T asset = AssetDatabase.LoadAssetAtPath<T>(unityPath);
+                loads.Add(asset);
+            }
+
+            return loads;
+        }
 
         public static void SaveAssetIntoObject(Object childAsset, Object masterAsset)
         {
