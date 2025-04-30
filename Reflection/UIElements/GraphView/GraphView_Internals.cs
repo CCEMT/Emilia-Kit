@@ -31,11 +31,8 @@ namespace Emilia.Reflection.Editor
         }
 
         public string SerializedDataMimeType_Internal => m_SerializedDataMimeType;
-        
-        public string GetSerializedData_Internal()
-        {
-            return clipboard.StartsWith(SerializedDataMimeType_Internal) ? clipboard.Substring(SerializedDataMimeType_Internal.Length + 1) : clipboard;
-        }
+
+        public string GetSerializedData_Internal() => clipboard.StartsWith(SerializedDataMimeType_Internal) ? clipboard.Substring(SerializedDataMimeType_Internal.Length + 1) : clipboard;
 
         public void UpdatePersistedViewTransform_Internals()
         {
@@ -71,5 +68,7 @@ namespace Emilia.Reflection.Editor
         {
             DuplicateSelectionCallback();
         }
+
+        public EventPropagation OnInsertNodeKeyDown_Internals(KeyDownEvent evt) => OnInsertNodeKeyDown(evt);
     }
 }

@@ -17,6 +17,8 @@ namespace Emilia.Kit.Editor
 {
     public static class EditorImGUIKit
     {
+        public readonly static Rect DummyRect = new Rect(0, 0, 1, 1);
+        
         public static EditorWindow GetImGUIWindow()
         {
             IMGUIContainer currentImguiContainer = UIElementsUtility_Internals.GetCurrentIMGUIContainer();
