@@ -13,6 +13,8 @@ namespace Emilia.Variables.Editor
     [Serializable]
     public class EditorParameter
     {
+        public const string DragAndDropKey = "EditorParameter";
+        
         [HideInInspector]
         public string key;
 
