@@ -14,10 +14,28 @@ namespace Emilia.Kit.Editor
         static void InstallationHook()
         {
             Type graphViewType = typeof(GraphView);
+
+            HookUpdateContentZoomer(graphViewType);
+            HookOnKeyDownShortcut(graphViewType);
+        }
+
+        private static void HookUpdateContentZoomer(Type graphViewType)
+        {
             MethodInfo methodInfo = graphViewType.GetMethod("UpdateContentZoomer", BindingFlags.Instance | BindingFlags.NonPublic);
 
             Type graphViewHookType = typeof(GraphView_Hook);
             MethodInfo hookInfo = graphViewHookType.GetMethod(nameof(UpdateContentZoomer_Hook), BindingFlags.Instance | BindingFlags.NonPublic);
+
+            MethodHook hook = new MethodHook(methodInfo, hookInfo, null);
+            hook.Install();
+        }
+
+        private static void HookOnKeyDownShortcut(Type graphViewType)
+        {
+            MethodInfo methodInfo = graphViewType.GetMethod("OnKeyDownShortcut", BindingFlags.Instance | BindingFlags.NonPublic);
+
+            Type graphViewHookType = typeof(GraphView_Hook);
+            MethodInfo hookInfo = graphViewHookType.GetMethod(nameof(OnKeyDownShortcut_Hook), BindingFlags.Instance | BindingFlags.NonPublic);
 
             MethodHook hook = new MethodHook(methodInfo, hookInfo, null);
             hook.Install();
@@ -49,9 +67,39 @@ namespace Emilia.Kit.Editor
             ValidateTransform();
         }
 
-        protected virtual bool OnUpdateContentZoomer()
+        private void OnKeyDownShortcut_Hook(KeyDownEvent evt)
         {
-            return false;
+            object result = ReflectUtility.Invoke(this, "OverrideOnKeyDownShortcut", new object[] {evt});
+            if (result is true) return;
+
+            if (! this.isReframable || this.panel.GetCapturingElement(PointerId.mousePointerId) != null) return;
+
+            EventPropagation eventPropagation = EventPropagation.Continue;
+            switch (evt.character)
+            {
+                case ' ':
+                    eventPropagation = this.OnInsertNodeKeyDown_Internals(evt);
+                    break;
+                case '[':
+                    eventPropagation = this.FramePrev();
+                    break;
+                case ']':
+                    eventPropagation = this.FrameNext();
+                    break;
+                case 'a':
+                    eventPropagation = this.FrameAll();
+                    break;
+                case 'o':
+                    eventPropagation = this.FrameOrigin();
+                    break;
+            }
+            if (eventPropagation != EventPropagation.Stop) return;
+            evt.StopPropagation();
+            if (evt.imguiEvent != null) evt.imguiEvent.Use();
         }
+
+        protected virtual bool OverrideUpdateContentZoomer() => false;
+
+        protected virtual bool OverrideOnKeyDownShortcut(KeyDownEvent evt) => false;
     }
 }
