@@ -10,10 +10,7 @@ namespace Emilia.Reflection.Editor
 
         public static float SingleLineHeight_Internal => EditorGUI.kSingleLineHeight;
 
-        public static bool IsEditingTextField_Internal()
-        {
-            return EditorGUI.IsEditingTextField();
-        }
+        public static bool IsEditingTextField_Internal() => EditorGUI.IsEditingTextField();
 
         public static void DrawOutline_Internal(Rect rect, float size, Color color)
         {
@@ -29,18 +26,16 @@ namespace Emilia.Reflection.Editor
             Rect position,
             GUIContent label,
             double value,
-            GUIStyle style)
-        {
-            return EditorGUI.DelayedDoubleFieldInternal(position, label, value, style);
-        }
+            GUIStyle style) =>
+            EditorGUI.DelayedDoubleFieldInternal(position, label, value, style);
 
         public static int DelayedIntField_Internal(
             Rect position,
             GUIContent label,
             int value,
-            GUIStyle style)
-        {
-            return EditorGUI.DelayedIntFieldInternal(position, label, value, style);
-        }
+            GUIStyle style) =>
+            EditorGUI.DelayedIntFieldInternal(position, label, value, style);
+
+        public static string TextField_Internal(int id, Rect position, GUIContent label, string text, GUIStyle style) => EditorGUI.TextFieldInternal(id, position, label, text, style);
     }
 }
