@@ -21,6 +21,7 @@ namespace Emilia.Kit.Editor
                 if (unityObject != null) allAsset.Add(unityObject);
 
                 List<Object> childAssets = currentAsset.GetChildren();
+                if (childAssets == null) continue;
                 int amount = childAssets.Count;
                 for (int i = 0; i < amount; i++)
                 {
