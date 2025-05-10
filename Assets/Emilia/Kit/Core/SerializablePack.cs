@@ -6,7 +6,7 @@ using Object = UnityEngine.Object;
 
 namespace Emilia.Kit
 {
-    public static class SerializableUtility
+    public static class JsonSerializableUtility
     {
         public static string ToJson<T>(T target)
         {

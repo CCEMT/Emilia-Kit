@@ -9,12 +9,12 @@ namespace Emilia.Kit
         {
             string json = EditorPrefs.GetString(key);
             if (string.IsNullOrEmpty(json)) return default;
-            return SerializableUtility.FromJson<T>(json);
+            return JsonSerializableUtility.FromJson<T>(json);
         }
 
         public static void SetValue<T>(string key, T value)
         {
-            string json = SerializableUtility.ToJson(value);
+            string json = JsonSerializableUtility.ToJson(value);
             EditorPrefs.SetString(key, json);
         }
 
