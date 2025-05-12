@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿#if UNITY_EDITOR
+using System.Collections.Generic;
 using Sirenix.OdinInspector.Editor;
 using UnityEngine;
 
@@ -65,3 +66,4 @@ namespace Emilia.Kit
         }
     }
 }
+#endif
