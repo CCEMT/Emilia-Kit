@@ -106,6 +106,11 @@ namespace Emilia.Kit.Editor
                 if (window != null) window.Repaint();
             }
         }
+        public static void ShowNotification(string tips)
+        {
+            EditorWindow window = GetImGUIWindow();
+            if (window != null) window.ShowNotification(new GUIContent(tips));
+        }
 
         public static void ShowTypePopup<T>(Func<Type, string> nameGetter, Action<Type> onSelector)
         {
