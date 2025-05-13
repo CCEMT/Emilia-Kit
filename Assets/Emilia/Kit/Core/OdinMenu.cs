@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Sirenix.OdinInspector.Editor;
+using Sirenix.Utilities;
+using UnityEditor;
 using UnityEngine;
 using Action = System.Action;
 
@@ -77,6 +79,36 @@ namespace Emilia.Kit
         public void Clear()
         {
             items.Clear();
+        }
+        
+        public static void ShowInPopupType<T>(Action<Type> onSelected)
+        {
+            ShowInPopupType<T>("选择", onSelected);
+        }
+
+        public static void ShowInPopupType<T>(string title, Action<Type> onSelected)
+        {
+            ShowInPopupType<T>(title, 200f, onSelected);
+        }
+
+        public static void ShowInPopupType<T>(string title, float width, Action<Type> onSelected)
+        {
+            OdinMenu menu = new(title);
+
+            IList<Type> types = TypeCache.GetTypesDerivedFrom<T>();
+            for (int i = 0; i < types.Count; i++)
+            {
+                Type type = types[i];
+                if (type.IsAbstract || type.IsInterface) continue;
+
+                string displayName = type.Name;
+                TextAttribute textAttribute = type.GetCustomAttribute<TextAttribute>(true);
+                if (textAttribute != null) displayName = textAttribute.text;
+
+                menu.AddItem(displayName, () => onSelected(type));
+            }
+
+            menu.ShowInPopup(width);
         }
     }
 }
