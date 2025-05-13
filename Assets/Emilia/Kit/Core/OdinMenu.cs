@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Emilia.Kit.Editor;
 using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities;
 using UnityEditor;
@@ -80,7 +81,22 @@ namespace Emilia.Kit
         {
             items.Clear();
         }
-        
+
+        public static void ShowInPopupObject<T>(Action<T> onSelected)
+        {
+            ShowInPopupObject<T>("选择", onSelected);
+        }
+
+        public static void ShowInPopupObject<T>(string title, Action<T> onSelected)
+        {
+            ShowInPopupObject<T>(title, 200f, onSelected);
+        }
+
+        public static void ShowInPopupObject<T>(string title, float width, Action<T> onSelected)
+        {
+            ShowInPopupType<T>(title, width, (type) => { onSelected?.Invoke((T) ReflectUtility.CreateInstance(type)); });
+        }
+
         public static void ShowInPopupType<T>(Action<Type> onSelected)
         {
             ShowInPopupType<T>("选择", onSelected);
