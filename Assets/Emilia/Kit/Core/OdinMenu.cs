@@ -67,6 +67,7 @@ namespace Emilia.Kit
                 new GenericSelectorItem<Action>($"{itemName}", () => items[itemName].action(items[itemName].userData)));
 
             GenericSelector<Action> customGenericSelector = new(title, false, customCollection);
+            customGenericSelector.SelectionTree.Config.SearchFunction = item => SearchUtility.Search(item.SearchString, customGenericSelector.SelectionTree.Config.SearchTerm);
             customGenericSelector.EnableSingleClickToSelect();
 
             customGenericSelector.SelectionChanged += ints => {
