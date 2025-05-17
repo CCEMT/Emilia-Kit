@@ -2,6 +2,6 @@
 {
     public interface IHierarchyAssetMessageHandle
     {
-        void MessageHandle(IHierarchyAsset sender, object arg);
+        void MessageHandle(IHierarchyAsset thisAsset, IHierarchyAsset sender, object arg);
     }
 }

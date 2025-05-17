@@ -13,13 +13,13 @@ namespace Emilia.Kit
 
         public static void SendMessageToParent(this IHierarchyAsset hierarchyAsset, string message, object arg = null)
         {
-            IHierarchyAsset parent = hierarchyAsset.parent;
+            IHierarchyAsset parent = hierarchyAsset;
             while (parent != null)
             {
                 IHierarchyAssetMessageHandle handle = HierarchyAssetMessageHandleUtility.GetHandle(parent.GetType(), message);
                 if (handle != null)
                 {
-                    handle.MessageHandle(hierarchyAsset, arg);
+                    handle.MessageHandle(parent, hierarchyAsset, arg);
                     return;
                 }
 
@@ -27,7 +27,7 @@ namespace Emilia.Kit
             }
         }
 
-        public static void SendMessageToChildren(this IHierarchyAsset hierarchyAsset, string message, object arg = null)
+        public static void SendMessageToChildrenForeword(this IHierarchyAsset hierarchyAsset, string message, object arg = null)
         {
             Queue<IHierarchyAsset> queue = new();
             queue.Enqueue(hierarchyAsset);
@@ -35,7 +35,7 @@ namespace Emilia.Kit
             {
                 IHierarchyAsset currentAsset = queue.Dequeue();
                 IHierarchyAssetMessageHandle handle = HierarchyAssetMessageHandleUtility.GetHandle(currentAsset.GetType(), message);
-                if (handle != null) handle.MessageHandle(hierarchyAsset, arg);
+                if (handle != null) handle.MessageHandle(currentAsset, hierarchyAsset, arg);
 
                 IReadOnlyList<IHierarchyAsset> children = currentAsset.children;
                 if (children == null) continue;
@@ -46,6 +46,28 @@ namespace Emilia.Kit
                     if (child == null) continue;
                     queue.Enqueue(child);
                 }
+            }
+        }
+
+        public static void SendMessageToChildrenBackword(this IHierarchyAsset hierarchyAsset, string message, object arg = null)
+        {
+            Queue<IHierarchyAsset> queue = new();
+            queue.Enqueue(hierarchyAsset);
+            while (queue.Count > 0)
+            {
+                IHierarchyAsset currentAsset = queue.Dequeue();
+                IReadOnlyList<IHierarchyAsset> children = currentAsset.children;
+                if (children == null) continue;
+                int amount = children.Count;
+                for (int i = 0; i < amount; i++)
+                {
+                    IHierarchyAsset child = children[i];
+                    if (child == null) continue;
+                    queue.Enqueue(child);
+                }
+
+                IHierarchyAssetMessageHandle handle = HierarchyAssetMessageHandleUtility.GetHandle(currentAsset.GetType(), message);
+                if (handle != null) handle.MessageHandle(currentAsset, hierarchyAsset, arg);
             }
         }
     }
