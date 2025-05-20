@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿#if UNITY_EDITOR
+using System.Collections.Generic;
 
 namespace Emilia.Kit
 {
@@ -72,3 +73,4 @@ namespace Emilia.Kit
         }
     }
 }
+#endif
