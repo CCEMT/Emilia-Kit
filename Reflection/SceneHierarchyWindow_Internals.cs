@@ -29,5 +29,15 @@ namespace Emilia.Reflection.Editor
         }
 
         public static EditorWindow GetSceneHierarchyWindowToFocusForNewGameObjects_Internals() => GetSceneHierarchyWindowToFocusForNewGameObjects();
+
+        public static void SetExpandedRecursive_Internals(int id, bool expand)
+        {
+            lastInteractedHierarchyWindow.SetExpandedRecursive(id, expand);
+        }
+
+        public static void SetExpanded_Internals(int id, bool expand)
+        {
+            lastInteractedHierarchyWindow.SetExpanded(id, expand);
+        }
     }
 }

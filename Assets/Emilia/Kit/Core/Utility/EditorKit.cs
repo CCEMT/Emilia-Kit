@@ -1,6 +1,7 @@
 ﻿#if UNITY_EDITOR
 using System;
 using System.Text.RegularExpressions;
+using Emilia.Reflection.Editor;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEditor;
@@ -66,11 +67,27 @@ namespace Emilia.Kit
                 Object.DestroyImmediate(previewGameObject);
             }
         }
-        
+
         public static void SetScenePicking(GameObject[] gameObjects, bool isEnable, bool includeDescendants)
         {
             if (isEnable) SceneVisibilityManager.instance.EnablePicking(gameObjects, includeDescendants);
             else SceneVisibilityManager.instance.DisablePicking(gameObjects, includeDescendants);
+        }
+
+        public static void SetSceneExpanded(GameObject[] gameObjects, bool expand, bool includeDescendants)
+        {
+            int count = gameObjects.Length;
+
+            for (int i = 0; i < count; i++)
+            {
+                GameObject gameObject = gameObjects[i];
+                if (gameObject == null) continue;
+
+                int id = gameObject.GetInstanceID();
+
+                if (includeDescendants) SceneHierarchyWindow_Internals.SetExpandedRecursive_Internals(id, expand);
+                else SceneHierarchyWindow_Internals.SetExpanded_Internals(id, expand);
+            }
         }
 
         [HideMonoScript]

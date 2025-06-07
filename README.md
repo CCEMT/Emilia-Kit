@@ -13,6 +13,7 @@ Emilia系列库的通用工具包
 * Odin序列化拓展实现 根据Tag进行序列化
 * 第三方库Roslyn
 * 第三方库UnityHook
+* 第三方库UnityMarkdownViewer
 * 第三方库TrueSync的定点数实现
 
 ## DataBuildPipeline（数据构建管线）
