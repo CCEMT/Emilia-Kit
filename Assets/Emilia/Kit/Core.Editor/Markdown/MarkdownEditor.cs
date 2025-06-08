@@ -35,8 +35,8 @@ namespace MG.MDV
 
         private void LoadSkin()
         {
-            if (SkinLight == null) SkinLight = ResourceUtility.LoadResource<GUISkin>("GUISkin/MarkdownSkinLight.guiskin");
-            if (this.SkinDark == null) SkinDark = ResourceUtility.LoadResource<GUISkin>("GUISkin/MarkdownSkinDark.guiskin");
+            SkinLight = ResourceUtility.LoadResource<GUISkin>("GUISkin/MarkdownSkinLight.guiskin");
+            SkinDark = ResourceUtility.LoadResource<GUISkin>("GUISkin/MarkdownSkinDark.guiskin");
         }
 
         protected void OnDisable()

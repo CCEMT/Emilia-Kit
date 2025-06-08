@@ -26,8 +26,8 @@ namespace Emilia.Kit
                     ResourceFolder resourceFolder = resourceContainer.resourceFolders[j];
 
                     string filterPath = path;
-                    if (string.IsNullOrEmpty($"{resourceFolder.pathFilter}/") == false) filterPath = path.Replace($"{resourceFolder.pathFilter}/", "");
-
+                    if (string.IsNullOrEmpty(resourceFolder.pathFilter) == false) filterPath = path.Replace($"{resourceFolder.pathFilter}/", "");
+                   
                     string fullPath = $"{resourceFolder.folderAsset.unityPath}/{filterPath}";
                     T resource = AssetDatabase.LoadAssetAtPath<T>(fullPath);
                     if (resource == default) continue;
