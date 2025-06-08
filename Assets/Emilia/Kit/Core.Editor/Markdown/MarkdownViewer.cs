@@ -21,6 +21,7 @@ namespace MG.MDV
 
         private Layout          mLayout          = null;
         private bool            mRaw             = false;
+        private bool            mDisplayRawButton= true;
 
         private static History  mHistory         = new History();
         
@@ -28,6 +29,12 @@ namespace MG.MDV
         {
             get { return mRaw; }
             set { mRaw = value; }
+        }
+        
+        public bool displayRawButton
+        {
+            get { return mDisplayRawButton; }
+            set { mDisplayRawButton = value; }
         }
 
         public MarkdownViewer( GUISkin skin, string path, string content )
@@ -152,9 +159,12 @@ namespace MG.MDV
             var size   = style.fixedHeight;
             var btn    = new Rect( Margin.x + contentWidth - size, Margin.y, size, size );
 
-            if( GUI.Button( btn, string.Empty, GUI.skin.GetStyle( mRaw ? "btnRaw" : "btnFile" ) ) )
+            if (this.mDisplayRawButton)
             {
-                mRaw = !mRaw;
+                if( GUI.Button( btn, string.Empty, GUI.skin.GetStyle( mRaw ? "btnRaw" : "btnFile" ) ) )
+                {
+                    mRaw = !mRaw;
+                }
             }
 
             if( mRaw == false )
