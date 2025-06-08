@@ -121,6 +121,12 @@ namespace MG.MDV
 
         //------------------------------------------------------------------------------
 
+        public void ResetContent(string content)
+        {
+            this.mText = content;
+            mLayout = ParseDocument();
+        }
+
         public void Draw()
         {
             GUI.skin    = mSkin;
@@ -198,13 +204,6 @@ namespace MG.MDV
             switch( Event.current.type )
             {
                 case EventType.Ignore:
-                    break;
-
-                case EventType.ContextClick:
-                    var menu = new GenericMenu();
-                    menu.AddItem( new GUIContent( "View Source" ), false, () => mRaw = !mRaw );
-                    menu.ShowAsContext();
-
                     break;
 
                 case EventType.Layout:
