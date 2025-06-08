@@ -70,5 +70,15 @@ namespace Emilia.Reflection.Editor
         }
 
         public EventPropagation OnInsertNodeKeyDown_Internals(KeyDownEvent evt) => OnInsertNodeKeyDown(evt);
+
+        public void OnValidateCommand_Internals(ValidateCommandEvent evt)
+        {
+            OnValidateCommand(evt);
+        }
+
+        public void OnExecuteCommand_Internals(ExecuteCommandEvent evt)
+        {
+            OnExecuteCommand(evt);
+        }
     }
 }
