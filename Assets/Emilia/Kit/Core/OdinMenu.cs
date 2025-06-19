@@ -8,6 +8,7 @@ using Sirenix.Utilities;
 using UnityEditor;
 using UnityEngine;
 using Action = System.Action;
+using Object = UnityEngine.Object;
 
 namespace Emilia.Kit
 {
@@ -123,6 +124,91 @@ namespace Emilia.Kit
                 if (textAttribute != null) displayName = textAttribute.text;
 
                 menu.AddItem(displayName, () => onSelected(type));
+            }
+
+            menu.ShowInPopup(width);
+        }
+
+        public static void ShowInPopupScriptableObject<T>(string path, Action<T> onSelected) where T : ScriptableObject
+        {
+            ShowInPopupScriptableObject(path, "选择", onSelected);
+        }
+
+        public static void ShowInPopupScriptableObject<T>(string path, string title, Action<T> onSelected) where T : ScriptableObject
+        {
+            ShowInPopupScriptableObject(path, title, 200f, onSelected);
+        }
+
+        public static void ShowInPopupScriptableObject<T>(string path, string title, float width, Action<T> onSelected) where T : ScriptableObject
+        {
+            OdinMenu menu = new(title);
+
+            List<T> resources = EditorAssetKit.LoadAssetAtPath<T>(path);
+            for (int i = 0; i < resources.Count; i++)
+            {
+                T asset = resources[i];
+                if (asset == null) continue;
+
+                string displayName = asset.name;
+                string description = ObjectDescriptionUtility.GetDescription(asset);
+                if (string.IsNullOrEmpty(description) == false) displayName += $"({description})";
+
+                menu.AddItem(displayName, () => onSelected(asset));
+            }
+
+            menu.ShowInPopup(width);
+        }
+
+        public static void ShowInPopupPrefab(string path, Action<GameObject> onSelected)
+        {
+            ShowInPopupPrefab(path, "选择", onSelected);
+        }
+
+        public static void ShowInPopupPrefab(string path, string title, Action<GameObject> onSelected)
+        {
+            ShowInPopupPrefab(path, title, 200f, onSelected);
+        }
+
+        public static void ShowInPopupPrefab(string path, string title, float width, Action<GameObject> onSelected)
+        {
+            OdinMenu menu = new(title);
+
+            List<GameObject> resources = EditorAssetKit.LoadAtPath<GameObject>(path, "*.prefab");
+            for (int i = 0; i < resources.Count; i++)
+            {
+                GameObject prefab = resources[i];
+                if (prefab == null) continue;
+
+                string displayName = prefab.name;
+                IObjectDescription descriptionComponent = prefab.GetComponent<IObjectDescription>();
+                if (descriptionComponent != null) displayName += $"({descriptionComponent.description})";
+
+                menu.AddItem(displayName, () => onSelected(prefab));
+            }
+
+            menu.ShowInPopup(width);
+        }
+
+        public static void ShowInPopupAsset<T>(string path, string searchPattern, Action<T> onSelected) where T : Object
+        {
+            ShowInPopupAsset(path, searchPattern, "选择", onSelected);
+        }
+
+        public static void ShowInPopupAsset<T>(string path, string searchPattern, string title, Action<T> onSelected) where T : Object
+        {
+            ShowInPopupAsset(path, searchPattern, title, 200f, onSelected);
+        }
+
+        public static void ShowInPopupAsset<T>(string path, string searchPattern, string title, float width, Action<T> onSelected) where T : Object
+        {
+            OdinMenu menu = new(title);
+
+            List<T> resources = EditorAssetKit.LoadAtPath<T>(path, searchPattern);
+            for (int i = 0; i < resources.Count; i++)
+            {
+                T asset = resources[i];
+                if (asset == null) continue;
+                menu.AddItem(asset.name, () => onSelected(asset));
             }
 
             menu.ShowInPopup(width);
