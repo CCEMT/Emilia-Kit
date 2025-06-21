@@ -129,17 +129,47 @@ namespace Emilia.Kit
             menu.ShowInPopup(width);
         }
 
-        public static void ShowInPopupScriptableObject<T>(string path, Action<T> onSelected) where T : ScriptableObject
+        public static void ShowInPopupScriptableObject<T>(Action<T> onSelected) where T : ScriptableObject
         {
-            ShowInPopupScriptableObject(path, "选择", onSelected);
+            ShowInPopupScriptableObject<T>("选择", onSelected);
         }
 
-        public static void ShowInPopupScriptableObject<T>(string path, string title, Action<T> onSelected) where T : ScriptableObject
+        public static void ShowInPopupScriptableObject<T>(string title, Action<T> onSelected) where T : ScriptableObject
         {
-            ShowInPopupScriptableObject(path, title, 200f, onSelected);
+            ShowInPopupScriptableObject<T>(title, 200f, onSelected);
         }
 
-        public static void ShowInPopupScriptableObject<T>(string path, string title, float width, Action<T> onSelected) where T : ScriptableObject
+        public static void ShowInPopupScriptableObject<T>(string title, float width, Action<T> onSelected) where T : ScriptableObject
+        {
+            OdinMenu menu = new(title);
+
+            T[] resources = EditorAssetKit.GetEditorResources<T>();
+            for (int i = 0; i < resources.Length; i++)
+            {
+                T asset = resources[i];
+                if (asset == null) continue;
+
+                string displayName = asset.name;
+                string description = ObjectDescriptionUtility.GetDescription(asset);
+                if (string.IsNullOrEmpty(description) == false) displayName += $"({description})";
+
+                menu.AddItem(displayName, () => onSelected(asset));
+            }
+
+            menu.ShowInPopup(width);
+        }
+
+        public static void ShowInPopupScriptableObjectPath<T>(string path, Action<T> onSelected) where T : ScriptableObject
+        {
+            ShowInPopupScriptableObjectPath(path, "选择", onSelected);
+        }
+
+        public static void ShowInPopupScriptableObjectPath<T>(string path, string title, Action<T> onSelected) where T : ScriptableObject
+        {
+            ShowInPopupScriptableObjectPath(path, title, 200f, onSelected);
+        }
+
+        public static void ShowInPopupScriptableObjectPath<T>(string path, string title, float width, Action<T> onSelected) where T : ScriptableObject
         {
             OdinMenu menu = new(title);
 
