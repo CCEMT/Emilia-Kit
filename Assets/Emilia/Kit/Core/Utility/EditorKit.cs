@@ -51,10 +51,10 @@ namespace Emilia.Kit
             return strRet;
         }
 
-        public static string GetWholePath(Transform currentGameObject, GameObject target)
+        public static string GetWholePath(Transform current, Transform target)
         {
-            if (currentGameObject.parent == null || currentGameObject.parent.gameObject == target) return currentGameObject.name;
-            return GetWholePath(currentGameObject.parent, target) + "/" + currentGameObject.name;
+            if (current.parent == null || current.parent == target) return current.name;
+            return GetWholePath(current.parent, target) + "/" + current.name;
         }
 
         public static void ClearScene(Scene scene)

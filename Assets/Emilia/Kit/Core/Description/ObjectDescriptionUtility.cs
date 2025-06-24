@@ -45,6 +45,9 @@ namespace Emilia.Kit
             IObjectDescription objectDescription = obj as IObjectDescription;
             if (objectDescription != null) return objectDescription.description;
 
+            TextAttribute textAttribute = type.GetCustomAttribute<TextAttribute>();
+            if (textAttribute != null) return textAttribute.text;
+
             return string.Empty;
         }
     }
