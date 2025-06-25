@@ -265,7 +265,12 @@ namespace Emilia.Kit
             {
                 T asset = resources[i];
                 if (asset == null) continue;
-                list.Add(asset.name, asset);
+
+                string displayName = asset.name;
+                string description = ObjectDescriptionUtility.GetDescription(asset);
+                if (string.IsNullOrEmpty(description) == false) displayName += $"({description})";
+
+                list.Add(displayName, asset);
             }
 
             return list;
@@ -281,8 +286,12 @@ namespace Emilia.Kit
                 T1 asset = resources[i];
                 if (asset == null) continue;
 
+                string displayName = asset.name;
+                string description = ObjectDescriptionUtility.GetDescription(asset);
+                if (string.IsNullOrEmpty(description) == false) displayName += $"({description})";
+
                 T2 value = onSelect(asset);
-                list.Add(asset.name, value);
+                list.Add(displayName, value);
             }
 
             return list;
@@ -297,7 +306,12 @@ namespace Emilia.Kit
             {
                 T asset = resources[i];
                 if (asset == null) continue;
-                list.Add(asset.name, asset.name);
+
+                string displayName = asset.name;
+                string description = ObjectDescriptionUtility.GetDescription(asset);
+                if (string.IsNullOrEmpty(description) == false) displayName += $"({description})";
+
+                list.Add(displayName, asset.name);
             }
 
             return list;

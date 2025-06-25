@@ -26,6 +26,8 @@ namespace Emilia.Kit
 
         public float defaultWidth { get; set; } = 200f;
 
+        public bool isEnablePinYinSearch { get; set; } = true;
+
         public OdinMenu(string name = "选择")
         {
             title = name;
@@ -68,7 +70,16 @@ namespace Emilia.Kit
                 new GenericSelectorItem<Action>($"{itemName}", () => items[itemName].action(items[itemName].userData)));
 
             GenericSelector<Action> customGenericSelector = new(title, false, customCollection);
-            customGenericSelector.SelectionTree.Config.SearchFunction = item => SearchUtility.Search(item.SearchString, customGenericSelector.SelectionTree.Config.SearchTerm);
+
+            if (isEnablePinYinSearch)
+            {
+                customGenericSelector.SelectionTree.Config.SearchFunction = item => {
+                    string target = item.SearchString;
+                    string input = customGenericSelector.SelectionTree.Config.SearchTerm;
+                    return SearchUtility.Search(target, input);
+                };
+            }
+
             customGenericSelector.EnableSingleClickToSelect();
 
             customGenericSelector.SelectionChanged += ints => {
@@ -238,7 +249,12 @@ namespace Emilia.Kit
             {
                 T asset = resources[i];
                 if (asset == null) continue;
-                menu.AddItem(asset.name, () => onSelected(asset));
+
+                string displayName = asset.name;
+                string description = ObjectDescriptionUtility.GetDescription(asset);
+                if (string.IsNullOrEmpty(description) == false) displayName += $"({description})";
+
+                menu.AddItem(displayName, () => onSelected(asset));
             }
 
             menu.ShowInPopup(width);
