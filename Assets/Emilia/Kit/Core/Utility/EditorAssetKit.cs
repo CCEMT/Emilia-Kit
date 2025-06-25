@@ -123,9 +123,9 @@ namespace Emilia.Kit
         {
             if (gameObject == null) return null;
             if (PrefabUtility.IsPartOfPrefabAsset(gameObject)) return gameObject;
-            PrefabStage prefabStage = PrefabStageUtility.GetPrefabStage(gameObject);
-            if (prefabStage != null) return prefabStage.prefabContentsRoot;
             if (PrefabUtility.IsPartOfPrefabInstance(gameObject)) return PrefabUtility.GetCorrespondingObjectFromOriginalSource(gameObject);
+            PrefabStage prefabStage = PrefabStageUtility.GetPrefabStage(gameObject);
+            if (prefabStage != null) return AssetDatabase.LoadAssetAtPath<GameObject>(prefabStage.assetPath);
             return null;
         }
         
