@@ -10,7 +10,7 @@ namespace Emilia.Kit
 {
     public static class ValueDropdownListUtility
     {
-        public static ValueDropdownList<T> GetValueDropdownListScriptableObject<T>(string path) where T : ScriptableObject
+        public static ValueDropdownList<T> GetScriptableObject<T>(string path) where T : ScriptableObject
         {
             ValueDropdownList<T> list = new ValueDropdownList<T>();
 
@@ -30,7 +30,7 @@ namespace Emilia.Kit
             return list;
         }
 
-        public static ValueDropdownList<T2> GetValueDropdownListScriptableObject<T1, T2>(string path, Func<T1, T2> onSelect) where T1 : ScriptableObject
+        public static ValueDropdownList<T2> GetScriptableObject<T1, T2>(string path, Func<T1, T2> onSelect) where T1 : ScriptableObject
         {
             ValueDropdownList<T2> list = new ValueDropdownList<T2>();
 
@@ -51,7 +51,7 @@ namespace Emilia.Kit
             return list;
         }
 
-        public static ValueDropdownList<T> GetValueDropdownListScriptableObject<T>() where T : ScriptableObject
+        public static ValueDropdownList<T> GetScriptableObject<T>() where T : ScriptableObject
         {
             ValueDropdownList<T> list = new ValueDropdownList<T>();
 
@@ -71,7 +71,7 @@ namespace Emilia.Kit
             return list;
         }
 
-        public static ValueDropdownList<T2> GetValueDropdownListScriptableObject<T1, T2>(Func<T1, T2> onSelect) where T1 : ScriptableObject
+        public static ValueDropdownList<T2> GetScriptableObject<T1, T2>(Func<T1, T2> onSelect) where T1 : ScriptableObject
         {
             ValueDropdownList<T2> list = new ValueDropdownList<T2>();
 
@@ -92,7 +92,7 @@ namespace Emilia.Kit
             return list;
         }
 
-        public static ValueDropdownList<string> GetValueDropdownListScriptableObjectName<T>() where T : ScriptableObject
+        public static ValueDropdownList<string> GetScriptableObjectName<T>() where T : ScriptableObject
         {
             ValueDropdownList<string> list = new ValueDropdownList<string>();
 
@@ -112,7 +112,7 @@ namespace Emilia.Kit
             return list;
         }
 
-        public static ValueDropdownList<string> GetValueDropdownListScriptableObjectName<T>(string path) where T : ScriptableObject
+        public static ValueDropdownList<string> GetScriptableObjectName<T>(string path) where T : ScriptableObject
         {
             ValueDropdownList<string> list = new ValueDropdownList<string>();
 
@@ -132,7 +132,7 @@ namespace Emilia.Kit
             return list;
         }
 
-        public static ValueDropdownList<string> GetValueDropdownListScriptableObjectPath<T>() where T : ScriptableObject
+        public static ValueDropdownList<string> GetScriptableObjectPath<T>() where T : ScriptableObject
         {
             ValueDropdownList<string> list = new ValueDropdownList<string>();
 
@@ -153,7 +153,7 @@ namespace Emilia.Kit
             return list;
         }
 
-        public static ValueDropdownList<string> GetValueDropdownListScriptableObjectPath<T>(string path) where T : ScriptableObject
+        public static ValueDropdownList<string> GetScriptableObjectPath<T>(string path) where T : ScriptableObject
         {
             ValueDropdownList<string> list = new ValueDropdownList<string>();
 
@@ -174,7 +174,7 @@ namespace Emilia.Kit
             return list;
         }
 
-        public static ValueDropdownList<GameObject> GetValueDropdownListPrefab(string path)
+        public static ValueDropdownList<GameObject> GetPrefab(string path)
         {
             ValueDropdownList<GameObject> list = new ValueDropdownList<GameObject>();
 
@@ -194,7 +194,7 @@ namespace Emilia.Kit
             return list;
         }
 
-        public static ValueDropdownList<T> GetValueDropdownListPrefab<T>(string path, Func<GameObject, T> onSelect)
+        public static ValueDropdownList<T> GetPrefab<T>(string path, Func<GameObject, T> onSelect)
         {
             ValueDropdownList<T> list = new ValueDropdownList<T>();
 
@@ -215,7 +215,7 @@ namespace Emilia.Kit
             return list;
         }
 
-        public static ValueDropdownList<string> GetValueDropdownListPrefabName(string path)
+        public static ValueDropdownList<string> GetPrefabName(string path)
         {
             ValueDropdownList<string> list = new ValueDropdownList<string>();
 
@@ -235,7 +235,7 @@ namespace Emilia.Kit
             return list;
         }
 
-        public static ValueDropdownList<string> GetValueDropdownListPrefabPath(string path)
+        public static ValueDropdownList<string> GetPrefabPath(string path)
         {
             ValueDropdownList<string> list = new ValueDropdownList<string>();
 
@@ -256,7 +256,7 @@ namespace Emilia.Kit
             return list;
         }
 
-        public static ValueDropdownList<T> GetValueDropdownListAsset<T>(string path, string searchPattern) where T : Object
+        public static ValueDropdownList<T> GetAsset<T>(string path, string searchPattern) where T : Object
         {
             ValueDropdownList<T> list = new ValueDropdownList<T>();
 
@@ -276,7 +276,7 @@ namespace Emilia.Kit
             return list;
         }
 
-        public static ValueDropdownList<T2> GetValueDropdownListAsset<T1, T2>(string path, string searchPattern, Func<T1, T2> onSelect) where T1 : Object
+        public static ValueDropdownList<T2> GetAsset<T1, T2>(string path, string searchPattern, Func<T1, T2> onSelect) where T1 : Object
         {
             ValueDropdownList<T2> list = new ValueDropdownList<T2>();
 
@@ -297,7 +297,7 @@ namespace Emilia.Kit
             return list;
         }
 
-        public static ValueDropdownList<string> GetValueDropdownListAssetName<T>(string path, string searchPattern) where T : Object
+        public static ValueDropdownList<string> GetAssetName<T>(string path, string searchPattern) where T : Object
         {
             ValueDropdownList<string> list = new ValueDropdownList<string>();
 
@@ -317,7 +317,7 @@ namespace Emilia.Kit
             return list;
         }
 
-        public static ValueDropdownList<string> GetValueDropdownListAssetPath<T>(string path, string searchPattern) where T : Object
+        public static ValueDropdownList<string> GetAssetPath<T>(string path, string searchPattern) where T : Object
         {
             ValueDropdownList<string> list = new ValueDropdownList<string>();
 
