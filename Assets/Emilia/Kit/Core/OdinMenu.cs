@@ -97,17 +97,32 @@ namespace Emilia.Kit
 
         public static void ShowInPopupObject<T>(Action<T> onSelected)
         {
-            ShowInPopupObject<T>("选择", onSelected);
+            ShowInPopupObject("选择", onSelected);
+        }
+
+        public static void ShowInPopupObject(Type type, Action<object> onSelected)
+        {
+            ShowInPopupObject(type, "选择", onSelected);
         }
 
         public static void ShowInPopupObject<T>(string title, Action<T> onSelected)
         {
-            ShowInPopupObject<T>(title, 200f, onSelected);
+            ShowInPopupObject(title, 200f, onSelected);
+        }
+
+        public static void ShowInPopupObject(Type type, string title, Action<object> onSelected)
+        {
+            ShowInPopupObject(type, title, 200f, onSelected);
         }
 
         public static void ShowInPopupObject<T>(string title, float width, Action<T> onSelected)
         {
-            ShowInPopupType<T>(title, width, (type) => { onSelected?.Invoke((T) ReflectUtility.CreateInstance(type)); });
+            ShowInPopupObject(typeof(T), title, width, (obj) => { onSelected?.Invoke((T) obj); });
+        }
+
+        public static void ShowInPopupObject(Type objectType, string title, float width, Action<object> onSelected)
+        {
+            ShowInPopupType(objectType, title, width, (type) => { onSelected?.Invoke(ReflectUtility.CreateInstance(type)); });
         }
 
         public static void ShowInPopupType<T>(Action<Type> onSelected)
@@ -115,16 +130,31 @@ namespace Emilia.Kit
             ShowInPopupType<T>("选择", onSelected);
         }
 
+        public static void ShowInPopupType(Type type, Action<Type> onSelected)
+        {
+            ShowInPopupType(type, "选择", onSelected);
+        }
+
         public static void ShowInPopupType<T>(string title, Action<Type> onSelected)
         {
             ShowInPopupType<T>(title, 200f, onSelected);
         }
 
+        public static void ShowInPopupType(Type type, string title, Action<Type> onSelected)
+        {
+            ShowInPopupType(type, title, 200f, onSelected);
+        }
+
         public static void ShowInPopupType<T>(string title, float width, Action<Type> onSelected)
+        {
+            ShowInPopupType(typeof(T), title, width, onSelected);
+        }
+
+        public static void ShowInPopupType(Type objectType, string title, float width, Action<Type> onSelected)
         {
             OdinMenu menu = new(title);
 
-            IList<Type> types = TypeCache.GetTypesDerivedFrom<T>();
+            IList<Type> types = TypeCache.GetTypesDerivedFrom(objectType);
             for (int i = 0; i < types.Count; i++)
             {
                 Type type = types[i];
@@ -142,29 +172,47 @@ namespace Emilia.Kit
 
         public static void ShowInPopupScriptableObject<T>(Action<T> onSelected) where T : ScriptableObject
         {
-            ShowInPopupScriptableObject<T>("选择", onSelected);
+            ShowInPopupScriptableObject("选择", onSelected);
+        }
+
+        public static void ShowInPopupScriptableObject(Type type, Action<ScriptableObject> onSelected)
+        {
+            ShowInPopupScriptableObject(type, "选择", onSelected);
         }
 
         public static void ShowInPopupScriptableObject<T>(string title, Action<T> onSelected) where T : ScriptableObject
         {
-            ShowInPopupScriptableObject<T>(title, 200f, onSelected);
+            ShowInPopupScriptableObject(title, 200f, onSelected);
+        }
+
+        public static void ShowInPopupScriptableObject(Type type, string title, Action<ScriptableObject> onSelected)
+        {
+            ShowInPopupScriptableObject(type, title, 200f, onSelected);
         }
 
         public static void ShowInPopupScriptableObject<T>(string title, float width, Action<T> onSelected) where T : ScriptableObject
         {
+            ShowInPopupScriptableObject(typeof(T), title, width, (obj) => { onSelected?.Invoke((T) obj); });
+        }
+
+        public static void ShowInPopupScriptableObject(Type objectType, string title, float width, Action<ScriptableObject> onSelected)
+        {
             OdinMenu menu = new(title);
 
-            T[] resources = EditorAssetKit.GetEditorResources<T>();
+            Object[] resources = EditorAssetKit.GetEditorResources(objectType);
             for (int i = 0; i < resources.Length; i++)
             {
-                T asset = resources[i];
+                Object asset = resources[i];
                 if (asset == null) continue;
 
-                string displayName = asset.name;
-                string description = ObjectDescriptionUtility.GetDescription(asset);
+                ScriptableObject scriptableObject = asset as ScriptableObject;
+                if (scriptableObject == null) continue;
+
+                string displayName = scriptableObject.name;
+                string description = ObjectDescriptionUtility.GetDescription(scriptableObject);
                 if (string.IsNullOrEmpty(description) == false) displayName += $"({description})";
 
-                menu.AddItem(displayName, () => onSelected(asset));
+                menu.AddItem(displayName, () => onSelected(scriptableObject));
             }
 
             menu.ShowInPopup(width);
@@ -175,19 +223,34 @@ namespace Emilia.Kit
             ShowInPopupScriptableObjectPath(path, "选择", onSelected);
         }
 
+        public static void ShowInPopupScriptableObjectPath(string path, Action<ScriptableObject> onSelected)
+        {
+            ShowInPopupScriptableObjectPath(path, "选择", onSelected);
+        }
+
         public static void ShowInPopupScriptableObjectPath<T>(string path, string title, Action<T> onSelected) where T : ScriptableObject
+        {
+            ShowInPopupScriptableObjectPath(path, title, 200f, onSelected);
+        }
+
+        public static void ShowInPopupScriptableObjectPath(string path, string title, Action<ScriptableObject> onSelected)
         {
             ShowInPopupScriptableObjectPath(path, title, 200f, onSelected);
         }
 
         public static void ShowInPopupScriptableObjectPath<T>(string path, string title, float width, Action<T> onSelected) where T : ScriptableObject
         {
+            ShowInPopupScriptableObjectPath(path, title, width, (obj) => { onSelected?.Invoke((T) obj); });
+        }
+
+        public static void ShowInPopupScriptableObjectPath(string path, string title, float width, Action<ScriptableObject> onSelected)
+        {
             OdinMenu menu = new(title);
 
-            List<T> resources = EditorAssetKit.LoadAssetAtPath<T>(path);
+            List<ScriptableObject> resources = EditorAssetKit.LoadAssetAtPath<ScriptableObject>(path);
             for (int i = 0; i < resources.Count; i++)
             {
-                T asset = resources[i];
+                ScriptableObject asset = resources[i];
                 if (asset == null) continue;
 
                 string displayName = asset.name;
@@ -235,19 +298,34 @@ namespace Emilia.Kit
             ShowInPopupAsset(path, searchPattern, "选择", onSelected);
         }
 
+        public static void ShowInPopupAsset(string path, string searchPattern, Action<Object> onSelected)
+        {
+            ShowInPopupAsset(path, searchPattern, "选择", onSelected);
+        }
+
         public static void ShowInPopupAsset<T>(string path, string searchPattern, string title, Action<T> onSelected) where T : Object
+        {
+            ShowInPopupAsset(path, searchPattern, title, 200f, onSelected);
+        }
+
+        public static void ShowInPopupAsset(string path, string searchPattern, string title, Action<Object> onSelected)
         {
             ShowInPopupAsset(path, searchPattern, title, 200f, onSelected);
         }
 
         public static void ShowInPopupAsset<T>(string path, string searchPattern, string title, float width, Action<T> onSelected) where T : Object
         {
+            ShowInPopupAsset(path, searchPattern, title, width, (obj) => { onSelected?.Invoke((T) obj); });
+        }
+
+        public static void ShowInPopupAsset(string path, string searchPattern, string title, float width, Action<Object> onSelected)
+        {
             OdinMenu menu = new(title);
 
-            List<T> resources = EditorAssetKit.LoadAtPath<T>(path, searchPattern);
+            List<Object> resources = EditorAssetKit.LoadAtPath<Object>(path, searchPattern);
             for (int i = 0; i < resources.Count; i++)
             {
-                T asset = resources[i];
+                Object asset = resources[i];
                 if (asset == null) continue;
 
                 string displayName = asset.name;
