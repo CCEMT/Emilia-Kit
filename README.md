@@ -68,34 +68,12 @@ public class TestBuildArgs : BuildArgs
 }
 
 //构建容器 容器中包含数据构建时所需要的所有数据
+[BuildPipeline(typeof(TestBuildArgs))]//指定管线名称
 public class TestBuildContainer : BuildContainer
 {
     public TestAsset editorTestAsset;
     public TestOutputAsset outputAsset;
     ...
-}
-
-//构建管线
-[BuildPipeline(typeof(TestBuildArgs))]//指定管线名称
-public class TestBuildPipeline : UniversalBuildPipeline
-{
-    private TestBuildArgs testBuildArgs;
-
-    protected override void RunInitialize()
-    {
-        base.RunInitialize();
-        testBuildArgs = buildArgs as TestBuildArgs;
-        ...
-    }
-
-    protected override IBuildContainer CreateContainer()
-    {
-        TestBuildContainer testBuildContainer = new TestBuildContainer();
-        testBuildContainer.editorTestAsset = this.testBuildArgs.testAsset;
-        ...
-
-        return testBuildContainer;
-    }
 }
 
 //数据检测
@@ -104,8 +82,8 @@ public class TestDataDetection : IDataDetection
 {
     public bool Detection(IBuildContainer buildContainer, IBuildArgs buildArgs)
     {
-        TestBuildContainer testBuildContainer = buildContainer as TestBuildContainer;
-        if (testBuildContainer.editorTestAsset == null) return false;
+        TestBuildArgs testBuildArgs = buildArgs as TestBuildArgs;
+        if (testBuildArgs.testAsset == null) return false;
         return true;
     }
 }
@@ -114,7 +92,7 @@ public class TestDataDetection : IDataDetection
 [BuildPipeline(typeof(TestBuildArgs)), BuildSequence(1000)]//指定管线名称
 public class TestDataBuild : IDataBuild
 {
-    public void Build(IBuildContainer buildContainer, Action onFinished)
+    public void Build(IBuildContainer buildContainer, IBuildArgs buildArgs, Action onFinished)
     {
         TestBuildContainer testBuildContainer = buildContainer as TestBuildContainer;
         testBuildContainer.outputAsset = new TestOutputAsset();
