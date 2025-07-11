@@ -104,6 +104,24 @@ namespace Emilia.Kit
             return captureTexture;
         }
 
+        public static string PathToName(string path)
+        {
+            if (string.IsNullOrEmpty(path)) return path;
+            path = path.Replace("\\", "/");
+            int index = path.LastIndexOf('/');
+            if (index >= 0 && index < path.Length - 1) return path.Substring(index + 1);
+            return path;
+        }
+
+        public static string PathToCategory(string path)
+        {
+            if (string.IsNullOrEmpty(path)) return path;
+            path = path.Replace("\\", "/");
+            int index = path.LastIndexOf('/');
+            if (index > 0) return path.Substring(0, index);
+            return string.Empty;
+        }
+        
         [HideMonoScript]
         private class SelectionContainer : TitleAsset
         {
