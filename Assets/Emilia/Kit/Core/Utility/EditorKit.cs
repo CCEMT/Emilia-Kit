@@ -5,6 +5,7 @@ using Emilia.Reflection.Editor;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEditor;
+using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Object = UnityEngine.Object;
@@ -88,6 +89,19 @@ namespace Emilia.Kit
                 if (includeDescendants) SceneHierarchyWindow_Internals.SetExpandedRecursive_Internals(id, expand);
                 else SceneHierarchyWindow_Internals.SetExpanded_Internals(id, expand);
             }
+        }
+
+        public static Texture2D CaptureScreen(Rect rect)
+        {
+            int width = (int) rect.width;
+            int height = (int) rect.height;
+
+            Texture2D captureTexture = new Texture2D(width, height, TextureFormat.RGB24, false);
+
+            Color[] pixels = InternalEditorUtility.ReadScreenPixel(rect.position, width, height);
+            captureTexture.SetPixels(pixels);
+            captureTexture.Apply();
+            return captureTexture;
         }
 
         [HideMonoScript]
