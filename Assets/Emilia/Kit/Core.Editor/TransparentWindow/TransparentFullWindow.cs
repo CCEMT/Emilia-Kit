@@ -1,6 +1,5 @@
 using Sirenix.Utilities.Editor;
 using UnityEditor;
-using UnityEditorInternal;
 using UnityEngine;
 
 namespace Emilia.Kit.Editor
@@ -9,16 +8,16 @@ namespace Emilia.Kit.Editor
     {
         protected Texture2D backgroundTexture;
 
-        public virtual void OnOpen()
+        public virtual void OpenInPopup()
         {
             position = GUIHelper.GetEditorWindowRect();
             ShowPopup();
             Focus();
         }
 
-        protected virtual void OnEnable()
+        private void OnInspectorUpdate()
         {
-            backgroundTexture = CaptureScreen();
+            Repaint();
         }
 
         protected virtual void OnDisable()
@@ -30,25 +29,15 @@ namespace Emilia.Kit.Editor
 
         protected virtual void OnGUI()
         {
-            if (this.backgroundTexture != null)
+            if (this.backgroundTexture == null) this.backgroundTexture = EditorKit.CaptureScreen(GUIHelper.GetEditorWindowRect());
+            else
             {
                 Rect windowRect = new Rect(0, 0, position.width, position.height);
                 GUI.DrawTexture(windowRect, this.backgroundTexture, ScaleMode.StretchToFill);
+                OnImGUI();
             }
         }
 
-        private static Texture2D CaptureScreen()
-        {
-            Rect mainWindowPosition = GUIHelper.GetEditorWindowRect();
-            int width = (int) mainWindowPosition.width;
-            int height = (int) mainWindowPosition.height;
-
-            Texture2D captureTexture = new Texture2D(width, height, TextureFormat.RGB24, false);
-
-            Color[] pixels = InternalEditorUtility.ReadScreenPixel(mainWindowPosition.position, width, height);
-            captureTexture.SetPixels(pixels);
-            captureTexture.Apply();
-            return captureTexture;
-        }
+        protected virtual void OnImGUI() { }
     }
 }
