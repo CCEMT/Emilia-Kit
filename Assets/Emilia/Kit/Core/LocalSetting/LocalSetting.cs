@@ -6,6 +6,7 @@ namespace Emilia.Kit
     public abstract class LocalSetting<T> where T : LocalSetting<T>, new()
     {
         private const string SettingKey = "##Emilia.Kit.LocalSetting";
+        public static string key => $"{SettingKey}.{typeof(T).FullName}";
 
         private static T _instance;
 
@@ -14,8 +15,6 @@ namespace Emilia.Kit
             get
             {
                 if (_instance != null) return _instance;
-
-                string key = $"{SettingKey}.{typeof(T).FullName}";
 
                 if (OdinEditorPrefs.HasValue(key)) _instance = OdinEditorPrefs.GetValue<T>(key);
                 else
@@ -26,6 +25,11 @@ namespace Emilia.Kit
 
                 return _instance;
             }
+        }
+
+        public static void Save()
+        {
+            OdinEditorPrefs.SetValue(key, instance);
         }
     }
 }
