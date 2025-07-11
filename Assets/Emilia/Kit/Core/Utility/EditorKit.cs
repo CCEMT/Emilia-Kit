@@ -125,8 +125,8 @@ namespace Emilia.Kit
         public static void PathToNameAndCategory(string path, out string name, out string category)
         {
             if (path == null) path = string.Empty;
-
-            var index = path.LastIndexOf('/');
+            path = path.Replace("\\", "/");
+            int index = path.LastIndexOf('/');
             if (index >= 0)
             {
                 name = index == path.Length - 1 ? string.Empty : path.Substring(index + 1);
