@@ -33,6 +33,36 @@ namespace Emilia.Kit
             return string.Empty;
         }
 
+        public static bool ContainsChinese(string str)
+        {
+            bool isContains = false;
+            for (int i = 0; i < str.Length; i++)
+            {
+                var chr = str[i];
+                bool isChineseChar = ChineseChar.IsValidChar(chr);
+                if (isChineseChar == false) continue;
+                isContains = true;
+                break;
+            }
+
+            return isContains;
+        }
+
+        public static bool AllChinese(string str)
+        {
+            bool isAllChinese = true;
+            for (int i = 0; i < str.Length; i++)
+            {
+                var chr = str[i];
+                bool isChineseChar = ChineseChar.IsValidChar(chr);
+                if (isChineseChar) continue;
+                isAllChinese = false;
+                break;
+            }
+
+            return isAllChinese;
+        }
+
         private static string GetSpell(char chr)
         {
             string converter = Pinyin.GetPinyin(chr);
