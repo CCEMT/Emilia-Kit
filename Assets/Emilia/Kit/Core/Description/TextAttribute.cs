@@ -2,6 +2,7 @@
 
 namespace Emilia.Kit
 {
+    [AttributeUsage(AttributeTargets.All)]
     public class TextAttribute : Attribute
     {
         public string text;
