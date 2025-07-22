@@ -16,6 +16,7 @@ namespace Emilia.Kit.Editor
         private static Dictionary<Type, Dictionary<string, MemberGetter<object, object>>> getValueCache = new Dictionary<Type, Dictionary<string, MemberGetter<object, object>>>();
         private static Dictionary<Type, Dictionary<string, MemberSetter<object, object>>> setValueCache = new Dictionary<Type, Dictionary<string, MemberSetter<object, object>>>();
         private static Dictionary<Type, Dictionary<string, MethodCaller<object, object>>> methodCache = new Dictionary<Type, Dictionary<string, MethodCaller<object, object>>>();
+        private static Dictionary<MethodInfo, MethodCaller<object, object>> methodCacheByMethodInfo = new Dictionary<MethodInfo, MethodCaller<object, object>>();
         private static Dictionary<Type, CtorInvoker<object>> ctorCache = new Dictionary<Type, CtorInvoker<object>>();
 
         public static Type GetType(string typeString)
@@ -295,11 +296,35 @@ namespace Emilia.Kit.Editor
             }
         }
 
+        public static object Invoke(MethodInfo method, object target, object[] args)
+        {
+            try
+            {
+                if (method == null) return null;
+                MethodCaller<object, object> caller;
+                if (methodCacheByMethodInfo.TryGetValue(method, out caller)) return caller.Invoke(null, args);
+                caller = FastReflection.DelegateForCall(method);
+                if (caller == null) return null;
+
+                methodCacheByMethodInfo[method] = caller;
+                return caller.Invoke(target, args);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e.ToString());
+                return null;
+            }
+        }
+
         public static void ClearCache()
         {
+            typeCache.Clear();
+            typeAttributeCache.Clear();
             getValueCache.Clear();
             setValueCache.Clear();
             methodCache.Clear();
+            methodCacheByMethodInfo.Clear();
+            ctorCache.Clear();
         }
 
         public static void ClearCache(Type type)
