@@ -296,7 +296,7 @@ namespace Emilia.Kit.Editor
             }
         }
 
-        public static object Invoke(MethodInfo method, object target, object[] args)
+        public static object Invoke(object target, MethodInfo method, object[] args)
         {
             try
             {
