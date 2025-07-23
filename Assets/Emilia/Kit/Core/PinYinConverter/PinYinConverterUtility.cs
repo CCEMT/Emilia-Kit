@@ -1,5 +1,6 @@
 #if UNITY_EDITOR
 using System;
+using System.Collections.Generic;
 using System.Text;
 using Microsoft.International.Converters.PinYinConverter;
 using NPinyin;
@@ -9,28 +10,32 @@ namespace Emilia.Kit
 {
     public static class PinYinConverterUtility
     {
+        private static readonly Dictionary<string, string> _pinyinCache = new Dictionary<string, string>();
+
         public static string ConvertToAllSpell(string strChinese)
         {
+            if (string.IsNullOrEmpty(strChinese)) return string.Empty;
+            if (_pinyinCache.TryGetValue(strChinese, out string cachedResult)) return cachedResult;
+
             try
             {
-                if (strChinese.Length != 0)
+                StringBuilder fullSpell = new StringBuilder();
+                for (int i = 0; i < strChinese.Length; i++)
                 {
-                    StringBuilder fullSpell = new StringBuilder();
-                    for (int i = 0; i < strChinese.Length; i++)
-                    {
-                        var chr = strChinese[i];
-                        fullSpell.Append(GetSpell(chr));
-                    }
-
-                    return fullSpell.ToString();
+                    var chr = strChinese[i];
+                    fullSpell.Append(GetSpell(chr));
                 }
+
+                string result = fullSpell.ToString();
+
+                _pinyinCache[strChinese] = result;
+                return result;
             }
             catch (Exception e)
             {
                 Debug.LogError("全拼转化出错！" + e.Message);
+                return string.Empty;
             }
-
-            return string.Empty;
         }
 
         public static bool ContainsChinese(string str)
