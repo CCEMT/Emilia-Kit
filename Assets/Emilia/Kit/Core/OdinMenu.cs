@@ -76,7 +76,7 @@ namespace Emilia.Kit
                 customGenericSelector.SelectionTree.Config.SearchFunction = item => {
                     string target = item.SearchString;
                     string input = customGenericSelector.SelectionTree.Config.SearchTerm;
-                    return SearchUtility.Search(target, input);
+                    return SearchUtility.Matching(target, input);
                 };
             }
 
