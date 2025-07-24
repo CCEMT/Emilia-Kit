@@ -15,16 +15,19 @@ namespace Emilia.Kit
         /// <param name="input">输入文本</param>
         /// <param name="inputNullResult">输入为空时的返回结果，默认为true</param>
         /// <returns>搜索分数0-100</returns>
-        public static int Search(string target, string input, bool inputNullResult = true)
+        public static int Search(string target, string input, bool inputNullResult = true, bool ignoreCase = true)
         {
             if (string.IsNullOrEmpty(input)) return inputNullResult ? MaxSearchScore : MinSearchScore;
             if (string.IsNullOrEmpty(target)) return MinSearchScore;
 
-            int score = Fuzz.Ratio(input, target);
+            string searchTarget = ignoreCase ? target.ToLower() : target;
+            string searchInput = ignoreCase ? input.ToLower() : input;
+
+            int score = Fuzz.WeightedRatio(searchInput, searchTarget);
             if (score > MinSearchScore) return score;
 
-            string pinYin = PinYinConverterUtility.ConvertToAllSpell(target);
-            return Fuzz.Ratio(input, pinYin);
+            string pinYin = PinYinConverterUtility.ConvertToAllSpell(searchTarget);
+            return Fuzz.WeightedRatio(searchInput, pinYin);
         }
 
         public static bool Matching(string target, string input) => Search(target, input) > MinSearchScore;
