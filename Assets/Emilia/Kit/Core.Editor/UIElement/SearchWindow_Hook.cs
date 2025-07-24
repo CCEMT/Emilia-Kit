@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using Emilia.Reflection.Editor;
 using MonoHook;
@@ -80,18 +81,21 @@ namespace Emilia.Kit.Editor
             }
             else
             {
-                List<SearchTreeEntry> collection = new List<SearchTreeEntry>();
+                List<(SearchTreeEntry, int)> collection = new();
+
                 foreach (SearchTreeEntry searchTreeEntry in tree_Internals)
                 {
                     if (searchTreeEntry is SearchTreeGroupEntry) continue;
                     string entryName = searchTreeEntry.name;
-                    bool result = SearchUtility.Search(entryName, search_Internals);
-                    if (result) collection.Add(searchTreeEntry);
+                    int source = SearchUtility.Search(entryName, search_Internals);
+                    if (source != 0) collection.Add((searchTreeEntry, source));
                 }
-                collection.Sort();
+
+                collection.Sort((a, b) => b.Item2.CompareTo(a.Item2));
+
                 List<SearchTreeEntry> searchTreeEntryList = new List<SearchTreeEntry>();
                 searchTreeEntryList.Add(new SearchTreeGroupEntry(new GUIContent("Search")));
-                searchTreeEntryList.AddRange(collection);
+                searchTreeEntryList.AddRange(collection.Select((i) => i.Item1));
                 searchResultTree_Internals = searchTreeEntryList.ToArray();
                 selectionStack_Internals.Clear();
                 selectionStack_Internals.Add(searchResultTree_Internals[0] as SearchTreeGroupEntry);
