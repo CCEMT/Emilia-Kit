@@ -94,25 +94,13 @@ namespace Emilia.Reflection.Editor
             base.ReloadData();
         }
 
-        public override TreeViewItem FindItem(int id)
-        {
-            return FindItemOverride_Internal(id);
-        }
+        public override TreeViewItem FindItem(int id) => FindItemOverride_Internal(id);
 
-        public virtual TreeViewItem FindItemOverride_Internal(int id)
-        {
-            return base.FindItem(id);
-        }
+        public virtual TreeViewItem FindItemOverride_Internal(int id) => base.FindItem(id);
 
-        public override bool IsRevealed(int id)
-        {
-            return IsRevealedOverride_Internal(id);
-        }
+        public override bool IsRevealed(int id) => IsRevealedOverride_Internal(id);
 
-        public virtual bool IsRevealedOverride_Internal(int id)
-        {
-            return base.IsRevealed(id);
-        }
+        public virtual bool IsRevealedOverride_Internal(int id) => base.IsRevealed(id);
 
         public override void RevealItem(int id)
         {
@@ -144,55 +132,25 @@ namespace Emilia.Reflection.Editor
             base.OnSearchChanged();
         }
 
-        protected override List<TreeViewItem> ExpandedRows(TreeViewItem root)
-        {
-            return ExpandedRowsOverride_Internal(root);
-        }
+        protected override List<TreeViewItem> ExpandedRows(TreeViewItem root) => ExpandedRowsOverride_Internal(root);
 
-        public virtual List<TreeViewItem> ExpandedRowsOverride_Internal(TreeViewItem root)
-        {
-            return base.ExpandedRows(root);
-        }
+        public virtual List<TreeViewItem> ExpandedRowsOverride_Internal(TreeViewItem root) => base.ExpandedRows(root);
 
-        protected override List<TreeViewItem> Search(TreeViewItem root, string search)
-        {
-            return SearchOverride_Internal(root, search);
-        }
+        protected override List<TreeViewItem> Search(TreeViewItem root, string search) => SearchOverride_Internal(root, search);
 
-        public virtual List<TreeViewItem> SearchOverride_Internal(TreeViewItem root, string search)
-        {
-            return base.Search(root, search);
-        }
+        public virtual List<TreeViewItem> SearchOverride_Internal(TreeViewItem root, string search) => base.Search(root, search);
 
-        public override int GetRow(int id)
-        {
-            return GetRowOverride_Internal(id);
-        }
+        public override int GetRow(int id) => GetRowOverride_Internal(id);
 
-        public virtual int GetRowOverride_Internal(int id)
-        {
-            return base.GetRow(id);
-        }
+        public virtual int GetRowOverride_Internal(int id) => base.GetRow(id);
 
-        public override TreeViewItem GetItem(int row)
-        {
-            return GetItemOverride_Internal(row);
-        }
+        public override TreeViewItem GetItem(int row) => GetItemOverride_Internal(row);
 
-        public virtual TreeViewItem GetItemOverride_Internal(int row)
-        {
-            return base.GetItem(row);
-        }
+        public virtual TreeViewItem GetItemOverride_Internal(int row) => base.GetItem(row);
 
-        public override IList<TreeViewItem> GetRows()
-        {
-            return GetRowsOverride_Internal();
-        }
+        public override IList<TreeViewItem> GetRows() => GetRowsOverride_Internal();
 
-        public virtual IList<TreeViewItem> GetRowsOverride_Internal()
-        {
-            return base.GetRows();
-        }
+        public virtual IList<TreeViewItem> GetRowsOverride_Internal() => base.GetRows();
 
         public override void InitIfNeeded()
         {
@@ -204,15 +162,9 @@ namespace Emilia.Reflection.Editor
             base.InitIfNeeded();
         }
 
-        public override int[] GetExpandedIDs()
-        {
-            return GetExpandedIDsOverride_Internal();
-        }
+        public override int[] GetExpandedIDs() => GetExpandedIDsOverride_Internal();
 
-        public virtual int[] GetExpandedIDsOverride_Internal()
-        {
-            return base.GetExpandedIDs();
-        }
+        public virtual int[] GetExpandedIDsOverride_Internal() => base.GetExpandedIDs();
 
         public override void SetExpandedIDs(int[] ids)
         {
@@ -224,25 +176,13 @@ namespace Emilia.Reflection.Editor
             base.SetExpandedIDs(ids);
         }
 
-        public override bool IsExpanded(int id)
-        {
-            return IsExpandedOverride_Internal(id);
-        }
+        public override bool IsExpanded(int id) => IsExpandedOverride_Internal(id);
 
-        public virtual bool IsExpandedOverride_Internal(int id)
-        {
-            return base.IsExpanded(id);
-        }
+        public virtual bool IsExpandedOverride_Internal(int id) => base.IsExpanded(id);
 
-        public override bool SetExpanded(int id, bool expand)
-        {
-            return SetExpandedOverride_Internal(id, expand);
-        }
+        public override bool SetExpanded(int id, bool expand) => SetExpandedOverride_Internal(id, expand);
 
-        public virtual bool SetExpandedOverride_Internal(int id, bool expand)
-        {
-            return base.SetExpanded(id, expand);
-        }
+        public virtual bool SetExpandedOverride_Internal(int id, bool expand) => base.SetExpanded(id, expand);
 
         public override void SetExpandedWithChildren(int id, bool expand)
         {
@@ -274,55 +214,25 @@ namespace Emilia.Reflection.Editor
             base.SetExpanded(item, expand);
         }
 
-        public override bool IsExpanded(TreeViewItem item)
-        {
-            return IsExpandedOverride_Internal(item);
-        }
+        public override bool IsExpanded(TreeViewItem item) => IsExpandedOverride_Internal(item);
 
-        public virtual bool IsExpandedOverride_Internal(TreeViewItem item)
-        {
-            return base.IsExpanded(item);
-        }
+        public virtual bool IsExpandedOverride_Internal(TreeViewItem item) => base.IsExpanded(item);
 
-        public override bool IsExpandable(TreeViewItem item)
-        {
-            return IsExpandableOverride_Internal(item);
-        }
+        public override bool IsExpandable(TreeViewItem item) => IsExpandableOverride_Internal(item);
 
-        public virtual bool IsExpandableOverride_Internal(TreeViewItem item)
-        {
-            return base.IsExpandable(item);
-        }
+        public virtual bool IsExpandableOverride_Internal(TreeViewItem item) => base.IsExpandable(item);
 
-        public override bool CanBeMultiSelected(TreeViewItem item)
-        {
-            return CanBeMultiSelectedOverride_Internal(item);
-        }
+        public override bool CanBeMultiSelected(TreeViewItem item) => CanBeMultiSelectedOverride_Internal(item);
 
-        public virtual bool CanBeMultiSelectedOverride_Internal(TreeViewItem item)
-        {
-            return base.CanBeMultiSelected(item);
-        }
+        public virtual bool CanBeMultiSelectedOverride_Internal(TreeViewItem item) => base.CanBeMultiSelected(item);
 
-        public override bool CanBeParent(TreeViewItem item)
-        {
-            return CanBeParentOverride_Internal(item);
-        }
+        public override bool CanBeParent(TreeViewItem item) => CanBeParentOverride_Internal(item);
 
-        public virtual bool CanBeParentOverride_Internal(TreeViewItem item)
-        {
-            return base.CanBeParent(item);
-        }
+        public virtual bool CanBeParentOverride_Internal(TreeViewItem item) => base.CanBeParent(item);
 
-        public override List<int> GetNewSelection(TreeViewItem clickedItem, TreeViewSelectState selectState)
-        {
-            return GetNewSelection_Internal(clickedItem, new TreeViewSelectState_Internals(selectState));
-        }
+        public override List<int> GetNewSelection(TreeViewItem clickedItem, TreeViewSelectState selectState) => GetNewSelection_Internal(clickedItem, new TreeViewSelectState_Internals(selectState));
 
-        public virtual List<int> GetNewSelection_Internal(TreeViewItem clickedItem, TreeViewSelectState_Internals selectState)
-        {
-            return base.GetNewSelection(clickedItem, selectState.value);
-        }
+        public virtual List<int> GetNewSelection_Internal(TreeViewItem clickedItem, TreeViewSelectState_Internals selectState) => base.GetNewSelection(clickedItem, selectState.value);
 
         public override void OnExpandedStateChanged()
         {
@@ -334,15 +244,9 @@ namespace Emilia.Reflection.Editor
             base.OnExpandedStateChanged();
         }
 
-        public override bool IsRenamingItemAllowed(TreeViewItem item)
-        {
-            return IsRenamingItemAllowedOverride_Internal(item);
-        }
+        public override bool IsRenamingItemAllowed(TreeViewItem item) => IsRenamingItemAllowedOverride_Internal(item);
 
-        public virtual bool IsRenamingItemAllowedOverride_Internal(TreeViewItem item)
-        {
-            return base.IsRenamingItemAllowed(item);
-        }
+        public virtual bool IsRenamingItemAllowedOverride_Internal(TreeViewItem item) => base.IsRenamingItemAllowed(item);
 
         public override void InsertFakeItem(int id, int parentID, string name, Texture2D icon)
         {
@@ -354,15 +258,9 @@ namespace Emilia.Reflection.Editor
             base.InsertFakeItem(id, parentID, name, icon);
         }
 
-        public override bool HasFakeItem()
-        {
-            return HasFakeItemOverride_Internal();
-        }
+        public override bool HasFakeItem() => HasFakeItemOverride_Internal();
 
-        public virtual bool HasFakeItemOverride_Internal()
-        {
-            return base.HasFakeItem();
-        }
+        public virtual bool HasFakeItemOverride_Internal() => base.HasFakeItem();
 
         public override void RemoveFakeItem()
         {
@@ -389,30 +287,15 @@ namespace Emilia.Reflection.Editor
             InitIfNeeded();
         }
 
-        public TreeViewItem FindItem_Internal(int id)
-        {
-            return FindItem(id);
-        }
+        public TreeViewItem FindItem_Internal(int id) => FindItem(id);
 
-        public int GetRow_Internal(int id)
-        {
-            return GetRow(id);
-        }
+        public int GetRow_Internal(int id) => GetRow(id);
 
-        public TreeViewItem GetItem_Internal(int row)
-        {
-            return GetItem(row);
-        }
+        public TreeViewItem GetItem_Internal(int row) => GetItem(row);
 
-        public IList<TreeViewItem> GetRows_Internal()
-        {
-            return GetRows();
-        }
+        public IList<TreeViewItem> GetRows_Internal() => GetRows();
 
-        public bool IsRevealed_Internal(int id)
-        {
-            return IsRevealed(id);
-        }
+        public bool IsRevealed_Internal(int id) => IsRevealed(id);
 
         public void RevealItem_Internal(int id)
         {
@@ -434,60 +317,33 @@ namespace Emilia.Reflection.Editor
             SetExpanded(item, expand);
         }
 
-        public bool IsExpanded_Internal(TreeViewItem item)
-        {
-            return IsExpanded(item);
-        }
+        public bool IsExpanded_Internal(TreeViewItem item) => IsExpanded(item);
 
-        public bool IsExpandable_Internal(TreeViewItem item)
-        {
-            return IsExpandable(item);
-        }
+        public bool IsExpandable_Internal(TreeViewItem item) => IsExpandable(item);
 
         public void SetExpandedWithChildren_Internal(int id, bool expand)
         {
             SetExpandedWithChildren(id, expand);
         }
 
-        public int[] GetExpandedIDs_Internal()
-        {
-            return GetExpandedIDs();
-        }
+        public int[] GetExpandedIDs_Internal() => GetExpandedIDs();
 
         public void SetExpandedIDs_Internal(int[] ids)
         {
             SetExpandedIDs(ids);
         }
 
-        public bool SetExpanded_Internal(int id, bool expand)
-        {
-            return SetExpanded(id, expand);
-        }
+        public bool SetExpanded_Internal(int id, bool expand) => SetExpanded(id, expand);
 
-        public bool IsExpanded_Internal(int id)
-        {
-            return IsExpanded(id);
-        }
+        public bool IsExpanded_Internal(int id) => IsExpanded(id);
 
-        public bool CanBeMultiSelected_Internal(TreeViewItem item)
-        {
-            return CanBeMultiSelected(item);
-        }
+        public bool CanBeMultiSelected_Internal(TreeViewItem item) => CanBeMultiSelected(item);
 
-        public bool CanBeParent_Internal(TreeViewItem item)
-        {
-            return CanBeParent(item);
-        }
+        public bool CanBeParent_Internal(TreeViewItem item) => CanBeParent(item);
 
-        public List<int> GetNewSelection_Internal(TreeViewItem clickedItem, TreeViewSelectState selectState)
-        {
-            return GetNewSelection(clickedItem, selectState);
-        }
+        public List<int> GetNewSelection_Internal(TreeViewItem clickedItem, TreeViewSelectState selectState) => GetNewSelection(clickedItem, selectState);
 
-        public bool IsRenamingItemAllowed_Internal(TreeViewItem item)
-        {
-            return IsRenamingItemAllowed(item);
-        }
+        public bool IsRenamingItemAllowed_Internal(TreeViewItem item) => IsRenamingItemAllowed(item);
 
         public void InsertFakeItem_Internal(int id, int parentID, string name, Texture2D icon)
         {
@@ -499,10 +355,7 @@ namespace Emilia.Reflection.Editor
             RemoveFakeItem();
         }
 
-        public bool HasFakeItem_Internal()
-        {
-            return HasFakeItem();
-        }
+        public bool HasFakeItem_Internal() => HasFakeItem();
 
         public void OnSearchChanged_Internal()
         {

@@ -106,9 +106,6 @@ namespace Emilia.Reflection.Editor
             _value.FireAnimationEndedEvent();
         }
 
-        public override string ToString()
-        {
-            return _value.ToString();
-        }
+        public override string ToString() => _value.ToString();
     }
 }

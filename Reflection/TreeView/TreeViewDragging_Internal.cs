@@ -57,20 +57,11 @@ namespace Emilia.Reflection.Editor
 
         public virtual void OnInitialize_Internal() { }
 
-        public int GetDropTargetControlID_Internal()
-        {
-            return GetDropTargetControlID();
-        }
+        public int GetDropTargetControlID_Internal() => GetDropTargetControlID();
 
-        public int GetRowMarkerControlID_Internal()
-        {
-            return GetRowMarkerControlID();
-        }
+        public int GetRowMarkerControlID_Internal() => GetRowMarkerControlID();
 
-        public int GetAncestorControlID_Internal()
-        {
-            return GetAncestorControlID();
-        }
+        public int GetAncestorControlID_Internal() => GetAncestorControlID();
 
         public bool drawRowMarkerAbove_Internal
         {
@@ -82,15 +73,9 @@ namespace Emilia.Reflection.Editor
 
         public TreeViewItem insertRelativeToSibling_Internal => insertRelativeToSibling;
 
-        public override bool CanStartDrag(TreeViewItem targetItem, List<int> draggedItemIDs, Vector2 mouseDownPosition)
-        {
-            return CanStartDrag_Internal(targetItem, draggedItemIDs, mouseDownPosition);
-        }
+        public override bool CanStartDrag(TreeViewItem targetItem, List<int> draggedItemIDs, Vector2 mouseDownPosition) => CanStartDrag_Internal(targetItem, draggedItemIDs, mouseDownPosition);
 
-        public virtual bool CanStartDrag_Internal(TreeViewItem targetItem, List<int> draggedItemIDs, Vector2 mouseDownPosition)
-        {
-            return base.CanStartDrag(targetItem, draggedItemIDs, mouseDownPosition);
-        }
+        public virtual bool CanStartDrag_Internal(TreeViewItem targetItem, List<int> draggedItemIDs, Vector2 mouseDownPosition) => base.CanStartDrag(targetItem, draggedItemIDs, mouseDownPosition);
 
         public override void StartDrag(TreeViewItem draggedItem, List<int> draggedItemIDs)
         {
@@ -99,25 +84,14 @@ namespace Emilia.Reflection.Editor
 
         public virtual void StartDrag_Internal(TreeViewItem draggedItem, List<int> draggedItemIDs) { }
 
-        public override bool DragElement(TreeViewItem targetItem, Rect targetItemRect, int row)
-        {
-            return DragElement_Internal(targetItem, targetItemRect, row);
-        }
+        public override bool DragElement(TreeViewItem targetItem, Rect targetItemRect, int row) => DragElement_Internal(targetItem, targetItemRect, row);
 
-        public virtual bool DragElement_Internal(TreeViewItem targetItem, Rect targetItemRect, int row)
-        {
-            return base.DragElement(targetItem, targetItemRect, row);
-        }
+        public virtual bool DragElement_Internal(TreeViewItem targetItem, Rect targetItemRect, int row) => base.DragElement(targetItem, targetItemRect, row);
 
-        public override DragAndDropVisualMode DoDrag(TreeViewItem parentItem, TreeViewItem targetItem, bool perform, DropPosition dropPosition)
-        {
-            return DoDrag_Internal(parentItem, targetItem, perform, (DropPosition_Internal) dropPosition);
-        }
+        public override DragAndDropVisualMode DoDrag(TreeViewItem parentItem, TreeViewItem targetItem, bool perform, DropPosition dropPosition) =>
+            DoDrag_Internal(parentItem, targetItem, perform, (DropPosition_Internal) dropPosition);
 
-        public virtual DragAndDropVisualMode DoDrag_Internal(TreeViewItem parentItem, TreeViewItem targetItem, bool perform, DropPosition_Internal dropPosition)
-        {
-            return default;
-        }
+        public virtual DragAndDropVisualMode DoDrag_Internal(TreeViewItem parentItem, TreeViewItem targetItem, bool perform, DropPosition_Internal dropPosition) => default;
 
         public override void DragCleanup(bool revertExpanded)
         {
@@ -179,10 +153,7 @@ namespace Emilia.Reflection.Editor
             FinalizeDragPerformed(revertExpanded);
         }
 
-        public List<int> GetCurrentExpanded_Internal()
-        {
-            return GetCurrentExpanded();
-        }
+        public List<int> GetCurrentExpanded_Internal() => GetCurrentExpanded();
 
         public void RestoreExpanded_Internal(List<int> ids)
         {
@@ -192,9 +163,7 @@ namespace Emilia.Reflection.Editor
         public static int GetInsertionIndex(
             TreeViewItem parentItem,
             TreeViewItem targetItem,
-            DropPosition_Internal dropPosition)
-        {
-            return GetInsertionIndex(parentItem, targetItem, (DropPosition) dropPosition);
-        }
+            DropPosition_Internal dropPosition) =>
+            GetInsertionIndex(parentItem, targetItem, (DropPosition) dropPosition);
     }
 }

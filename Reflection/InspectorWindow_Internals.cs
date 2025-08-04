@@ -19,10 +19,7 @@ namespace Emilia.Reflection.Editor
             RefreshInspectors();
         }
 
-        public static List<EditorWindow> GetInspectors_Internals()
-        {
-            return GetInspectors().OfType<EditorWindow>().ToList();
-        }
+        public static List<EditorWindow> GetInspectors_Internals() => GetInspectors().OfType<EditorWindow>().ToList();
 
         public static void ApplyChanges_Internals()
         {
