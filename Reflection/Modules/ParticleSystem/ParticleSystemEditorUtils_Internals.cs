@@ -65,5 +65,5 @@ namespace Emilia.Reflection.Editor
         }
 
         public static ParticleSystem GetRoot_Internals(ParticleSystem ps) => ParticleSystemEditorUtils.GetRoot(ps);
-    }//ParticleSystemEffectUtils_Internals
+    }
 }

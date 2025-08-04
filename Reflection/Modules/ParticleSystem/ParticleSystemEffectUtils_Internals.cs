@@ -7,7 +7,7 @@ namespace Emilia.Reflection.Editor
     {
         public static string CheckCircularReferences_Internals(ParticleSystem subEmitter) => ParticleSystemEffectUtils.CheckCircularReferences(subEmitter);
 
-        public static void StopEffect()
+        public static void StopEffect_Internals()
         {
             ParticleSystemEffectUtils.StopEffect();
         }
