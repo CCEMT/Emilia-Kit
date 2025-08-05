@@ -56,5 +56,19 @@ namespace Emilia.Kit.Editor
         public override bool RequiresConstantRepaint() => baseEditor.RequiresConstantRepaint();
 
         public override bool UseDefaultMargins() => baseEditor.UseDefaultMargins();
+        
+        protected virtual void OnDestroy()
+        {
+            if (_baseEditor != null)
+            {
+                try
+                {
+                    DestroyImmediate(_baseEditor);
+                }
+                catch { }
+
+                _baseEditor = null;
+            }
+        }
     }
 }
