@@ -8,14 +8,14 @@ echo ====================================================
 echo.
 
 REM 检查工具是否存在
-if not exist "bin\Release\net8.0-windows\MakeAllPublic.exe" (
+if not exist "MakeAllPublic\bin\Release\net8.0-windows\MakeAllPublic.exe" (
     echo ❌ 错误: 找不到 MakeAllPublic.exe
     echo 请先运行: dotnet build --configuration Release
     pause
     exit /b 1
 )
 
-set TOOL_PATH=bin\Release\net8.0-windows\MakeAllPublic.exe
+set TOOL_PATH=MakeAllPublic\bin\Release\net8.0-windows\MakeAllPublic.exe
 
 REM 获取输入和输出文件夹
 if "%~1"=="" (
