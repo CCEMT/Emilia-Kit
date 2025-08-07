@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <!-- Support both library and executable output -->
+    <TargetFrameworks>net8.0-windows;netstandard2.0;net48</TargetFrameworks>
+    <Copyright>$(DnSpyAssemblyCopyright)</Copyright>
+    <Version>$(DnSpyAssemblyVersion)</Version>
+    <InformationalVersion>$(DnSpyAssemblyInformationalVersion)</InformationalVersion>
+
+    <SignAssembly>True</SignAssembly>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="dnlib" Version="4.5.0" />
+    <PackageReference Include="Microsoft.Build.Framework" Version="$(MSBuildNuGetVersion)" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="$(MSBuildNuGetVersion)" />
+  </ItemGroup>
+
+</Project>
