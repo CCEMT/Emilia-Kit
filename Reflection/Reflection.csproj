@@ -19,52 +19,54 @@
         <DebugSymbols>false</DebugSymbols>
         <DebugType>full</DebugType>
     </PropertyGroup>
-    
-    
+
 
     <ItemGroup>
-      <Compile Remove="Libraries\**" />
+        <Compile Remove="Libraries\**"/>
     </ItemGroup>
 
     <ItemGroup>
-      <EmbeddedResource Remove="Libraries\**" />
+        <EmbeddedResource Remove="Libraries\**"/>
     </ItemGroup>
 
     <ItemGroup>
-      <None Remove="Libraries\**" />
+        <None Remove="Libraries\**"/>
     </ItemGroup>
 
     <ItemGroup>
-      <Reference Include="mscorlib">
-        <HintPath>Libraries\mscorlib.dll</HintPath>
-      </Reference>
-      <Reference Include="UnityEditor">
-        <HintPath>Libraries\UnityEditor.dll</HintPath>
-      </Reference>
-      <Reference Include="UnityEditor.CoreModule">
-        <HintPath>Libraries\UnityEditor.CoreModule.dll</HintPath>
-      </Reference>
-      <Reference Include="UnityEditor.GraphViewModule">
-        <HintPath>Libraries\UnityEditor.GraphViewModule.dll</HintPath>
-      </Reference>
-      <Reference Include="UnityEngine.CoreModule">
-        <HintPath>Libraries\UnityEngine.CoreModule.dll</HintPath>
-      </Reference>
-      <Reference Include="UnityEngine.IMGUIModule">
-        <HintPath>Libraries\UnityEngine.IMGUIModule.dll</HintPath>
-      </Reference>
-      <Reference Include="UnityEngine.SharedInternalsModule">
-        <HintPath>Libraries\UnityEngine.SharedInternalsModule.dll</HintPath>
-      </Reference>
-      <Reference Include="UnityEngine.TextRenderingModule">
-        <HintPath>Libraries\UnityEngine.TextRenderingModule.dll</HintPath>
-      </Reference>
-      <Reference Include="UnityEngine.UIElementsModule">
-        <HintPath>Libraries\UnityEngine.UIElementsModule.dll</HintPath>
-      </Reference>
-      <Reference Include="UnityEngine.UIElementsNativeModule">
-        <HintPath>Libraries\UnityEngine.UIElementsNativeModule.dll</HintPath>
-      </Reference>
+        <Reference Include="mscorlib">
+            <HintPath>Libraries\mscorlib.dll</HintPath>
+        </Reference>
+        <Reference Include="UnityEditor">
+            <HintPath>Libraries\UnityEditor.dll</HintPath>
+        </Reference>
+        <Reference Include="UnityEditor.CoreModule">
+            <HintPath>Libraries\UnityEditor.CoreModule.dll</HintPath>
+        </Reference>
+        <Reference Include="UnityEditor.GraphViewModule">
+            <HintPath>Libraries\UnityEditor.GraphViewModule.dll</HintPath>
+        </Reference>
+        <Reference Include="UnityEngine.CoreModule">
+            <HintPath>Libraries\UnityEngine.CoreModule.dll</HintPath>
+        </Reference>
+        <Reference Include="UnityEngine.IMGUIModule">
+            <HintPath>Libraries\UnityEngine.IMGUIModule.dll</HintPath>
+        </Reference>
+        <Reference Include="UnityEngine.ParticleSystemModule">
+            <HintPath>Libraries\UnityEngine.ParticleSystemModule.dll</HintPath>
+        </Reference>
+        <Reference Include="UnityEngine.SharedInternalsModule">
+            <HintPath>Libraries\UnityEngine.SharedInternalsModule.dll</HintPath>
+        </Reference>
+        <Reference Include="UnityEngine.TextRenderingModule">
+            <HintPath>Libraries\UnityEngine.TextRenderingModule.dll</HintPath>
+        </Reference>
+        <Reference Include="UnityEngine.UIElementsModule">
+            <HintPath>Libraries\UnityEngine.UIElementsModule.dll</HintPath>
+        </Reference>
+        <Reference Include="UnityEngine.UIElementsNativeModule">
+            <HintPath>Libraries\UnityEngine.UIElementsNativeModule.dll</HintPath>
+        </Reference>
     </ItemGroup>
 
 </Project>

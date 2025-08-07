@@ -285,52 +285,25 @@ namespace Emilia.Reflection.Editor
 
         public Matrix4x4 drawingToViewMatrix_Internals => drawingToViewMatrix;
 
-        public Vector2 DrawingToViewTransformPoint_Internals(Vector2 lhs)
-        {
-            return DrawingToViewTransformPoint(lhs);
-        }
+        public Vector2 DrawingToViewTransformPoint_Internals(Vector2 lhs) => DrawingToViewTransformPoint(lhs);
 
-        public Vector3 DrawingToViewTransformPoint_Internals(Vector3 lhs)
-        {
-            return DrawingToViewTransformPoint(lhs);
-        }
+        public Vector3 DrawingToViewTransformPoint_Internals(Vector3 lhs) => DrawingToViewTransformPoint(lhs);
 
-        public Vector2 ViewToDrawingTransformPoint_Internals(Vector2 lhs)
-        {
-            return ViewToDrawingTransformPoint(lhs);
-        }
+        public Vector2 ViewToDrawingTransformPoint_Internals(Vector2 lhs) => ViewToDrawingTransformPoint(lhs);
 
-        public Vector3 ViewToDrawingTransformPoint_Internals(Vector3 lhs)
-        {
-            return ViewToDrawingTransformPoint(lhs);
-        }
+        public Vector3 ViewToDrawingTransformPoint_Internals(Vector3 lhs) => ViewToDrawingTransformPoint(lhs);
 
-        public Vector2 DrawingToViewTransformVector_Internals(Vector2 lhs)
-        {
-            return DrawingToViewTransformVector(lhs);
-        }
+        public Vector2 DrawingToViewTransformVector_Internals(Vector2 lhs) => DrawingToViewTransformVector(lhs);
 
-        public Vector3 DrawingToViewTransformVector_Internals(Vector3 lhs)
-        {
-            return DrawingToViewTransformVector(lhs);
-        }
+        public Vector3 DrawingToViewTransformVector_Internals(Vector3 lhs) => DrawingToViewTransformVector(lhs);
 
-        public Vector2 ViewToDrawingTransformVector_Internals(Vector2 lhs)
-        {
-            return ViewToDrawingTransformVector(lhs);
-        }
+        public Vector2 ViewToDrawingTransformVector_Internals(Vector2 lhs) => ViewToDrawingTransformVector(lhs);
 
-        public Vector3 ViewToDrawingTransformVector_Internals(Vector3 lhs)
-        {
-            return ViewToDrawingTransformVector(lhs);
-        }
+        public Vector3 ViewToDrawingTransformVector_Internals(Vector3 lhs) => ViewToDrawingTransformVector(lhs);
 
         public Vector2 mousePositionInDrawing_Internals => mousePositionInDrawing;
 
-        public Vector2 NormalizeInViewSpace_Internals(Vector2 vec)
-        {
-            return NormalizeInViewSpace(vec);
-        }
+        public Vector2 NormalizeInViewSpace_Internals(Vector2 vec) => NormalizeInViewSpace(vec);
 
         public TimeArea_Internals(bool minimalGUI) : base(minimalGUI) { }
         public TimeArea_Internals(bool minimalGUI, bool enableSliderZoom) : base(minimalGUI, enableSliderZoom) { }
@@ -376,55 +349,27 @@ namespace Emilia.Reflection.Editor
             DrawVerticalLineFast(x, minY, maxY, color);
         }
 
-        public TimeRulerDragMode_Internals BrowseRuler_Internals(Rect position, ref float time, float frameRate, bool pickAnywhere, GUIStyle thumbStyle)
-        {
-            return (TimeRulerDragMode_Internals) BrowseRuler(position, ref time, frameRate, pickAnywhere, thumbStyle);
-        }
+        public TimeRulerDragMode_Internals BrowseRuler_Internals(Rect position, ref float time, float frameRate, bool pickAnywhere, GUIStyle thumbStyle) =>
+            (TimeRulerDragMode_Internals) BrowseRuler(position, ref time, frameRate, pickAnywhere, thumbStyle);
 
-        public TimeRulerDragMode_Internals BrowseRuler_Internals(Rect position, int id, ref float time, float frameRate, bool pickAnywhere, GUIStyle thumbStyle)
-        {
-            return (TimeRulerDragMode_Internals) BrowseRuler(position, id, ref time, frameRate, pickAnywhere, thumbStyle);
-        }
+        public TimeRulerDragMode_Internals BrowseRuler_Internals(Rect position, int id, ref float time, float frameRate, bool pickAnywhere, GUIStyle thumbStyle) =>
+            (TimeRulerDragMode_Internals) BrowseRuler(position, id, ref time, frameRate, pickAnywhere, thumbStyle);
 
-        public float FrameToPixel_Internals(float i, float frameRate, Rect rect)
-        {
-            return FrameToPixel(i, frameRate, rect, shownArea);
-        }
+        public float FrameToPixel_Internals(float i, float frameRate, Rect rect) => FrameToPixel(i, frameRate, rect, shownArea);
 
-        public float TimeField_Internals(Rect rect, int id, float time, float frameRate, TimeFormat_Internals timeFormat)
-        {
-            return TimeField(rect, id, time, frameRate, (TimeFormat) timeFormat);
-        }
+        public float TimeField_Internals(Rect rect, int id, float time, float frameRate, TimeFormat_Internals timeFormat) => TimeField(rect, id, time, frameRate, (TimeFormat) timeFormat);
 
-        public float ValueField_Internals(Rect rect, int id, float value)
-        {
-            return ValueField(rect, id, value);
-        }
+        public float ValueField_Internals(Rect rect, int id, float value) => ValueField(rect, id, value);
 
-        public string FormatTime_Internals(float time, float frameRate, TimeFormat_Internals timeFormat)
-        {
-            return base.FormatTickTime(time, frameRate, (TimeFormat) timeFormat);
-        }
+        public string FormatTime_Internals(float time, float frameRate, TimeFormat_Internals timeFormat) => base.FormatTickTime(time, frameRate, (TimeFormat) timeFormat);
 
-        public override string FormatTickTime(float time, float frameRate, TimeFormat timeFormat)
-        {
-            return FormatTickTime_Internals(time, frameRate, (TimeFormat_Internals) timeFormat);
-        }
+        public override string FormatTickTime(float time, float frameRate, TimeFormat timeFormat) => FormatTickTime_Internals(time, frameRate, (TimeFormat_Internals) timeFormat);
 
-        public virtual string FormatTickTime_Internals(float time, float frameRate, TimeFormat_Internals timeFormat)
-        {
-            return base.FormatTickTime(time, frameRate, (TimeFormat) timeFormat);
-        }
+        public virtual string FormatTickTime_Internals(float time, float frameRate, TimeFormat_Internals timeFormat) => base.FormatTickTime(time, frameRate, (TimeFormat) timeFormat);
 
-        public string FormatValue_Internals(float value)
-        {
-            return FormatValue(value);
-        }
+        public string FormatValue_Internals(float value) => FormatValue(value);
 
-        public float SnapTimeToWholeFPS_Internals(float time, float frameRate)
-        {
-            return SnapTimeToWholeFPS(time, frameRate);
-        }
+        public float SnapTimeToWholeFPS_Internals(float time, float frameRate) => SnapTimeToWholeFPS(time, frameRate);
 
         public void DrawTimeOnSlider_Internals(float time, Color c, float maxTime, float leftSidePadding = 0.0f, float rightSidePadding = 0.0f)
         {
@@ -466,20 +411,11 @@ namespace Emilia.Reflection.Editor
             EnforceScaleAndRange();
         }
 
-        public float PixelToTime_Internals(float pixelX, Rect rect)
-        {
-            return PixelToTime(pixelX, rect);
-        }
+        public float PixelToTime_Internals(float pixelX, Rect rect) => PixelToTime(pixelX, rect);
 
-        public float TimeToPixel_Internals(float time, Rect rect)
-        {
-            return TimeToPixel(time, rect);
-        }
+        public float TimeToPixel_Internals(float time, Rect rect) => TimeToPixel(time, rect);
 
-        public float PixelDeltaToTime_Internals(Rect rect)
-        {
-            return PixelDeltaToTime(rect);
-        }
+        public float PixelDeltaToTime_Internals(Rect rect) => PixelDeltaToTime(rect);
 
         public void UpdateZoomScale_Internals(float fMaxScaleValue, float fMinScaleValue)
         {

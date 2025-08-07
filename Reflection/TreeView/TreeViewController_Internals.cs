@@ -162,10 +162,7 @@ namespace Emilia.Reflection.Editor
 
         public bool isDragging_Internal => isDragging;
 
-        public bool IsDraggingItem_Internal(TreeViewItem item)
-        {
-            return IsDraggingItem(item);
-        }
+        public bool IsDraggingItem_Internal(TreeViewItem item) => IsDraggingItem(item);
 
         public bool showingVerticalScrollBar_Internal => showingVerticalScrollBar;
 
@@ -219,25 +216,13 @@ namespace Emilia.Reflection.Editor
             set => m_KeyboardControlID = value;
         }
 
-        public bool IsSelected_Internal(int id)
-        {
-            return IsSelected(id);
-        }
+        public bool IsSelected_Internal(int id) => IsSelected(id);
 
-        public bool HasSelection_Internal()
-        {
-            return HasSelection();
-        }
+        public bool HasSelection_Internal() => HasSelection();
 
-        public int[] GetSelection_Internal()
-        {
-            return GetSelection();
-        }
+        public int[] GetSelection_Internal() => GetSelection();
 
-        public int[] GetRowIDs_Internal()
-        {
-            return GetRowIDs();
-        }
+        public int[] GetRowIDs_Internal() => GetRowIDs();
 
         public void SetSelection_Internal(int[] selectedIDs, bool revealSelectionAndFrameLastSelected)
         {
@@ -249,10 +234,7 @@ namespace Emilia.Reflection.Editor
             SetSelection(selectedIDs, revealSelectionAndFrameLastSelected, animatedFraming);
         }
 
-        public TreeViewItem FindItem_Internal(int id)
-        {
-            return FindItem(id);
-        }
+        public TreeViewItem FindItem_Internal(int id) => FindItem(id);
 
         public void SetConsumeKeyDownEvents_Internal(bool consume)
         {
@@ -269,15 +251,9 @@ namespace Emilia.Reflection.Editor
             ReloadData();
         }
 
-        public bool HasFocus_Internal()
-        {
-            return HasFocus();
-        }
+        public bool HasFocus_Internal() => HasFocus();
 
-        public static int GetItemControlID_Internal(TreeViewItem item)
-        {
-            return GetItemControlID(item);
-        }
+        public static int GetItemControlID_Internal(TreeViewItem item) => GetItemControlID(item);
 
         public void HandleUnusedMouseEventsForItem_Internal(Rect rect, TreeViewItem item, int row)
         {
@@ -299,25 +275,16 @@ namespace Emilia.Reflection.Editor
             NotifyListenersThatDragEnded(draggedIDs, draggedItemsFromOwnTreeView);
         }
 
-        public Vector2 GetContentSize_Internal()
-        {
-            return GetContentSize();
-        }
+        public Vector2 GetContentSize_Internal() => GetContentSize();
 
-        public Rect GetTotalRect_Internal()
-        {
-            return GetTotalRect();
-        }
+        public Rect GetTotalRect_Internal() => GetTotalRect();
 
         public void SetTotalRect_Internal(Rect rect)
         {
             SetTotalRect(rect);
         }
 
-        public bool IsItemDragSelectedOrSelected_Internal(TreeViewItem item)
-        {
-            return IsItemDragSelectedOrSelected(item);
-        }
+        public bool IsItemDragSelectedOrSelected_Internal(TreeViewItem item) => IsItemDragSelectedOrSelected(item);
 
         public bool animatingExpansion_Internal => animatingExpansion;
 
@@ -346,10 +313,7 @@ namespace Emilia.Reflection.Editor
             ExpansionAnimationEnded(setup.value);
         }
 
-        public float GetAnimationDuration_Internal(float height)
-        {
-            return GetAnimationDuration(height);
-        }
+        public float GetAnimationDuration_Internal(float height) => GetAnimationDuration(height);
 
         public void UserInputChangedExpandedState_Internal(TreeViewItem item, int row, bool expand)
         {
@@ -361,20 +325,11 @@ namespace Emilia.Reflection.Editor
             ChangeExpandedState(item, expand, includeChildren);
         }
 
-        public int GetLastChildRowUnder_Internal(int row)
-        {
-            return GetLastChildRowUnder(row);
-        }
+        public int GetLastChildRowUnder_Internal(int row) => GetLastChildRowUnder(row);
 
-        protected override Rect GetRectForRows(int startRow, int endRow, float rowWidth)
-        {
-            return GetRectForRows_Internal(startRow, endRow, rowWidth);
-        }
+        public override Rect GetRectForRows(int startRow, int endRow, float rowWidth) => GetRectForRows_Internal(startRow, endRow, rowWidth);
 
-        public virtual Rect GetRectForRows_Internal(int startRow, int endRow, float rowWidth)
-        {
-            return base.GetRectForRows(startRow, endRow, rowWidth);
-        }
+        public virtual Rect GetRectForRows_Internal(int startRow, int endRow, float rowWidth) => base.GetRectForRows(startRow, endRow, rowWidth);
 
         public void HandleUnusedEvents_Internal()
         {
@@ -386,20 +341,14 @@ namespace Emilia.Reflection.Editor
             OnEvent();
         }
 
-        public bool BeginNameEditing_Internal(float delay)
-        {
-            return BeginNameEditing(delay);
-        }
+        public bool BeginNameEditing_Internal(float delay) => BeginNameEditing(delay);
 
         public void EndNameEditing_Internal(bool acceptChanges)
         {
             EndNameEditing(acceptChanges);
         }
 
-        public TreeViewItem GetItemAndRowIndex_Internal(int id, out int row)
-        {
-            return GetItemAndRowIndex(id, out row);
-        }
+        public TreeViewItem GetItemAndRowIndex_Internal(int id, out int row) => GetItemAndRowIndex(id, out row);
 
         public void HandleFastCollapse_Internal(TreeViewItem item, int row)
         {
@@ -431,15 +380,9 @@ namespace Emilia.Reflection.Editor
             KeyboardGUI();
         }
 
-        public static int GetIndexOfID_Internal(IList<TreeViewItem> items, int id)
-        {
-            return GetIndexOfID(items, id);
-        }
+        public static int GetIndexOfID_Internal(IList<TreeViewItem> items, int id) => GetIndexOfID(items, id);
 
-        public bool IsLastClickedPartOfRows_Internal()
-        {
-            return IsLastClickedPartOfRows();
-        }
+        public bool IsLastClickedPartOfRows_Internal() => IsLastClickedPartOfRows();
 
         public void OffsetSelection_Internal(int offset)
         {
@@ -451,10 +394,7 @@ namespace Emilia.Reflection.Editor
             set => getNewSelectionOverride = value;
         }
 
-        public List<int> GetNewSelection_Internal(TreeViewItem clickedItem, bool keepMultiSelection, bool useShiftAsActionKey)
-        {
-            return GetNewSelection(clickedItem, keepMultiSelection, useShiftAsActionKey);
-        }
+        public List<int> GetNewSelection_Internal(TreeViewItem clickedItem, bool keepMultiSelection, bool useShiftAsActionKey) => GetNewSelection(clickedItem, keepMultiSelection, useShiftAsActionKey);
 
         public void SelectionByKey_Internal(TreeViewItem itemSelected)
         {
@@ -476,10 +416,7 @@ namespace Emilia.Reflection.Editor
             RemoveSelection();
         }
 
-        public float GetTopPixelOfRow_Internal(int row)
-        {
-            return GetTopPixelOfRow(row);
-        }
+        public float GetTopPixelOfRow_Internal(int row) => GetTopPixelOfRow(row);
 
         public void EnsureRowIsVisible_Internal(int row, bool animated)
         {
@@ -511,9 +448,6 @@ namespace Emilia.Reflection.Editor
             EndPing();
         }
 
-        public List<int> SortIDsInVisiblityOrder_Internal(IList<int> ids)
-        {
-            return SortIDsInVisiblityOrder(ids);
-        }
+        public List<int> SortIDsInVisiblityOrder_Internal(IList<int> ids) => SortIDsInVisiblityOrder(ids);
     }
 }

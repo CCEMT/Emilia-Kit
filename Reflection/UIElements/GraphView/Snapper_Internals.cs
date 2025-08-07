@@ -11,15 +11,9 @@ namespace Emilia.Reflection.Editor
             BeginSnap(graphView);
         }
 
-        public List<Rect> GetNotSelectedElementRectsInView_Internals()
-        {
-            return GetNotSelectedElementRectsInView();
-        }
+        public List<Rect> GetNotSelectedElementRectsInView_Internals() => GetNotSelectedElementRectsInView();
 
-        public Rect GetSnappedRect_Internals(Rect sourceRect, float scale = 1.0f)
-        {
-            return GetSnappedRect(sourceRect, 1);
-        }
+        public Rect GetSnappedRect_Internals(Rect sourceRect, float scale = 1.0f) => GetSnappedRect(sourceRect, 1);
 
         public void EndSnap_Internals(GraphView graphView)
         {

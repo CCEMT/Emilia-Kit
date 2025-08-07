@@ -6,31 +6,19 @@ namespace Emilia.Reflection.Editor
 {
     public static class VisualElementExtension_Internals
     {
-        public static Matrix4x4 GetWorldTransformInverseCache_Internal(this VisualElement visualElement)
-        {
-            return visualElement.m_WorldTransformInverseCache;
-        }
-        
-        public static Rect GetRect_Internal(this VisualElement visualElement)
-        {
-            return visualElement.rect;
-        }
+        public static Matrix4x4 GetWorldTransformInverseCache_Internal(this VisualElement visualElement) => visualElement.m_WorldTransformInverseCache;
 
-        public static bool isWorldTransformDirty_Internal(this VisualElement visualElement)
-        {
-            return visualElement.isWorldTransformDirty;
-        }
-        
-        public static bool isWorldTransformInverseDirty_Internal(this VisualElement visualElement)
-        {
-            return visualElement.isWorldTransformInverseDirty;
-        }
-        
+        public static Rect GetRect_Internal(this VisualElement visualElement) => visualElement.rect;
+
+        public static bool isWorldTransformDirty_Internal(this VisualElement visualElement) => visualElement.isWorldTransformDirty;
+
+        public static bool isWorldTransformInverseDirty_Internal(this VisualElement visualElement) => visualElement.isWorldTransformInverseDirty;
+
         public static void UpdateWorldTransformInverse_Internal(this VisualElement visualElement)
         {
             visualElement.UpdateWorldTransformInverse();
         }
-        
+
         public static void SetLayout_Internals(this VisualElement visualElement, Rect layout)
         {
             visualElement.layout = layout;
