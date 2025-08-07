@@ -327,7 +327,7 @@ namespace Emilia.Reflection.Editor
 
         public int GetLastChildRowUnder_Internal(int row) => GetLastChildRowUnder(row);
 
-        protected override Rect GetRectForRows(int startRow, int endRow, float rowWidth) => GetRectForRows_Internal(startRow, endRow, rowWidth);
+        public override Rect GetRectForRows(int startRow, int endRow, float rowWidth) => GetRectForRows_Internal(startRow, endRow, rowWidth);
 
         public virtual Rect GetRectForRows_Internal(int startRow, int endRow, float rowWidth) => base.GetRectForRows(startRow, endRow, rowWidth);
 

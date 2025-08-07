@@ -103,7 +103,7 @@ namespace Emilia.Reflection.Editor
             base.DragCleanup(revertExpanded);
         }
 
-        protected override void HandleAutoExpansion(int itemControlID, TreeViewItem targetItem, Rect targetItemRect)
+        public override void HandleAutoExpansion(int itemControlID, TreeViewItem targetItem, Rect targetItemRect)
         {
             HandleAutoExpansion_Internal(itemControlID, targetItem, targetItemRect);
         }

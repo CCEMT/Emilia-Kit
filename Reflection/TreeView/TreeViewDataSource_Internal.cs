@@ -132,11 +132,11 @@ namespace Emilia.Reflection.Editor
             base.OnSearchChanged();
         }
 
-        protected override List<TreeViewItem> ExpandedRows(TreeViewItem root) => ExpandedRowsOverride_Internal(root);
+        public override List<TreeViewItem> ExpandedRows(TreeViewItem root) => ExpandedRowsOverride_Internal(root);
 
         public virtual List<TreeViewItem> ExpandedRowsOverride_Internal(TreeViewItem root) => base.ExpandedRows(root);
 
-        protected override List<TreeViewItem> Search(TreeViewItem root, string search) => SearchOverride_Internal(root, search);
+        public override List<TreeViewItem> Search(TreeViewItem root, string search) => SearchOverride_Internal(root, search);
 
         public virtual List<TreeViewItem> SearchOverride_Internal(TreeViewItem root, string search) => base.Search(root, search);
 
