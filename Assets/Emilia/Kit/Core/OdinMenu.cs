@@ -160,6 +160,8 @@ namespace Emilia.Kit
                 Type type = types[i];
                 if (type.IsAbstract || type.IsInterface) continue;
 
+                if (HideUtility.IsHide(type)) continue;
+
                 string displayName = type.Name;
                 TextAttribute textAttribute = type.GetCustomAttribute<TextAttribute>(true);
                 if (textAttribute != null) displayName = textAttribute.text;
@@ -207,7 +209,9 @@ namespace Emilia.Kit
 
                 ScriptableObject scriptableObject = asset as ScriptableObject;
                 if (scriptableObject == null) continue;
-
+                
+                if (HideUtility.IsHide(scriptableObject)) continue;
+                
                 string displayName = scriptableObject.name;
                 string description = ObjectDescriptionUtility.GetDescription(scriptableObject);
                 if (string.IsNullOrEmpty(description) == false) displayName += $"({description})";
@@ -252,6 +256,8 @@ namespace Emilia.Kit
             {
                 ScriptableObject asset = resources[i];
                 if (asset == null) continue;
+                
+                if (HideUtility.IsHide(asset)) continue;
 
                 string displayName = asset.name;
                 string description = ObjectDescriptionUtility.GetDescription(asset);
@@ -282,6 +288,8 @@ namespace Emilia.Kit
             {
                 GameObject prefab = resources[i];
                 if (prefab == null) continue;
+                
+                if (HideUtility.IsHide(prefab)) continue;
 
                 string displayName = prefab.name;
                 IObjectDescription descriptionComponent = prefab.GetComponent<IObjectDescription>();
@@ -327,6 +335,8 @@ namespace Emilia.Kit
             {
                 Object asset = resources[i];
                 if (asset == null) continue;
+                
+                if (HideUtility.IsHide(asset)) continue;
 
                 string displayName = asset.name;
                 string description = ObjectDescriptionUtility.GetDescription(asset);

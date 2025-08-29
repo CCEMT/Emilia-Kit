@@ -19,6 +19,7 @@ namespace Emilia.Kit
             {
                 T asset = resources[i];
                 if (asset == null) continue;
+                if (HideUtility.IsHide(asset)) continue;
 
                 string displayName = asset.name;
                 string description = ObjectDescriptionUtility.GetDescription(asset);
@@ -39,6 +40,7 @@ namespace Emilia.Kit
             {
                 T1 asset = resources[i];
                 if (asset == null) continue;
+                if (HideUtility.IsHide(asset)) continue;
 
                 string displayName = asset.name;
                 string description = ObjectDescriptionUtility.GetDescription(asset);
@@ -60,6 +62,7 @@ namespace Emilia.Kit
             {
                 T asset = resources[i];
                 if (asset == null) continue;
+                if (HideUtility.IsHide(asset)) continue;
 
                 string displayName = asset.name;
                 string description = ObjectDescriptionUtility.GetDescription(asset);
@@ -80,6 +83,7 @@ namespace Emilia.Kit
             {
                 T1 asset = resources[i];
                 if (asset == null) continue;
+                if (HideUtility.IsHide(asset)) continue;
 
                 string displayName = asset.name;
                 string description = ObjectDescriptionUtility.GetDescription(asset);
@@ -101,6 +105,7 @@ namespace Emilia.Kit
             {
                 T asset = resources[i];
                 if (asset == null) continue;
+                if (HideUtility.IsHide(asset)) continue;
 
                 string displayName = asset.name;
                 string description = ObjectDescriptionUtility.GetDescription(asset);
@@ -121,6 +126,7 @@ namespace Emilia.Kit
             {
                 T asset = resources[i];
                 if (asset == null) continue;
+                if (HideUtility.IsHide(asset)) continue;
 
                 string displayName = asset.name;
                 string description = ObjectDescriptionUtility.GetDescription(asset);
@@ -141,6 +147,7 @@ namespace Emilia.Kit
             {
                 T asset = resources[i];
                 if (asset == null) continue;
+                if (HideUtility.IsHide(asset)) continue;
 
                 string displayName = asset.name;
                 string description = ObjectDescriptionUtility.GetDescription(asset);
@@ -162,6 +169,7 @@ namespace Emilia.Kit
             {
                 T asset = resources[i];
                 if (asset == null) continue;
+                if (HideUtility.IsHide(asset)) continue;
 
                 string displayName = asset.name;
                 string description = ObjectDescriptionUtility.GetDescription(asset);
@@ -183,6 +191,7 @@ namespace Emilia.Kit
             {
                 GameObject prefab = resources[i];
                 if (prefab == null) continue;
+                if (HideUtility.IsHide(prefab)) continue;
 
                 string displayName = prefab.name;
                 IObjectDescription descriptionComponent = prefab.GetComponent<IObjectDescription>();
@@ -203,6 +212,7 @@ namespace Emilia.Kit
             {
                 GameObject prefab = resources[i];
                 if (prefab == null) continue;
+                if (HideUtility.IsHide(prefab)) continue;
 
                 string displayName = prefab.name;
                 IObjectDescription descriptionComponent = prefab.GetComponent<IObjectDescription>();
@@ -224,6 +234,7 @@ namespace Emilia.Kit
             {
                 GameObject prefab = resources[i];
                 if (prefab == null) continue;
+                if (HideUtility.IsHide(prefab)) continue;
 
                 string displayName = prefab.name;
                 IObjectDescription descriptionComponent = prefab.GetComponent<IObjectDescription>();
@@ -244,6 +255,7 @@ namespace Emilia.Kit
             {
                 GameObject prefab = resources[i];
                 if (prefab == null) continue;
+                if (HideUtility.IsHide(prefab)) continue;
 
                 string displayName = prefab.name;
                 IObjectDescription descriptionComponent = prefab.GetComponent<IObjectDescription>();
@@ -265,6 +277,7 @@ namespace Emilia.Kit
             {
                 T asset = resources[i];
                 if (asset == null) continue;
+                if (HideUtility.IsHide(asset)) continue;
 
                 string displayName = asset.name;
                 string description = ObjectDescriptionUtility.GetDescription(asset);
@@ -285,6 +298,7 @@ namespace Emilia.Kit
             {
                 T1 asset = resources[i];
                 if (asset == null) continue;
+                if (HideUtility.IsHide(asset)) continue;
 
                 string displayName = asset.name;
                 string description = ObjectDescriptionUtility.GetDescription(asset);
@@ -306,6 +320,7 @@ namespace Emilia.Kit
             {
                 T asset = resources[i];
                 if (asset == null) continue;
+                if (HideUtility.IsHide(asset)) continue;
 
                 string displayName = asset.name;
                 string description = ObjectDescriptionUtility.GetDescription(asset);
@@ -326,6 +341,7 @@ namespace Emilia.Kit
             {
                 T asset = resources[i];
                 if (asset == null) continue;
+                if (HideUtility.IsHide(asset)) continue;
 
                 string assetPath = AssetDatabase.GetAssetPath(asset);
                 list.Add(asset.name, assetPath);
