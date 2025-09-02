@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using Sirenix.Serialization;
+using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
+using SerializationUtility = Sirenix.Serialization.SerializationUtility;
 
 namespace Emilia.Kit
 {
@@ -10,7 +12,7 @@ namespace Emilia.Kit
     public class OdinSerializablePack<T> : ISerializationCallbackReceiver
     {
         [SerializeField]
-        private byte[] objectInfoBytes;
+        private string byteString;
 
         [SerializeField]
         private List<Object> unityObjects = new List<Object>();
@@ -22,12 +24,28 @@ namespace Emilia.Kit
         {
             if (this.serializableObject == null) return;
             unityObjects.Clear();
-            objectInfoBytes = TagSerializationUtility.IgnoreTagSerializeValue(serializableObject, DataFormat.Binary, out unityObjects, SerializeTagDefine.DefaultIgnoreTag);
+            byte[] bytes = TagSerializationUtility.IgnoreTagSerializeValue(serializableObject, DataFormat.Binary, out unityObjects, SerializeTagDefine.DefaultIgnoreTag);
+            byteString = Convert.ToBase64String(bytes);
         }
 
         public void OnAfterDeserialize()
         {
-            serializableObject = SerializationUtility.DeserializeValue<T>(objectInfoBytes, DataFormat.Binary, unityObjects);
+            if (string.IsNullOrEmpty(byteString)) return;
+            byte[] bytes = Convert.FromBase64String(byteString);
+            serializableObject = SerializationUtility.DeserializeValue<T>(bytes, DataFormat.Binary, unityObjects);
+        }
+
+        public static string ToJson<V>(V value)
+        {
+            OdinSerializablePack<V> pack = new OdinSerializablePack<V>();
+            pack.serializableObject = value;
+            return JsonUtility.ToJson(pack);
+        }
+
+        public static V FromJson<V>(string json)
+        {
+            OdinSerializablePack<V> pack = JsonUtility.FromJson<OdinSerializablePack<V>>(json);
+            return pack.serializableObject;
         }
     }
 }
