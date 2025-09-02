@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Sirenix.Serialization;
-using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
 using SerializationUtility = Sirenix.Serialization.SerializationUtility;
@@ -34,7 +33,10 @@ namespace Emilia.Kit
             byte[] bytes = Convert.FromBase64String(byteString);
             serializableObject = SerializationUtility.DeserializeValue<T>(bytes, DataFormat.Binary, unityObjects);
         }
+    }
 
+    public static class OdinSerializablePackUtility
+    {
         public static string ToJson<V>(V value)
         {
             OdinSerializablePack<V> pack = new OdinSerializablePack<V>();
