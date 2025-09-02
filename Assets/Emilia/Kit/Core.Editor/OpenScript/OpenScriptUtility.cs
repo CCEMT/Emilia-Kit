@@ -135,7 +135,7 @@ namespace Emilia.Kit.Editor
             string csprojPath = $"{EditorAssetKit.dataParentPath}/{assemblyName}.csproj";
             if (File.Exists(csprojPath) == false)
             {
-                EditorKit.UnityInvoke(onCompleted);
+                EditorApplication.delayCall += () => onCompleted();
                 return;
             }
 

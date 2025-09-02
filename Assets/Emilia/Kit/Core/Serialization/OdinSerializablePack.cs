@@ -6,31 +6,8 @@ using Object = UnityEngine.Object;
 
 namespace Emilia.Kit
 {
-    public static class JsonSerializableUtility
-    {
-        public static string ToJson<T>(T target)
-        {
-            var serializablePack = new SerializablePack<T>();
-            serializablePack.serializableObject = target;
-            return JsonUtility.ToJson(serializablePack);
-        }
-
-        public static T FromJson<T>(string json)
-        {
-            try
-            {
-                var serializablePack = JsonUtility.FromJson<SerializablePack<T>>(json);
-                return serializablePack.serializableObject;
-            }
-            catch
-            {
-                return default;
-            }
-        }
-    }
-
     [Serializable]
-    public class SerializablePack<T> : ISerializationCallbackReceiver
+    public class OdinSerializablePack<T> : ISerializationCallbackReceiver
     {
         [SerializeField]
         private byte[] objectInfoBytes;
