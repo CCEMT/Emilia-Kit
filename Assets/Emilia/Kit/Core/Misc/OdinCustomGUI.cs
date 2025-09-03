@@ -23,10 +23,8 @@ namespace Emilia.Kit
 
         private static GUIStyle textGUIStyle;
 
-        public static OdinCustomGUI CreateTextGUI(string text)
+        public static OdinCustomGUI CreateTextGUI(string text, float maxWidth = 300)
         {
-            const float MaxWidth = 300f;
-
             OdinCustomGUI odinCustomGUI = new OdinCustomGUI(() => {
 
                 if (textGUIStyle == null)
@@ -35,7 +33,7 @@ namespace Emilia.Kit
                     textGUIStyle.wordWrap = true;
                 }
 
-                GUILayout.Label(string.IsNullOrEmpty(text) ? string.Empty : text, textGUIStyle, GUILayout.MaxWidth(MaxWidth));
+                GUILayout.Label(string.IsNullOrEmpty(text) ? string.Empty : text, textGUIStyle, GUILayout.MaxWidth(maxWidth));
             });
 
             return odinCustomGUI;
