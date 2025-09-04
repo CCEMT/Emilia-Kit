@@ -2,7 +2,7 @@ using System;
 
 namespace Emilia.DataBuildPipeline.Editor
 {
-    public interface IDataPostproces
+    public interface IDataPostprocess
     {
         void Postprocess(IBuildContainer buildContainer, IBuildArgs buildArgs, Action onFinished);
     }
