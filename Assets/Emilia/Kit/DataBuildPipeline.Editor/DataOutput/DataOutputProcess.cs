@@ -6,7 +6,7 @@ namespace Emilia.DataBuildPipeline.Editor
     {
         public IEnumerator StartProcess(IBuildContainer container, IBuildArgs buildArgs)
         {
-            var dataOutputs = DataOutputManage.instance.GetFinalizeBuildDisposeList(buildArgs);
+            var dataOutputs = DataOutputManager.instance.GetFinalizeBuildDisposeList(buildArgs);
             var amount = dataOutputs.Count;
             for (var i = 0; i < amount; i++)
             {

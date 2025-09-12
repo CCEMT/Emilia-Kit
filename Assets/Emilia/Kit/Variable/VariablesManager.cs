@@ -5,12 +5,12 @@ using UnityEngine;
 namespace Emilia.Variables
 {
     [Serializable]
-    public class VariablesManage
+    public class VariablesManager
     {
         [SerializeField]
         private Dictionary<string, Variable> _variableMap = new Dictionary<string, Variable>();
 
-        private VariablesManage _parentManage;
+        private VariablesManager _parentManager;
 
         /// <summary>
         /// 所有参数
@@ -20,10 +20,10 @@ namespace Emilia.Variables
         /// <summary>
         /// 父级参数管理器
         /// </summary>
-        public VariablesManage parentManage
+        public VariablesManager parentManager
         {
-            get => this._parentManage;
-            set => this._parentManage = value;
+            get => this._parentManager;
+            set => this._parentManager = value;
         }
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace Emilia.Variables
         {
             if (this._variableMap.TryGetValue(key, out var value) == false)
             {
-                if (parentManage != null) return parentManage.GetValue<T>(key);
+                if (parentManager != null) return parentManager.GetValue<T>(key);
                 return default;
             }
 
@@ -60,7 +60,7 @@ namespace Emilia.Variables
         /// </summary>
         public bool SetValue<T>(string key, T value)
         {
-            if (parentManage != null && parentManage.HasKey(key)) return parentManage.SetValue(key, value);
+            if (parentManager != null && parentManager.HasKey(key)) return parentManager.SetValue(key, value);
 
             if (this._variableMap.TryGetValue(key, out Variable variable) == false)
             {
@@ -111,7 +111,7 @@ namespace Emilia.Variables
         public bool HasKey(string key)
         {
             if (this._variableMap.ContainsKey(key)) return true;
-            if (parentManage != null) return parentManage.HasKey(key);
+            if (parentManager != null) return parentManager.HasKey(key);
             return false;
         }
 
@@ -142,9 +142,9 @@ namespace Emilia.Variables
         /// <summary>
         /// 克隆
         /// </summary>
-        public VariablesManage Clone()
+        public VariablesManager Clone()
         {
-            VariablesManage cloneVariablesManage = new VariablesManage();
+            VariablesManager cloneVariablesManage = new VariablesManager();
 
             foreach (var item in variableMap)
             {

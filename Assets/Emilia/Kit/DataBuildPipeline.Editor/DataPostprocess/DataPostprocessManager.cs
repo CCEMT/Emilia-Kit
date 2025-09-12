@@ -6,11 +6,11 @@ using UnityEditor;
 
 namespace Emilia.DataBuildPipeline.Editor
 {
-    public class DataPostprocessManage : BuildSingleton<DataPostprocessManage>
+    public class DataPostprocessManager : BuildSingleton<DataPostprocessManager>
     {
         private List<IDataPostprocess> _postprocessList = new List<IDataPostprocess>();
 
-        public DataPostprocessManage()
+        public DataPostprocessManager()
         {
             Type[] types = TypeCache.GetTypesDerivedFrom<IDataPostprocess>().Where((type) => type.IsAbstract == false && type.IsInterface == false).ToArray();
             var amount = types.Length;

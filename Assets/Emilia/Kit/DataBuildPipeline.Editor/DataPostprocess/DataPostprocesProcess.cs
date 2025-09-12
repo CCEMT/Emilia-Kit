@@ -8,7 +8,7 @@ namespace Emilia.DataBuildPipeline.Editor
     {
         public IEnumerator StartProcess(IBuildContainer container, IBuildArgs args)
         {
-            List<IDataPostprocess> postprocessList = DataPostprocessManage.instance.GetDataPostprocess(args);
+            List<IDataPostprocess> postprocessList = DataPostprocessManager.instance.GetDataPostprocess(args);
             int amount = postprocessList.Count;
             for (int i = 0; i < amount; i++)
             {
