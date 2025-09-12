@@ -12,342 +12,226 @@ namespace Emilia.Kit
     {
         public static ValueDropdownList<T> GetScriptableObject<T>(string path) where T : ScriptableObject
         {
-            ValueDropdownList<T> list = new ValueDropdownList<T>();
-
             List<T> resources = EditorAssetKit.LoadAssetAtPath<T>(path);
-            for (int i = 0; i < resources.Count; i++)
-            {
-                T asset = resources[i];
-                if (asset == null) continue;
-                if (HideUtility.IsHide(asset)) continue;
+            return BuildList(resources, (asset) => ObjectDescriptionUtility.GetDescription(asset), asset => asset);
+        }
 
-                string displayName = asset.name;
-                string description = ObjectDescriptionUtility.GetDescription(asset);
-                if (string.IsNullOrEmpty(description) == false) displayName += $"({description})";
-
-                list.Add(displayName, asset);
-            }
-
-            return list;
+        public static ValueDropdownList<T> GetScriptableObject<T>(string path, Func<T, string> getDescription) where T : ScriptableObject
+        {
+            List<T> resources = EditorAssetKit.LoadAssetAtPath<T>(path);
+            return BuildList(resources, getDescription, asset => asset);
         }
 
         public static ValueDropdownList<T2> GetScriptableObject<T1, T2>(string path, Func<T1, T2> onSelect) where T1 : ScriptableObject
         {
-            ValueDropdownList<T2> list = new ValueDropdownList<T2>();
-
             List<T1> resources = EditorAssetKit.LoadAssetAtPath<T1>(path);
-            for (int i = 0; i < resources.Count; i++)
-            {
-                T1 asset = resources[i];
-                if (asset == null) continue;
-                if (HideUtility.IsHide(asset)) continue;
+            return BuildList(resources, (asset) => ObjectDescriptionUtility.GetDescription(asset), onSelect);
+        }
 
-                string displayName = asset.name;
-                string description = ObjectDescriptionUtility.GetDescription(asset);
-                if (string.IsNullOrEmpty(description) == false) displayName += $"({description})";
-
-                T2 value = onSelect(asset);
-                list.Add(displayName, value);
-            }
-
-            return list;
+        public static ValueDropdownList<T2> GetScriptableObject<T1, T2>(string path, 
+            Func<T1, T2> onSelect, Func<T1, string> getDescription) where T1 : ScriptableObject
+        {
+            List<T1> resources = EditorAssetKit.LoadAssetAtPath<T1>(path);
+            return BuildList(resources, getDescription, onSelect);
         }
 
         public static ValueDropdownList<T> GetScriptableObject<T>() where T : ScriptableObject
         {
-            ValueDropdownList<T> list = new ValueDropdownList<T>();
-
             T[] resources = EditorAssetKit.GetEditorResources<T>();
-            for (int i = 0; i < resources.Length; i++)
-            {
-                T asset = resources[i];
-                if (asset == null) continue;
-                if (HideUtility.IsHide(asset)) continue;
+            return BuildList(resources, (asset) => ObjectDescriptionUtility.GetDescription(asset), asset => asset);
+        }
 
-                string displayName = asset.name;
-                string description = ObjectDescriptionUtility.GetDescription(asset);
-                if (string.IsNullOrEmpty(description) == false) displayName += $"({description})";
-
-                list.Add(displayName, asset);
-            }
-
-            return list;
+        public static ValueDropdownList<T> GetScriptableObject<T>(Func<T, string> getDescription) where T : ScriptableObject
+        {
+            T[] resources = EditorAssetKit.GetEditorResources<T>();
+            return BuildList(resources, getDescription, asset => asset);
         }
 
         public static ValueDropdownList<T2> GetScriptableObject<T1, T2>(Func<T1, T2> onSelect) where T1 : ScriptableObject
         {
-            ValueDropdownList<T2> list = new ValueDropdownList<T2>();
-
             T1[] resources = EditorAssetKit.GetEditorResources<T1>();
-            for (int i = 0; i < resources.Length; i++)
-            {
-                T1 asset = resources[i];
-                if (asset == null) continue;
-                if (HideUtility.IsHide(asset)) continue;
+            return BuildList(resources, (asset) => ObjectDescriptionUtility.GetDescription(asset), onSelect);
+        }
 
-                string displayName = asset.name;
-                string description = ObjectDescriptionUtility.GetDescription(asset);
-                if (string.IsNullOrEmpty(description) == false) displayName += $"({description})";
-
-                T2 value = onSelect(asset);
-                list.Add(displayName, value);
-            }
-
-            return list;
+        public static ValueDropdownList<T2> GetScriptableObject<T1, T2>(
+            Func<T1, T2> onSelect, Func<T1, string> getDescription) where T1 : ScriptableObject
+        {
+            T1[] resources = EditorAssetKit.GetEditorResources<T1>();
+            return BuildList(resources, getDescription, onSelect);
         }
 
         public static ValueDropdownList<string> GetScriptableObjectName<T>() where T : ScriptableObject
         {
-            ValueDropdownList<string> list = new ValueDropdownList<string>();
-
             T[] resources = EditorAssetKit.GetEditorResources<T>();
-            for (int i = 0; i < resources.Length; i++)
-            {
-                T asset = resources[i];
-                if (asset == null) continue;
-                if (HideUtility.IsHide(asset)) continue;
+            return BuildList(resources, (asset) => ObjectDescriptionUtility.GetDescription(asset), asset => asset.name);
+        }
 
-                string displayName = asset.name;
-                string description = ObjectDescriptionUtility.GetDescription(asset);
-                if (string.IsNullOrEmpty(description) == false) displayName += $"({description})";
-
-                list.Add(displayName, asset.name);
-            }
-
-            return list;
+        public static ValueDropdownList<string> GetScriptableObjectName<T>(Func<T, string> getDescription) where T : ScriptableObject
+        {
+            T[] resources = EditorAssetKit.GetEditorResources<T>();
+            return BuildList(resources, getDescription, asset => asset.name);
         }
 
         public static ValueDropdownList<string> GetScriptableObjectName<T>(string path) where T : ScriptableObject
         {
-            ValueDropdownList<string> list = new ValueDropdownList<string>();
-
             List<T> resources = EditorAssetKit.LoadAssetAtPath<T>(path);
-            for (int i = 0; i < resources.Count; i++)
-            {
-                T asset = resources[i];
-                if (asset == null) continue;
-                if (HideUtility.IsHide(asset)) continue;
+            return BuildList(resources, (asset) => ObjectDescriptionUtility.GetDescription(asset), asset => asset.name);
+        }
 
-                string displayName = asset.name;
-                string description = ObjectDescriptionUtility.GetDescription(asset);
-                if (string.IsNullOrEmpty(description) == false) displayName += $"({description})";
-
-                list.Add(displayName, asset.name);
-            }
-
-            return list;
+        public static ValueDropdownList<string> GetScriptableObjectName<T>(string path, Func<T, string> getDescription) where T : ScriptableObject
+        {
+            List<T> resources = EditorAssetKit.LoadAssetAtPath<T>(path);
+            return BuildList(resources, getDescription, asset => asset.name);
         }
 
         public static ValueDropdownList<string> GetScriptableObjectPath<T>() where T : ScriptableObject
         {
-            ValueDropdownList<string> list = new ValueDropdownList<string>();
-
             T[] resources = EditorAssetKit.GetEditorResources<T>();
-            for (int i = 0; i < resources.Length; i++)
-            {
-                T asset = resources[i];
-                if (asset == null) continue;
-                if (HideUtility.IsHide(asset)) continue;
+            return BuildList(resources, (asset) => ObjectDescriptionUtility.GetDescription(asset), AssetDatabase.GetAssetPath);
+        }
 
-                string displayName = asset.name;
-                string description = ObjectDescriptionUtility.GetDescription(asset);
-                if (string.IsNullOrEmpty(description) == false) displayName += $"({description})";
-
-                string path = AssetDatabase.GetAssetPath(asset);
-                list.Add(displayName, path);
-            }
-
-            return list;
+        public static ValueDropdownList<string> GetScriptableObjectPath<T>(Func<T, string> getDescription) where T : ScriptableObject
+        {
+            T[] resources = EditorAssetKit.GetEditorResources<T>();
+            return BuildList(resources, getDescription, AssetDatabase.GetAssetPath);
         }
 
         public static ValueDropdownList<string> GetScriptableObjectPath<T>(string path) where T : ScriptableObject
         {
-            ValueDropdownList<string> list = new ValueDropdownList<string>();
-
             List<T> resources = EditorAssetKit.LoadAssetAtPath<T>(path);
-            for (int i = 0; i < resources.Count; i++)
-            {
-                T asset = resources[i];
-                if (asset == null) continue;
-                if (HideUtility.IsHide(asset)) continue;
+            return BuildList(resources, (asset) => ObjectDescriptionUtility.GetDescription(asset), AssetDatabase.GetAssetPath);
+        }
 
-                string displayName = asset.name;
-                string description = ObjectDescriptionUtility.GetDescription(asset);
-                if (string.IsNullOrEmpty(description) == false) displayName += $"({description})";
-
-                string assetPath = AssetDatabase.GetAssetPath(asset);
-                list.Add(displayName, assetPath);
-            }
-
-            return list;
+        public static ValueDropdownList<string> GetScriptableObjectPath<T>(string path, Func<T, string> getDescription) where T : ScriptableObject
+        {
+            List<T> resources = EditorAssetKit.LoadAssetAtPath<T>(path);
+            return BuildList(resources, getDescription, AssetDatabase.GetAssetPath);
         }
 
         public static ValueDropdownList<GameObject> GetPrefab(string path)
         {
-            ValueDropdownList<GameObject> list = new ValueDropdownList<GameObject>();
-
             List<GameObject> resources = EditorAssetKit.LoadAtPath<GameObject>(path, "*.prefab");
-            for (int i = 0; i < resources.Count; i++)
-            {
-                GameObject prefab = resources[i];
-                if (prefab == null) continue;
-                if (HideUtility.IsHide(prefab)) continue;
+            return BuildList(resources, PrefabDefaultDescription, prefab => prefab);
+        }
 
-                string displayName = prefab.name;
-                IObjectDescription descriptionComponent = prefab.GetComponent<IObjectDescription>();
-                if (descriptionComponent != null) displayName += $"({descriptionComponent.description})";
-
-                list.Add(displayName, prefab);
-            }
-
-            return list;
+        public static ValueDropdownList<GameObject> GetPrefab(string path, Func<GameObject, string> getDescription)
+        {
+            List<GameObject> resources = EditorAssetKit.LoadAtPath<GameObject>(path, "*.prefab");
+            return BuildList(resources, getDescription, prefab => prefab);
         }
 
         public static ValueDropdownList<T> GetPrefab<T>(string path, Func<GameObject, T> onSelect)
         {
-            ValueDropdownList<T> list = new ValueDropdownList<T>();
-
             List<GameObject> resources = EditorAssetKit.LoadAtPath<GameObject>(path, "*.prefab");
-            for (int i = 0; i < resources.Count; i++)
-            {
-                GameObject prefab = resources[i];
-                if (prefab == null) continue;
-                if (HideUtility.IsHide(prefab)) continue;
+            return BuildList(resources, PrefabDefaultDescription, onSelect);
+        }
 
-                string displayName = prefab.name;
-                IObjectDescription descriptionComponent = prefab.GetComponent<IObjectDescription>();
-                if (descriptionComponent != null) displayName += $"({descriptionComponent.description})";
-
-                T value = onSelect(prefab);
-                list.Add(displayName, value);
-            }
-
-            return list;
+        public static ValueDropdownList<T> GetPrefab<T>(string path, Func<GameObject, T> onSelect, Func<GameObject, string> getDescription)
+        {
+            List<GameObject> resources = EditorAssetKit.LoadAtPath<GameObject>(path, "*.prefab");
+            return BuildList(resources, getDescription, onSelect);
         }
 
         public static ValueDropdownList<string> GetPrefabName(string path)
         {
-            ValueDropdownList<string> list = new ValueDropdownList<string>();
-
             List<GameObject> resources = EditorAssetKit.LoadAtPath<GameObject>(path, "*.prefab");
-            for (int i = 0; i < resources.Count; i++)
-            {
-                GameObject prefab = resources[i];
-                if (prefab == null) continue;
-                if (HideUtility.IsHide(prefab)) continue;
+            return BuildList(resources, PrefabDefaultDescription, prefab => prefab.name);
+        }
 
-                string displayName = prefab.name;
-                IObjectDescription descriptionComponent = prefab.GetComponent<IObjectDescription>();
-                if (descriptionComponent != null) displayName += $"({descriptionComponent.description})";
-
-                list.Add(displayName, prefab.name);
-            }
-
-            return list;
+        public static ValueDropdownList<string> GetPrefabName(string path, Func<GameObject, string> getDescription)
+        {
+            List<GameObject> resources = EditorAssetKit.LoadAtPath<GameObject>(path, "*.prefab");
+            return BuildList(resources, getDescription, prefab => prefab.name);
         }
 
         public static ValueDropdownList<string> GetPrefabPath(string path)
         {
-            ValueDropdownList<string> list = new ValueDropdownList<string>();
-
             List<GameObject> resources = EditorAssetKit.LoadAtPath<GameObject>(path, "*.prefab");
-            for (int i = 0; i < resources.Count; i++)
-            {
-                GameObject prefab = resources[i];
-                if (prefab == null) continue;
-                if (HideUtility.IsHide(prefab)) continue;
+            return BuildList(resources, PrefabDefaultDescription, AssetDatabase.GetAssetPath);
+        }
 
-                string displayName = prefab.name;
-                IObjectDescription descriptionComponent = prefab.GetComponent<IObjectDescription>();
-                if (descriptionComponent != null) displayName += $"({descriptionComponent.description})";
-
-                string assetPath = AssetDatabase.GetAssetPath(prefab);
-                list.Add(displayName, assetPath);
-            }
-
-            return list;
+        public static ValueDropdownList<string> GetPrefabPath(string path, Func<GameObject, string> getDescription)
+        {
+            List<GameObject> resources = EditorAssetKit.LoadAtPath<GameObject>(path, "*.prefab");
+            return BuildList(resources, getDescription, AssetDatabase.GetAssetPath);
         }
 
         public static ValueDropdownList<T> GetAsset<T>(string path, string searchPattern) where T : Object
         {
-            ValueDropdownList<T> list = new ValueDropdownList<T>();
-
             List<T> resources = EditorAssetKit.LoadAtPath<T>(path, searchPattern);
-            for (int i = 0; i < resources.Count; i++)
-            {
-                T asset = resources[i];
-                if (asset == null) continue;
-                if (HideUtility.IsHide(asset)) continue;
+            return BuildList(resources, (asset) => ObjectDescriptionUtility.GetDescription(asset), asset => asset);
+        }
 
-                string displayName = asset.name;
-                string description = ObjectDescriptionUtility.GetDescription(asset);
-                if (string.IsNullOrEmpty(description) == false) displayName += $"({description})";
-
-                list.Add(displayName, asset);
-            }
-
-            return list;
+        public static ValueDropdownList<T> GetAsset<T>(string path, string searchPattern, Func<T, string> getDescription) where T : Object
+        {
+            List<T> resources = EditorAssetKit.LoadAtPath<T>(path, searchPattern);
+            return BuildList(resources, getDescription, asset => asset);
         }
 
         public static ValueDropdownList<T2> GetAsset<T1, T2>(string path, string searchPattern, Func<T1, T2> onSelect) where T1 : Object
         {
-            ValueDropdownList<T2> list = new ValueDropdownList<T2>();
-
             List<T1> resources = EditorAssetKit.LoadAtPath<T1>(path, searchPattern);
-            for (int i = 0; i < resources.Count; i++)
-            {
-                T1 asset = resources[i];
-                if (asset == null) continue;
-                if (HideUtility.IsHide(asset)) continue;
+            return BuildList(resources, (asset) => ObjectDescriptionUtility.GetDescription(asset), onSelect);
+        }
 
-                string displayName = asset.name;
-                string description = ObjectDescriptionUtility.GetDescription(asset);
-                if (string.IsNullOrEmpty(description) == false) displayName += $"({description})";
-
-                T2 value = onSelect(asset);
-                list.Add(displayName, value);
-            }
-
-            return list;
+        public static ValueDropdownList<T2> GetAsset<T1, T2>(string path, string searchPattern,
+            Func<T1, T2> onSelect, Func<T1, string> getDescription) where T1 : Object
+        {
+            List<T1> resources = EditorAssetKit.LoadAtPath<T1>(path, searchPattern);
+            return BuildList(resources, getDescription, onSelect);
         }
 
         public static ValueDropdownList<string> GetAssetName<T>(string path, string searchPattern) where T : Object
         {
-            ValueDropdownList<string> list = new ValueDropdownList<string>();
-
             List<T> resources = EditorAssetKit.LoadAtPath<T>(path, searchPattern);
-            for (int i = 0; i < resources.Count; i++)
+            return BuildList(resources, (asset) => ObjectDescriptionUtility.GetDescription(asset), asset => asset.name);
+        }
+
+        public static ValueDropdownList<string> GetAssetName<T>(string path, string searchPattern, Func<T, string> getDescription) where T : Object
+        {
+            List<T> resources = EditorAssetKit.LoadAtPath<T>(path, searchPattern);
+            return BuildList(resources, getDescription, asset => asset.name);
+        }
+
+        public static ValueDropdownList<string> GetAssetPath<T>(string path, string searchPattern) where T : Object
+        {
+            List<T> resources = EditorAssetKit.LoadAtPath<T>(path, searchPattern);
+            return BuildList(resources, (asset) => ObjectDescriptionUtility.GetDescription(asset), AssetDatabase.GetAssetPath);
+        }
+
+        public static ValueDropdownList<string> GetAssetPath<T>(string path, string searchPattern, Func<T, string> getDescription) where T : Object
+        {
+            List<T> resources = EditorAssetKit.LoadAtPath<T>(path, searchPattern);
+            return BuildList(resources, getDescription, AssetDatabase.GetAssetPath);
+        }
+
+        private static ValueDropdownList<TOut> BuildList<TAsset, TOut>(
+            IEnumerable<TAsset> assets,
+            Func<TAsset, string> getDescription,
+            Func<TAsset, TOut> selectValue)
+            where TAsset : Object
+        {
+            ValueDropdownList<TOut> list = new ValueDropdownList<TOut>();
+
+            foreach (TAsset asset in assets)
             {
-                T asset = resources[i];
                 if (asset == null) continue;
                 if (HideUtility.IsHide(asset)) continue;
 
                 string displayName = asset.name;
-                string description = ObjectDescriptionUtility.GetDescription(asset);
+                string description = getDescription?.Invoke(asset) ?? string.Empty;
                 if (string.IsNullOrEmpty(description) == false) displayName += $"({description})";
 
-                list.Add(displayName, asset.name);
+                list.Add(displayName, selectValue(asset));
             }
 
             return list;
         }
 
-        public static ValueDropdownList<string> GetAssetPath<T>(string path, string searchPattern) where T : Object
+        private static string PrefabDefaultDescription(GameObject prefab)
         {
-            ValueDropdownList<string> list = new ValueDropdownList<string>();
-
-            List<T> resources = EditorAssetKit.LoadAtPath<T>(path, searchPattern);
-            for (int i = 0; i < resources.Count; i++)
-            {
-                T asset = resources[i];
-                if (asset == null) continue;
-                if (HideUtility.IsHide(asset)) continue;
-
-                string assetPath = AssetDatabase.GetAssetPath(asset);
-                list.Add(asset.name, assetPath);
-            }
-
-            return list;
+            IObjectDescription descriptionComponent = prefab != null ? prefab.GetComponent<IObjectDescription>() : null;
+            return descriptionComponent != null ? descriptionComponent.description : string.Empty;
         }
     }
 }

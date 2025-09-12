@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Emilia.Variables.Editor
 {
-    public partial class EditorParametersManage : ISelectedHandle
+    public partial class EditorParametersManager : ISelectedHandle
     {
         public bool Validate() => true;
 

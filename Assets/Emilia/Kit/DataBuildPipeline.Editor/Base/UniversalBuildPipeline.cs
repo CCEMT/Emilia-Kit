@@ -49,11 +49,11 @@ namespace Emilia.DataBuildPipeline.Editor
             container = CreateContainer();
         }
 
-        protected virtual IBuildContainer CreateContainer() => BuildContainerManage.instance.CreateBuildContainer(buildArgs);
+        protected virtual IBuildContainer CreateContainer() => BuildContainerManager.instance.CreateBuildContainer(buildArgs);
 
         protected virtual void DataDetection()
         {
-            List<IDataDetection> detections = DataDetectionManage.instance.GetDataDetectionList(this.buildArgs);
+            List<IDataDetection> detections = DataDetectionManager.instance.GetDataDetectionList(this.buildArgs);
             int amount = detections.Count;
             for (int i = 0; i < amount; i++)
             {

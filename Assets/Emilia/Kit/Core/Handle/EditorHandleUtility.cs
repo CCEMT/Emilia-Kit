@@ -85,7 +85,7 @@ namespace Emilia.Kit
                     Type handleType = types[i];
                     if (filterType.IsAssignableFrom(handleType) == false) continue;
 
-                    if (type.IsSubclassOf(typeof(ScriptableObject))) return (T) ReflectUtility.CreateInstance(handleType);
+                    if (handleType.IsSubclassOf(typeof(ScriptableObject))) return (T) (object) ScriptableObject.CreateInstance(handleType);
                     return (T) ReflectUtility.CreateInstance(handleType);
                 }
 

@@ -5,11 +5,11 @@ using UnityEditor;
 
 namespace Emilia.DataBuildPipeline.Editor
 {
-    public class BuildContainerManage : BuildSingleton<BuildContainerManage>
+    public class BuildContainerManager : BuildSingleton<BuildContainerManager>
     {
         private Dictionary<Type, Type> buildContainerTypes = new Dictionary<Type, Type>();
 
-        public BuildContainerManage()
+        public BuildContainerManager()
         {
             IList<Type> types = TypeCache.GetTypesDerivedFrom<IBuildContainer>();
 

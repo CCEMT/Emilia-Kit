@@ -26,7 +26,7 @@ namespace Emilia.Variables.Editor
     }
 
     [Serializable, HideMonoScript]
-    public partial class EditorParametersManage : TitleAsset
+    public partial class EditorParametersManager : TitleAsset
     {
         public override string title => "参数列表";
 
@@ -83,9 +83,9 @@ namespace Emilia.Variables.Editor
         /// <summary>
         /// 转换为VariablesManage
         /// </summary>
-        public VariablesManage ToParametersManage()
+        public VariablesManager ToParametersManage()
         {
-            VariablesManage variablesManage = new VariablesManage();
+            VariablesManager variablesManage = new VariablesManager();
 
             int amount = parameters.Count;
             for (int i = 0; i < amount; i++)

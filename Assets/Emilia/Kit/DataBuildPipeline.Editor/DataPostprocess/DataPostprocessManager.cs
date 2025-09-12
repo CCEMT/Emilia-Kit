@@ -6,37 +6,37 @@ using UnityEditor;
 
 namespace Emilia.DataBuildPipeline.Editor
 {
-    public class DataPostprocesManage : BuildSingleton<DataPostprocesManage>
+    public class DataPostprocessManager : BuildSingleton<DataPostprocessManager>
     {
-        private List<IDataPostproces> _postprocessList = new List<IDataPostproces>();
+        private List<IDataPostprocess> _postprocessList = new List<IDataPostprocess>();
 
-        public DataPostprocesManage()
+        public DataPostprocessManager()
         {
-            Type[] types = TypeCache.GetTypesDerivedFrom<IDataPostproces>().Where((type) => type.IsAbstract == false && type.IsInterface == false).ToArray();
+            Type[] types = TypeCache.GetTypesDerivedFrom<IDataPostprocess>().Where((type) => type.IsAbstract == false && type.IsInterface == false).ToArray();
             var amount = types.Length;
             for (var i = 0; i < amount; i++)
             {
                 Type type = types[i];
                 var postprocess = Activator.CreateInstance(type);
-                IDataPostproces iDataPostproces = postprocess as IDataPostproces;
-                if (iDataPostproces != null) this._postprocessList.Add(iDataPostproces);
+                IDataPostprocess iDataPostprocess = postprocess as IDataPostprocess;
+                if (iDataPostprocess != null) this._postprocessList.Add(iDataPostprocess);
             }
         }
 
-        public List<IDataPostproces> GetDataPostproces(IBuildArgs buildArgs)
+        public List<IDataPostprocess> GetDataPostprocess(IBuildArgs buildArgs)
         {
             Type argsType = buildArgs.GetType();
 
-            Dictionary<int, IDataPostproces> dataPostprocesMap = new Dictionary<int, IDataPostproces>();
-            List<IDataPostproces> dataPostprocesList = new List<IDataPostproces>();
+            Dictionary<int, IDataPostprocess> dataPostprocessMap = new Dictionary<int, IDataPostprocess>();
+            List<IDataPostprocess> dataPostprocessList = new List<IDataPostprocess>();
 
             while (argsType != typeof(object))
             {
                 int amount = this._postprocessList.Count;
                 for (var i = 0; i < amount; i++)
                 {
-                    IDataPostproces postproces = this._postprocessList[i];
-                    Type type = postproces.GetType();
+                    IDataPostprocess postprocess = this._postprocessList[i];
+                    Type type = postprocess.GetType();
                     
                     BuildPipelineAttribute attribute = type.GetCustomAttribute<BuildPipelineAttribute>();
                     if (attribute == null) continue;
@@ -47,21 +47,21 @@ namespace Emilia.DataBuildPipeline.Editor
                     BuildSequenceAttribute sequenceAttribute = type.GetCustomAttribute<BuildSequenceAttribute>();
                     if (sequenceAttribute != null) priority = sequenceAttribute.priority;
                     
-                    if (dataPostprocesMap.TryAdd(priority, postproces) == false) continue;
+                    if (dataPostprocessMap.TryAdd(priority, postprocess) == false) continue;
                     
-                    dataPostprocesList.Add(postproces);
+                    dataPostprocessList.Add(postprocess);
                 }
                 
                 argsType = argsType.BaseType;
             }
 
-            dataPostprocesList.Sort((a, b) => {
+            dataPostprocessList.Sort((a, b) => {
                 BuildSequenceAttribute attributeA = a.GetType().GetCustomAttribute<BuildSequenceAttribute>();
                 BuildSequenceAttribute attributeB = b.GetType().GetCustomAttribute<BuildSequenceAttribute>();
                 return attributeA.priority.CompareTo(attributeB.priority);
             });
 
-            return dataPostprocesList;
+            return dataPostprocessList;
         }
     }
 }

@@ -1,67 +1,67 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Sirenix.Utilities;
+using System.Reflection;
 using UnityEditor;
 
 namespace Emilia.DataBuildPipeline.Editor
 {
-    public class DataOutputManage : BuildSingleton<DataOutputManage>
+    public class DataBuildManager : BuildSingleton<DataBuildManager>
     {
-        private List<IDataOutput> _dataOutputs = new List<IDataOutput>();
+        private List<IDataBuild> _dataBuilds = new List<IDataBuild>();
 
-        public DataOutputManage()
+        public DataBuildManager()
         {
-            Type[] types = TypeCache.GetTypesDerivedFrom<IDataOutput>().Where((type) => type.IsAbstract == false && type.IsInterface == false).ToArray();
+            Type[] types = TypeCache.GetTypesDerivedFrom<IDataBuild>().Where((type) => type.IsAbstract == false && type.IsInterface == false).ToArray();
             int amount = types.Length;
             for (var i = 0; i < amount; i++)
             {
                 Type type = types[i];
-                object output = Activator.CreateInstance(type);
-                IDataOutput dataOutput = output as IDataOutput;
-                if (dataOutput != null) this._dataOutputs.Add(dataOutput);
+                object dataBuild = Activator.CreateInstance(type);
+                IDataBuild build = dataBuild as IDataBuild;
+                if (build == null) continue;
+                this._dataBuilds.Add(build);
             }
         }
 
-        public List<IDataOutput> GetFinalizeBuildDisposeList(IBuildArgs buildArgs)
+        public List<IDataBuild> GetDataBuildList(IBuildArgs buildArgs)
         {
             Type argsType = buildArgs.GetType();
-
-            Dictionary<int, IDataOutput> dataOutputMap = new Dictionary<int, IDataOutput>();
-            List<IDataOutput> dataOutputList = new List<IDataOutput>();
+            Dictionary<int, IDataBuild> dataBuildMap = new Dictionary<int, IDataBuild>();
+            List<IDataBuild> dataBuildList = new List<IDataBuild>();
 
             while (argsType != typeof(object))
             {
-                int amount = this._dataOutputs.Count;
-                for (var i = 0; i < amount; i++)
+                int amount = this._dataBuilds.Count;
+                for (int i = 0; i < amount; i++)
                 {
-                    IDataOutput dataOutput = this._dataOutputs[i];
-                    Type type = dataOutput.GetType();
+                    IDataBuild build = this._dataBuilds[i];
+                    Type type = build.GetType();
                     
                     BuildPipelineAttribute attribute = type.GetCustomAttribute<BuildPipelineAttribute>();
                     if (attribute == null) continue;
                     
                     if (attribute.argsType != argsType) continue;
-                    
+
                     int priority = 0;
                     BuildSequenceAttribute sequenceAttribute = type.GetCustomAttribute<BuildSequenceAttribute>();
                     if (sequenceAttribute != null) priority = sequenceAttribute.priority;
+
+                    if (dataBuildMap.TryAdd(priority, build) == false) continue;
                     
-                    if (dataOutputMap.TryAdd(priority, dataOutput) == false) continue;
-                    
-                    dataOutputList.Add(dataOutput);
+                    dataBuildList.Add(build);
                 }
-                
+
                 argsType = argsType.BaseType;
             }
 
-            dataOutputList.Sort((a, b) => {
+            dataBuildList.Sort((a, b) => {
                 BuildSequenceAttribute attributeA = a.GetType().GetCustomAttribute<BuildSequenceAttribute>();
                 BuildSequenceAttribute attributeB = b.GetType().GetCustomAttribute<BuildSequenceAttribute>();
                 return attributeA.priority.CompareTo(attributeB.priority);
             });
 
-            return dataOutputList;
+            return dataBuildList;
         }
     }
 }

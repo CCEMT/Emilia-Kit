@@ -6,11 +6,11 @@ using UnityEditor;
 
 namespace Emilia.DataBuildPipeline.Editor
 {
-    public class BuildPipelineManage : BuildSingleton<BuildPipelineManage>
+    public class BuildPipelineManager : BuildSingleton<BuildPipelineManager>
     {
         private Dictionary<Type, Type> pipelines = new Dictionary<Type, Type>();
 
-        public BuildPipelineManage()
+        public BuildPipelineManager()
         {
             Type[] types = TypeCache.GetTypesDerivedFrom<IBuildPipeline>().ToArray();
             int amount = types.Length;

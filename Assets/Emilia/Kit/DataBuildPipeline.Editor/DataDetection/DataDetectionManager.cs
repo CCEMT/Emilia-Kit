@@ -6,11 +6,11 @@ using UnityEditor;
 
 namespace Emilia.DataBuildPipeline.Editor
 {
-    public class DataDetectionManage : BuildSingleton<DataDetectionManage>
+    public class DataDetectionManager : BuildSingleton<DataDetectionManager>
     {
         private List<IDataDetection> _detections = new List<IDataDetection>();
 
-        public DataDetectionManage()
+        public DataDetectionManager()
         {
             Type[] types = TypeCache.GetTypesDerivedFrom<IDataDetection>().Where((type) => type.IsAbstract == false && type.IsInterface == false).ToArray();
             int amount = types.Length;

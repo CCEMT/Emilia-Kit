@@ -34,8 +34,15 @@ namespace Emilia.Kit
         {
             if (obj == null) return string.Empty;
 
-            Type type = obj.GetType();
-            IObjectDescriptionGetter getter = descriptionGetterMap.GetValueOrDefault(type);
+            if (obj is Type type)
+            {
+                TextAttribute typeTextAttribute = type.GetCustomAttribute<TextAttribute>();
+                if (typeTextAttribute != null) return typeTextAttribute.text;
+                return string.Empty;
+            }
+
+            Type objType = obj.GetType();
+            IObjectDescriptionGetter getter = descriptionGetterMap.GetValueOrDefault(objType);
             if (getter != null)
             {
                 string description = getter.GetDescription(obj, owner, userData);
@@ -45,7 +52,7 @@ namespace Emilia.Kit
             IObjectDescription objectDescription = obj as IObjectDescription;
             if (objectDescription != null) return objectDescription.description;
 
-            TextAttribute textAttribute = type.GetCustomAttribute<TextAttribute>();
+            TextAttribute textAttribute = objType.GetCustomAttribute<TextAttribute>();
             if (textAttribute != null) return textAttribute.text;
 
             return string.Empty;

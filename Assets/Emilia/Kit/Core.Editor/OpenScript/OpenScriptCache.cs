@@ -24,8 +24,15 @@ namespace Emilia.Kit.Editor
             if (File.Exists(path) == false) instance = new OpenScriptCache();
             else
             {
-                byte[] bytes = File.ReadAllBytes(path);
-                instance = SerializationUtility.DeserializeValue<OpenScriptCache>(bytes, DataFormat.JSON);
+                try
+                {
+                    byte[] bytes = File.ReadAllBytes(path);
+                    instance = SerializationUtility.DeserializeValue<OpenScriptCache>(bytes, DataFormat.Binary);
+                }
+                catch
+                {
+                    instance = new OpenScriptCache();
+                }
             }
 
             return instance;
@@ -34,7 +41,7 @@ namespace Emilia.Kit.Editor
         public static void Save()
         {
             string path = $"{EditorAssetKit.dataParentPath}/Library/OpenScriptCache.bytes";
-            var bytes = SerializationUtility.SerializeValue(instance, DataFormat.JSON);
+            var bytes = SerializationUtility.SerializeValue(instance, DataFormat.Binary);
             File.WriteAllBytes(path, bytes);
         }
     }
