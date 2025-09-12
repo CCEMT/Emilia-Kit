@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Emilia.Kit.Editor;
 using Sirenix.OdinInspector.Editor;
-using Sirenix.Utilities;
 using UnityEditor;
 using UnityEngine;
 using Action = System.Action;
@@ -14,6 +13,9 @@ namespace Emilia.Kit
 {
     public class OdinMenu
     {
+        private const string DefaultName = "选择";
+        private const float DefaultWidth = 200f;
+
         private struct MenuItem
         {
             public object userData;
@@ -24,11 +26,11 @@ namespace Emilia.Kit
 
         public string title { get; set; }
 
-        public float defaultWidth { get; set; } = 200f;
+        public float defaultWidth { get; set; } = DefaultWidth;
 
         public bool isEnablePinYinSearch { get; set; } = true;
 
-        public OdinMenu(string name = "选择")
+        public OdinMenu(string name = DefaultName)
         {
             title = name;
         }
@@ -97,52 +99,52 @@ namespace Emilia.Kit
 
         public static void ShowInPopupObject<T>(Action<T> onSelected)
         {
-            ShowInPopupObject("选择", onSelected);
+            ShowInPopupObject(DefaultName, onSelected);
         }
 
         public static void ShowInPopupObject(Type type, Action<object> onSelected)
         {
-            ShowInPopupObject(type, "选择", onSelected);
+            ShowInPopupObject(type, DefaultName, onSelected);
         }
 
         public static void ShowInPopupObject<T>(string title, Action<T> onSelected)
         {
-            ShowInPopupObject(title, 200f, onSelected);
+            ShowInPopupObject(title, DefaultWidth, onSelected);
         }
 
         public static void ShowInPopupObject(Type type, string title, Action<object> onSelected)
         {
-            ShowInPopupObject(type, title, 200f, onSelected);
+            ShowInPopupObject(type, title, DefaultWidth, onSelected);
         }
 
         public static void ShowInPopupObject<T>(string title, float width, Action<T> onSelected)
         {
-            ShowInPopupObject(typeof(T), title, width, (obj) => { onSelected?.Invoke((T) obj); });
+            ShowInPopupObject(typeof(T), title, width, (obj) => onSelected?.Invoke((T) obj));
         }
 
         public static void ShowInPopupObject(Type objectType, string title, float width, Action<object> onSelected)
         {
-            ShowInPopupType(objectType, title, width, (type) => { onSelected?.Invoke(ReflectUtility.CreateInstance(type)); });
+            ShowInPopupType(objectType, title, width, (type) => onSelected?.Invoke(ReflectUtility.CreateInstance(type)));
         }
 
         public static void ShowInPopupType<T>(Action<Type> onSelected)
         {
-            ShowInPopupType<T>("选择", onSelected);
+            ShowInPopupType<T>(DefaultName, onSelected);
         }
 
         public static void ShowInPopupType(Type type, Action<Type> onSelected)
         {
-            ShowInPopupType(type, "选择", onSelected);
+            ShowInPopupType(type, DefaultName, onSelected);
         }
 
         public static void ShowInPopupType<T>(string title, Action<Type> onSelected)
         {
-            ShowInPopupType<T>(title, 200f, onSelected);
+            ShowInPopupType<T>(title, DefaultWidth, onSelected);
         }
 
         public static void ShowInPopupType(Type type, string title, Action<Type> onSelected)
         {
-            ShowInPopupType(type, title, 200f, onSelected);
+            ShowInPopupType(type, title, DefaultWidth, onSelected);
         }
 
         public static void ShowInPopupType<T>(string title, float width, Action<Type> onSelected)
@@ -163,8 +165,8 @@ namespace Emilia.Kit
                 if (HideUtility.IsHide(type)) continue;
 
                 string displayName = type.Name;
-                TextAttribute textAttribute = type.GetCustomAttribute<TextAttribute>(true);
-                if (textAttribute != null) displayName = textAttribute.text;
+                string description = ObjectDescriptionUtility.GetDescription(type);
+                if (string.IsNullOrEmpty(description) == false) displayName = description;
 
                 menu.AddItem(displayName, () => onSelected(type));
             }
@@ -174,178 +176,462 @@ namespace Emilia.Kit
 
         public static void ShowInPopupScriptableObject<T>(Action<T> onSelected) where T : ScriptableObject
         {
-            ShowInPopupScriptableObject("选择", onSelected);
+            T[] resources = EditorAssetKit.GetEditorResources<T>();
+            ShowInPopupList(DefaultName, DefaultWidth, resources,
+                (asset) => ObjectDescriptionUtility.GetDescription(asset), asset => asset, onSelected);
+        }
+
+        public static void ShowInPopupScriptableObject<T>(Func<T, string> getDescription, Action<T> onSelected) where T : ScriptableObject
+        {
+            T[] resources = EditorAssetKit.GetEditorResources<T>();
+            ShowInPopupList(DefaultName, DefaultWidth, resources, getDescription, asset => asset, onSelected);
+        }
+
+        public static void ShowInPopupScriptableObject<T1, T2>(Func<T1, T2> selectValue, Action<T2> onSelected) where T1 : ScriptableObject
+        {
+            T1[] resources = EditorAssetKit.GetEditorResources<T1>();
+            ShowInPopupList(DefaultName, DefaultWidth, resources,
+                (asset) => ObjectDescriptionUtility.GetDescription(asset), selectValue, onSelected);
+        }
+
+        public static void ShowInPopupScriptableObject<T1, T2>(
+            Func<T1, string> getDescription, Func<T1, T2> selectValue, Action<T2> onSelected) where T1 : ScriptableObject
+        {
+            T1[] resources = EditorAssetKit.GetEditorResources<T1>();
+            ShowInPopupList(DefaultName, DefaultWidth, resources, getDescription, selectValue, onSelected);
         }
 
         public static void ShowInPopupScriptableObject(Type type, Action<ScriptableObject> onSelected)
         {
-            ShowInPopupScriptableObject(type, "选择", onSelected);
+            var resources = EditorAssetKit.GetEditorResources(type).OfType<ScriptableObject>();
+            ShowInPopupList(DefaultName, DefaultWidth, resources,
+                (asset) => ObjectDescriptionUtility.GetDescription(asset), asset => asset, onSelected);
+        }
+
+        public static void ShowInPopupScriptableObject(Type type, Func<ScriptableObject, string> getDescription, Action<ScriptableObject> onSelected)
+        {
+            var resources = EditorAssetKit.GetEditorResources(type).OfType<ScriptableObject>();
+            ShowInPopupList(DefaultName, DefaultWidth, resources, getDescription, asset => asset, onSelected);
+        }
+
+        public static void ShowInPopupScriptableObject<T>(Type type, Func<ScriptableObject, T> selectValue, Action<T> onSelected)
+        {
+            var resources = EditorAssetKit.GetEditorResources(type).OfType<ScriptableObject>();
+            ShowInPopupList(DefaultName, DefaultWidth, resources,
+                (asset) => ObjectDescriptionUtility.GetDescription(asset), selectValue, onSelected);
+        }
+
+        public static void ShowInPopupScriptableObject<T>(Type type,
+            Func<ScriptableObject, string> getDescription, Func<ScriptableObject, T> selectValue, Action<T> onSelected)
+        {
+            var resources = EditorAssetKit.GetEditorResources(type).OfType<ScriptableObject>();
+            ShowInPopupList(DefaultName, DefaultWidth, resources, getDescription, selectValue, onSelected);
         }
 
         public static void ShowInPopupScriptableObject<T>(string title, Action<T> onSelected) where T : ScriptableObject
         {
-            ShowInPopupScriptableObject(title, 200f, onSelected);
+            T[] resources = EditorAssetKit.GetEditorResources<T>();
+            ShowInPopupList(title, DefaultWidth, resources,
+                (asset) => ObjectDescriptionUtility.GetDescription(asset), asset => asset, onSelected);
         }
 
         public static void ShowInPopupScriptableObject(Type type, string title, Action<ScriptableObject> onSelected)
         {
-            ShowInPopupScriptableObject(type, title, 200f, onSelected);
+            var resources = EditorAssetKit.GetEditorResources(type).OfType<ScriptableObject>();
+            ShowInPopupList(title, DefaultWidth, resources,
+                (asset) => ObjectDescriptionUtility.GetDescription(asset), asset => asset, onSelected);
         }
 
         public static void ShowInPopupScriptableObject<T>(string title, float width, Action<T> onSelected) where T : ScriptableObject
         {
-            ShowInPopupScriptableObject(typeof(T), title, width, (obj) => { onSelected?.Invoke((T) obj); });
+            T[] resources = EditorAssetKit.GetEditorResources<T>();
+            ShowInPopupList(title, width, resources,
+                (asset) => ObjectDescriptionUtility.GetDescription(asset), asset => asset, onSelected);
         }
 
         public static void ShowInPopupScriptableObject(Type objectType, string title, float width, Action<ScriptableObject> onSelected)
         {
-            OdinMenu menu = new(title);
-
-            Object[] resources = EditorAssetKit.GetEditorResources(objectType);
-            for (int i = 0; i < resources.Length; i++)
-            {
-                Object asset = resources[i];
-                if (asset == null) continue;
-
-                ScriptableObject scriptableObject = asset as ScriptableObject;
-                if (scriptableObject == null) continue;
-                
-                if (HideUtility.IsHide(scriptableObject)) continue;
-                
-                string displayName = scriptableObject.name;
-                string description = ObjectDescriptionUtility.GetDescription(scriptableObject);
-                if (string.IsNullOrEmpty(description) == false) displayName += $"({description})";
-
-                menu.AddItem(displayName, () => onSelected(scriptableObject));
-            }
-
-            menu.ShowInPopup(width);
+            var resources = EditorAssetKit.GetEditorResources(objectType).OfType<ScriptableObject>();
+            ShowInPopupList(title, width, resources,
+                (asset) => ObjectDescriptionUtility.GetDescription(asset), asset => asset, onSelected);
         }
 
-        public static void ShowInPopupScriptableObjectPath<T>(string path, Action<T> onSelected) where T : ScriptableObject
+        public static void ShowInPopupScriptableObject<T>(string title, Func<T, string> getDescription, Action<T> onSelected) where T : ScriptableObject
         {
-            ShowInPopupScriptableObjectPath(path, "选择", onSelected);
+            T[] resources = EditorAssetKit.GetEditorResources<T>();
+            ShowInPopupList(title, DefaultWidth, resources, getDescription, asset => asset, onSelected);
         }
 
-        public static void ShowInPopupScriptableObjectPath(string path, Action<ScriptableObject> onSelected)
+        public static void ShowInPopupScriptableObject<T>(string title, float width,
+            Func<T, string> getDescription, Action<T> onSelected) where T : ScriptableObject
         {
-            ShowInPopupScriptableObjectPath(path, "选择", onSelected);
+            T[] resources = EditorAssetKit.GetEditorResources<T>();
+            ShowInPopupList(title, width, resources, getDescription, asset => asset, onSelected);
         }
 
-        public static void ShowInPopupScriptableObjectPath<T>(string path, string title, Action<T> onSelected) where T : ScriptableObject
+        public static void ShowInPopupScriptableObject<T1, T2>(string title, float width,
+            Func<T1, string> getDescription, Func<T1, T2> selectValue, Action<T2> onSelected) where T1 : ScriptableObject
         {
-            ShowInPopupScriptableObjectPath(path, title, 200f, onSelected);
+            T1[] resources = EditorAssetKit.GetEditorResources<T1>();
+            ShowInPopupList(title, width, resources, getDescription, selectValue, onSelected);
         }
 
-        public static void ShowInPopupScriptableObjectPath(string path, string title, Action<ScriptableObject> onSelected)
+        public static void ShowInPopupScriptableObject(Type objectType, string title, float width,
+            Func<ScriptableObject, string> getDescription, Action<ScriptableObject> onSelected)
         {
-            ShowInPopupScriptableObjectPath(path, title, 200f, onSelected);
+            IEnumerable<ScriptableObject> resources = EditorAssetKit.GetEditorResources(objectType).OfType<ScriptableObject>();
+            ShowInPopupList(title, width, resources, getDescription, asset => asset, onSelected);
         }
 
-        public static void ShowInPopupScriptableObjectPath<T>(string path, string title, float width, Action<T> onSelected) where T : ScriptableObject
+        public static void ShowInPopupScriptableObject<T>(Type objectType, string title, float width,
+            Func<ScriptableObject, string> getDescription, Func<ScriptableObject, T> selectValue, Action<T> onSelected)
         {
-            ShowInPopupScriptableObjectPath(path, title, width, (obj) => { onSelected?.Invoke((T) obj); });
+            IEnumerable<ScriptableObject> resources = EditorAssetKit.GetEditorResources(objectType).OfType<ScriptableObject>();
+            ShowInPopupList(title, width, resources, getDescription, selectValue, onSelected);
         }
 
-        public static void ShowInPopupScriptableObjectPath(string path, string title, float width, Action<ScriptableObject> onSelected)
+        public static void ShowInPopupScriptableObjectName<T>(Action<string> onSelected) where T : ScriptableObject
         {
-            OdinMenu menu = new(title);
+            T[] resources = EditorAssetKit.GetEditorResources<T>();
+            ShowInPopupList(DefaultName, DefaultWidth, resources,
+                (asset) => ObjectDescriptionUtility.GetDescription(asset), asset => asset.name, onSelected);
+        }
 
-            List<ScriptableObject> resources = EditorAssetKit.LoadAssetAtPath<ScriptableObject>(path);
-            for (int i = 0; i < resources.Count; i++)
-            {
-                ScriptableObject asset = resources[i];
-                if (asset == null) continue;
-                
-                if (HideUtility.IsHide(asset)) continue;
+        public static void ShowInPopupScriptableObjectName<T>(Func<T, string> getDescription, Action<string> onSelected) where T : ScriptableObject
+        {
+            T[] resources = EditorAssetKit.GetEditorResources<T>();
+            ShowInPopupList(DefaultName, DefaultWidth, resources, getDescription, asset => asset.name, onSelected);
+        }
 
-                string displayName = asset.name;
-                string description = ObjectDescriptionUtility.GetDescription(asset);
-                if (string.IsNullOrEmpty(description) == false) displayName += $"({description})";
+        public static void ShowInPopupScriptableObjectName<T>(string title, float width, Action<string> onSelected) where T : ScriptableObject
+        {
+            T[] resources = EditorAssetKit.GetEditorResources<T>();
+            ShowInPopupList(title, width, resources,
+                (asset) => ObjectDescriptionUtility.GetDescription(asset), asset => asset.name, onSelected);
+        }
 
-                menu.AddItem(displayName, () => onSelected(asset));
-            }
+        public static void ShowInPopupScriptableObjectName<T>(string title, float width,
+            Func<T, string> getDescription, Action<string> onSelected) where T : ScriptableObject
+        {
+            T[] resources = EditorAssetKit.GetEditorResources<T>();
+            ShowInPopupList(title, width, resources, getDescription, asset => asset.name, onSelected);
+        }
 
-            menu.ShowInPopup(width);
+        public static void ShowInPopupScriptableObjectName<T>(string path, Action<string> onSelected) where T : ScriptableObject
+        {
+            List<T> resources = EditorAssetKit.LoadAssetAtPath<T>(path);
+            ShowInPopupList(DefaultName, DefaultWidth, resources,
+                (asset) => ObjectDescriptionUtility.GetDescription(asset), asset => asset.name, onSelected);
+        }
+
+        public static void ShowInPopupScriptableObjectName<T>(string path, 
+            Func<T, string> getDescription, Action<string> onSelected) where T : ScriptableObject
+        {
+            List<T> resources = EditorAssetKit.LoadAssetAtPath<T>(path);
+            ShowInPopupList(DefaultName, DefaultWidth, resources, getDescription, asset => asset.name, onSelected);
+        }
+
+        public static void ShowInPopupScriptableObjectName<T>(string path, string title, float width,
+            Func<T, string> getDescription, Action<string> onSelected) where T : ScriptableObject
+        {
+            List<T> resources = EditorAssetKit.LoadAssetAtPath<T>(path);
+            ShowInPopupList(title, width, resources, getDescription, asset => asset.name, onSelected);
+        }
+
+        public static void ShowInPopupScriptableObjectPath<T>(string path, Action<string> onSelected) where T : ScriptableObject
+        {
+            List<T> resources = EditorAssetKit.LoadAssetAtPath<T>(path);
+            ShowInPopupList(DefaultName, DefaultWidth, resources,
+                (asset) => ObjectDescriptionUtility.GetDescription(asset), AssetDatabase.GetAssetPath, onSelected);
+        }
+
+        public static void ShowInPopupScriptableObjectPath<T>(string path,
+            Func<T, string> getDescription, Action<string> onSelected) where T : ScriptableObject
+        {
+            List<T> resources = EditorAssetKit.LoadAssetAtPath<T>(path);
+            ShowInPopupList(DefaultName, DefaultWidth, resources, getDescription, AssetDatabase.GetAssetPath, onSelected);
+        }
+
+        public static void ShowInPopupScriptableObjectPath<T>(string path, string title, Action<string> onSelected) where T : ScriptableObject
+        {
+            List<T> resources = EditorAssetKit.LoadAssetAtPath<T>(path);
+            ShowInPopupList(title, DefaultWidth, resources,
+                (asset) => ObjectDescriptionUtility.GetDescription(asset), AssetDatabase.GetAssetPath, onSelected);
+        }
+
+        public static void ShowInPopupScriptableObjectPath<T>(string path, string title,
+            Func<T, string> getDescription, Action<string> onSelected) where T : ScriptableObject
+        {
+            List<T> resources = EditorAssetKit.LoadAssetAtPath<T>(path);
+            ShowInPopupList(title, DefaultWidth, resources, getDescription, AssetDatabase.GetAssetPath, onSelected);
+        }
+
+        public static void ShowInPopupScriptableObjectPath<T>(string path, string title, float width,
+            Action<string> onSelected) where T : ScriptableObject
+        {
+            List<T> resources = EditorAssetKit.LoadAssetAtPath<T>(path);
+            ShowInPopupList(title, width, resources,
+                (asset) => ObjectDescriptionUtility.GetDescription(asset), AssetDatabase.GetAssetPath, onSelected);
+        }
+
+        public static void ShowInPopupScriptableObjectPath<T>(string path, string title, float width,
+            Func<T, string> getDescription, Action<string> onSelected) where T : ScriptableObject
+        {
+            List<T> resources = EditorAssetKit.LoadAssetAtPath<T>(path);
+            ShowInPopupList(title, width, resources, getDescription, AssetDatabase.GetAssetPath, onSelected);
         }
 
         public static void ShowInPopupPrefab(string path, Action<GameObject> onSelected)
         {
-            ShowInPopupPrefab(path, "选择", onSelected);
+            List<GameObject> resources = EditorAssetKit.LoadAtPath<GameObject>(path, "*.prefab");
+            ShowInPopupList(DefaultName, DefaultWidth, resources, PrefabDefaultDescription, prefab => prefab, onSelected);
+        }
+
+        public static void ShowInPopupPrefab(string path, Func<GameObject, string> getDescription, Action<GameObject> onSelected)
+        {
+            List<GameObject> resources = EditorAssetKit.LoadAtPath<GameObject>(path, "*.prefab");
+            ShowInPopupList(DefaultName, DefaultWidth, resources, getDescription, prefab => prefab, onSelected);
+        }
+
+        public static void ShowInPopupPrefab<T>(string path, Func<GameObject, T> selectValue, Action<T> onSelected)
+        {
+            List<GameObject> resources = EditorAssetKit.LoadAtPath<GameObject>(path, "*.prefab");
+            ShowInPopupList(DefaultName, DefaultWidth, resources, PrefabDefaultDescription, selectValue, onSelected);
+        }
+
+        public static void ShowInPopupPrefab<T>(string path,
+            Func<GameObject, string> getDescription, Func<GameObject, T> selectValue, Action<T> onSelected)
+        {
+            List<GameObject> resources = EditorAssetKit.LoadAtPath<GameObject>(path, "*.prefab");
+            ShowInPopupList(DefaultName, DefaultWidth, resources, getDescription, selectValue, onSelected);
         }
 
         public static void ShowInPopupPrefab(string path, string title, Action<GameObject> onSelected)
         {
-            ShowInPopupPrefab(path, title, 200f, onSelected);
+            List<GameObject> resources = EditorAssetKit.LoadAtPath<GameObject>(path, "*.prefab");
+            ShowInPopupList(title, DefaultWidth, resources, PrefabDefaultDescription, prefab => prefab, onSelected);
         }
 
         public static void ShowInPopupPrefab(string path, string title, float width, Action<GameObject> onSelected)
         {
-            OdinMenu menu = new(title);
-
             List<GameObject> resources = EditorAssetKit.LoadAtPath<GameObject>(path, "*.prefab");
-            for (int i = 0; i < resources.Count; i++)
-            {
-                GameObject prefab = resources[i];
-                if (prefab == null) continue;
-                
-                if (HideUtility.IsHide(prefab)) continue;
+            ShowInPopupList(title, width, resources, PrefabDefaultDescription, prefab => prefab, onSelected);
+        }
 
-                string displayName = prefab.name;
-                IObjectDescription descriptionComponent = prefab.GetComponent<IObjectDescription>();
-                if (descriptionComponent != null) displayName += $"({descriptionComponent.description})";
+        public static void ShowInPopupPrefab<T>(string path, string title, float width,
+            Func<GameObject, string> getDescription, Func<GameObject, T> selectValue, Action<T> onSelected)
+        {
+            List<GameObject> resources = EditorAssetKit.LoadAtPath<GameObject>(path, "*.prefab");
+            ShowInPopupList(title, width, resources, getDescription, selectValue, onSelected);
+        }
 
-                menu.AddItem(displayName, () => onSelected(prefab));
-            }
+        public static void ShowInPopupPrefabName(string path, Action<string> onSelected)
+        {
+            List<GameObject> resources = EditorAssetKit.LoadAtPath<GameObject>(path, "*.prefab");
+            ShowInPopupList(DefaultName, DefaultWidth, resources, PrefabDefaultDescription, prefab => prefab.name, onSelected);
+        }
 
-            menu.ShowInPopup(width);
+        public static void ShowInPopupPrefabName(string path, Func<GameObject, string> getDescription, Action<string> onSelected)
+        {
+            List<GameObject> resources = EditorAssetKit.LoadAtPath<GameObject>(path, "*.prefab");
+            ShowInPopupList(DefaultName, DefaultWidth, resources, getDescription, prefab => prefab.name, onSelected);
+        }
+
+        public static void ShowInPopupPrefabPath(string path, Action<string> onSelected)
+        {
+            List<GameObject> resources = EditorAssetKit.LoadAtPath<GameObject>(path, "*.prefab");
+            ShowInPopupList(DefaultName, DefaultWidth, resources, PrefabDefaultDescription, AssetDatabase.GetAssetPath, onSelected);
+        }
+
+        public static void ShowInPopupPrefabPath(string path, Func<GameObject, string> getDescription, Action<string> onSelected)
+        {
+            List<GameObject> resources = EditorAssetKit.LoadAtPath<GameObject>(path, "*.prefab");
+            ShowInPopupList(DefaultName, DefaultWidth, resources, getDescription, AssetDatabase.GetAssetPath, onSelected);
         }
 
         public static void ShowInPopupAsset<T>(string path, string searchPattern, Action<T> onSelected) where T : Object
         {
-            ShowInPopupAsset(path, searchPattern, "选择", onSelected);
+            List<T> resources = EditorAssetKit.LoadAtPath<T>(path, searchPattern);
+            ShowInPopupList(DefaultName, DefaultWidth, resources,
+                (asset) => ObjectDescriptionUtility.GetDescription(asset), asset => asset, onSelected);
         }
 
-        public static void ShowInPopupAsset(string path, string searchPattern, Action<Object> onSelected)
+        public static void ShowInPopupAsset<T>(string path, string searchPattern,
+            Func<T, string> getDescription, Action<T> onSelected) where T : Object
         {
-            ShowInPopupAsset(path, searchPattern, "选择", onSelected);
+            List<T> resources = EditorAssetKit.LoadAtPath<T>(path, searchPattern);
+            ShowInPopupList(DefaultName, DefaultWidth, resources, getDescription, asset => asset, onSelected);
+        }
+
+        public static void ShowInPopupAsset<T1, T2>(string path, string searchPattern,
+            Func<T1, T2> selectValue, Action<T2> onSelected) where T1 : Object
+        {
+            List<T1> resources = EditorAssetKit.LoadAtPath<T1>(path, searchPattern);
+            ShowInPopupList(DefaultName, DefaultWidth, resources,
+                (asset) => ObjectDescriptionUtility.GetDescription(asset), selectValue, onSelected);
+        }
+
+        public static void ShowInPopupAsset<T1, T2>(string path, string searchPattern,
+            Func<T1, string> getDescription, Func<T1, T2> selectValue, Action<T2> onSelected) where T1 : Object
+        {
+            List<T1> resources = EditorAssetKit.LoadAtPath<T1>(path, searchPattern);
+            ShowInPopupList(DefaultName, DefaultWidth, resources, getDescription, selectValue, onSelected);
         }
 
         public static void ShowInPopupAsset<T>(string path, string searchPattern, string title, Action<T> onSelected) where T : Object
         {
-            ShowInPopupAsset(path, searchPattern, title, 200f, onSelected);
+            List<T> resources = EditorAssetKit.LoadAtPath<T>(path, searchPattern);
+            ShowInPopupList(title, DefaultWidth, resources,
+                (asset) => ObjectDescriptionUtility.GetDescription(asset), asset => asset, onSelected);
         }
 
-        public static void ShowInPopupAsset(string path, string searchPattern, string title, Action<Object> onSelected)
+        public static void ShowInPopupAsset<T>(string path, string searchPattern, string title,
+            Func<T, string> getDescription, Action<T> onSelected) where T : Object
         {
-            ShowInPopupAsset(path, searchPattern, title, 200f, onSelected);
+            List<T> resources = EditorAssetKit.LoadAtPath<T>(path, searchPattern);
+            ShowInPopupList(title, DefaultWidth, resources, getDescription, asset => asset, onSelected);
         }
 
         public static void ShowInPopupAsset<T>(string path, string searchPattern, string title, float width, Action<T> onSelected) where T : Object
         {
-            ShowInPopupAsset(path, searchPattern, title, width, (obj) => { onSelected?.Invoke((T) obj); });
+            List<T> resources = EditorAssetKit.LoadAtPath<T>(path, searchPattern);
+            ShowInPopupList(title, width, resources,
+                (asset) => ObjectDescriptionUtility.GetDescription(asset), asset => asset, onSelected);
         }
 
-        public static void ShowInPopupAsset(string path, string searchPattern, string title, float width, Action<Object> onSelected)
+        public static void ShowInPopupAsset<T>(string path, string searchPattern, string title, float width,
+            Func<T, string> getDescription, Action<T> onSelected) where T : Object
+        {
+            List<T> resources = EditorAssetKit.LoadAtPath<T>(path, searchPattern);
+            ShowInPopupList(title, width, resources, getDescription, asset => asset, onSelected);
+        }
+
+        public static void ShowInPopupAsset<T1, T2>(string path, string searchPattern, string title, float width,
+            Func<T1, T2> selectValue, Action<T2> onSelected) where T1 : Object
+        {
+            List<T1> resources = EditorAssetKit.LoadAtPath<T1>(path, searchPattern);
+            ShowInPopupList(title, width, resources,
+                (asset) => ObjectDescriptionUtility.GetDescription(asset), selectValue, onSelected);
+        }
+
+        public static void ShowInPopupAssetName<T>(string path, string searchPattern, Action<string> onSelected) where T : Object
+        {
+            List<T> resources = EditorAssetKit.LoadAtPath<T>(path, searchPattern);
+            ShowInPopupList(DefaultName, DefaultWidth, resources,
+                (asset) => ObjectDescriptionUtility.GetDescription(asset), (asset) => asset.name, onSelected);
+        }
+
+        public static void ShowInPopupAssetName<T>(string path, string searchPattern,
+            Func<T, string> getDescription, Action<string> onSelected) where T : Object
+        {
+            List<T> resources = EditorAssetKit.LoadAtPath<T>(path, searchPattern);
+            ShowInPopupList(DefaultName, DefaultWidth, resources, getDescription, (asset) => asset.name, onSelected);
+        }
+
+        public static void ShowInPopupAssetName<T>(string path, string searchPattern, string title, Action<string> onSelected) where T : Object
+        {
+            List<T> resources = EditorAssetKit.LoadAtPath<T>(path, searchPattern);
+            ShowInPopupList(title, DefaultWidth, resources,
+                (asset) => ObjectDescriptionUtility.GetDescription(asset), (asset) => asset.name, onSelected);
+        }
+
+        public static void ShowInPopupAssetName<T>(string path, string searchPattern, string title,
+            Func<T, string> getDescription, Action<string> onSelected) where T : Object
+        {
+            List<T> resources = EditorAssetKit.LoadAtPath<T>(path, searchPattern);
+            ShowInPopupList(title, DefaultWidth, resources, getDescription, (asset) => asset.name, onSelected);
+        }
+
+        public static void ShowInPopupAssetName<T>(string path, string searchPattern, string title, float width,
+            Action<string> onSelected) where T : Object
+        {
+            List<T> resources = EditorAssetKit.LoadAtPath<T>(path, searchPattern);
+            ShowInPopupList(title, width, resources,
+                (asset) => ObjectDescriptionUtility.GetDescription(asset), (asset) => asset.name, onSelected);
+        }
+
+        public static void ShowInPopupAssetName<T>(string path, string searchPattern, string title, float width,
+            Func<T, string> getDescription, Action<string> onSelected) where T : Object
+        {
+            List<T> resources = EditorAssetKit.LoadAtPath<T>(path, searchPattern);
+            ShowInPopupList(title, width, resources, getDescription, (asset) => asset.name, onSelected);
+        }
+
+        public static void ShowInPopupAssetPath<T>(string path, string searchPattern, Action<string> onSelected) where T : Object
+        {
+            List<T> resources = EditorAssetKit.LoadAtPath<T>(path, searchPattern);
+            ShowInPopupList(DefaultName, DefaultWidth, resources,
+                (asset) => ObjectDescriptionUtility.GetDescription(asset), AssetDatabase.GetAssetPath, onSelected);
+        }
+
+        public static void ShowInPopupAssetPath<T>(string path, string searchPattern,
+            Func<T, string> getDescription, Action<string> onSelected) where T : Object
+        {
+            List<T> resources = EditorAssetKit.LoadAtPath<T>(path, searchPattern);
+            ShowInPopupList(DefaultName, DefaultWidth, resources, getDescription, AssetDatabase.GetAssetPath, onSelected);
+        }
+
+        public static void ShowInPopupAssetPath<T>(string path, string searchPattern, string title, Action<string> onSelected) where T : Object
+        {
+            List<T> resources = EditorAssetKit.LoadAtPath<T>(path, searchPattern);
+            ShowInPopupList(title, DefaultWidth, resources,
+                (asset) => ObjectDescriptionUtility.GetDescription(asset), AssetDatabase.GetAssetPath, onSelected);
+        }
+
+        public static void ShowInPopupAssetPath<T>(string path, string searchPattern, string title,
+            Func<T, string> getDescription, Action<string> onSelected) where T : Object
+        {
+            List<T> resources = EditorAssetKit.LoadAtPath<T>(path, searchPattern);
+            ShowInPopupList(title, DefaultWidth, resources, getDescription, AssetDatabase.GetAssetPath, onSelected);
+        }
+
+        public static void ShowInPopupAssetPath<T>(string path, string searchPattern, string title, float width,
+            Action<string> onSelected) where T : Object
+        {
+            List<T> resources = EditorAssetKit.LoadAtPath<T>(path, searchPattern);
+            ShowInPopupList(title, width, resources,
+                (asset) => ObjectDescriptionUtility.GetDescription(asset), AssetDatabase.GetAssetPath, onSelected);
+        }
+
+        public static void ShowInPopupAssetPath<T>(string path, string searchPattern, string title, float width,
+            Func<T, string> getDescription, Action<string> onSelected) where T : Object
+        {
+            List<T> resources = EditorAssetKit.LoadAtPath<T>(path, searchPattern);
+            ShowInPopupList(title, width, resources, getDescription, AssetDatabase.GetAssetPath, onSelected);
+        }
+
+        private static void ShowInPopupList<TAsset, TOut>(
+            string title,
+            float width,
+            IEnumerable<TAsset> assets,
+            Func<TAsset, string> getDescription,
+            Func<TAsset, TOut> selectValue,
+            Action<TOut> onSelected)
+            where TAsset : Object
         {
             OdinMenu menu = new(title);
 
-            List<Object> resources = EditorAssetKit.LoadAtPath<Object>(path, searchPattern);
-            for (int i = 0; i < resources.Count; i++)
+            foreach (TAsset asset in assets)
             {
-                Object asset = resources[i];
                 if (asset == null) continue;
-                
                 if (HideUtility.IsHide(asset)) continue;
 
                 string displayName = asset.name;
-                string description = ObjectDescriptionUtility.GetDescription(asset);
+                string description = getDescription?.Invoke(asset) ?? string.Empty;
                 if (string.IsNullOrEmpty(description) == false) displayName += $"({description})";
 
-                menu.AddItem(displayName, () => onSelected(asset));
+                TOut value = selectValue(asset);
+
+                menu.AddItem(displayName, () => onSelected(value));
             }
 
             menu.ShowInPopup(width);
+        }
+
+        private static string PrefabDefaultDescription(GameObject prefab)
+        {
+            IObjectDescription descriptionComponent = prefab != null ? prefab.GetComponent<IObjectDescription>() : null;
+            return descriptionComponent != null ? descriptionComponent.description : string.Empty;
         }
     }
 }
