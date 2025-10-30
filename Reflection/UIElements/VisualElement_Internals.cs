@@ -1,4 +1,6 @@
-﻿using UnityEditor;
+﻿using System;
+using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -6,6 +8,31 @@ namespace Emilia.Reflection.Editor
 {
     public static class VisualElementExtension_Internals
     {
+        private static Dictionary<VisualElement, Dictionary<Action<VisualElement, HierarchyChangeType_Internals>, HierarchyEvent>> hierarchyChangedMap =
+            new Dictionary<VisualElement, Dictionary<Action<VisualElement, HierarchyChangeType_Internals>, HierarchyEvent>>();
+
+        public static void AddHierarchyChangedCallback_Internal(this VisualElement self, Action<VisualElement, HierarchyChangeType_Internals> callback)
+        {
+            if (hierarchyChangedMap.TryGetValue(self, out Dictionary<Action<VisualElement, HierarchyChangeType_Internals>, HierarchyEvent> map) == false)
+            {
+                map = new Dictionary<Action<VisualElement, HierarchyChangeType_Internals>, HierarchyEvent>();
+                hierarchyChangedMap[self] = map;
+            }
+
+            if (map.ContainsKey(callback)) return;
+
+            HierarchyEvent hierarchyEvent = (ve, changeType) => callback?.Invoke(ve, (HierarchyChangeType_Internals) changeType);
+            map[callback] = hierarchyEvent;
+            self.elementPanel.hierarchyChanged += hierarchyEvent;
+        }
+
+        public static void RemoveHierarchyChangedCallback_Internal(this VisualElement self, Action<VisualElement, HierarchyChangeType_Internals> callback)
+        {
+            if (hierarchyChangedMap.TryGetValue(self, out Dictionary<Action<VisualElement, HierarchyChangeType_Internals>, HierarchyEvent> map) == false) return;
+            if (map.TryGetValue(callback, out HierarchyEvent hierarchyEvent) == false) return;
+            self.elementPanel.hierarchyChanged -= hierarchyEvent;
+        }
+
         public static Matrix4x4 GetWorldTransformInverseCache_Internal(this VisualElement visualElement) => visualElement.m_WorldTransformInverseCache;
 
         public static Rect GetRect_Internal(this VisualElement visualElement) => visualElement.rect;
