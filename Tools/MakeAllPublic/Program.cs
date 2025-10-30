@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using dnlib.DotNet;
 using dnlib.DotNet.Writer;
@@ -156,10 +157,18 @@ namespace MakeAllPublic
         {
             int modifiedCount = 0;
 
+            HashSet<string> eventBackingFields = new HashSet<string>(StringComparer.Ordinal);
+            for (var i = 0; i < type.Events.Count; i++)
+            {
+                EventDef evt = type.Events[i];
+                eventBackingFields.Add(evt.Name);
+                eventBackingFields.Add($"<{evt.Name}>");
+            }
+
             for (var i = 0; i < type.Fields.Count; i++)
             {
                 FieldDef field = type.Fields[i];
-                if (MakeFieldPublic(field))
+                if (MakeFieldPublic(field, eventBackingFields))
                 {
                     modifiedCount++;
                     Console.WriteLine($"    将字段 '{type.FullName}.{field.Name}' 改为 public");
@@ -200,9 +209,12 @@ namespace MakeAllPublic
             return modifiedCount;
         }
 
-        private bool MakeFieldPublic(FieldDef field)
+        private bool MakeFieldPublic(FieldDef field, HashSet<string> eventBackingFields)
         {
-            if (field.IsCompilerControlled || field.Name.Contains("k__BackingField")) return false;
+            if (field.IsCompilerControlled) return false;
+            if (field.Name.Contains("k__BackingField")) return false;
+            
+            if (eventBackingFields.Contains(field.Name)) return false;
 
             FieldAttributes currentAccess = field.Attributes & FieldAttributes.FieldAccessMask;
             if (currentAccess != FieldAttributes.Public)
