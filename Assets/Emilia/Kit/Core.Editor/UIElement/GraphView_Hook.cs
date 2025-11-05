@@ -14,89 +14,49 @@ namespace Emilia.Kit.Editor
         static void InstallationHook()
         {
             Type graphViewType = typeof(GraphView);
+            Type graphViewHookType = typeof(GraphView_Hook);
 
-            HookUpdateContentZoomer(graphViewType);
-            HookOnKeyDownShortcut(graphViewType);
+            HookUpdateContentZoomer(graphViewType, graphViewHookType);
+            HookOnKeyDownShortcut(graphViewType, graphViewHookType);
         }
 
-        private static void HookUpdateContentZoomer(Type graphViewType)
+        private static void HookUpdateContentZoomer(Type graphViewType, Type graphViewHookType)
         {
             MethodInfo methodInfo = graphViewType.GetMethod("UpdateContentZoomer", BindingFlags.Instance | BindingFlags.NonPublic);
 
-            Type graphViewHookType = typeof(GraphView_Hook);
             MethodInfo hookInfo = graphViewHookType.GetMethod(nameof(UpdateContentZoomer_Hook), BindingFlags.Instance | BindingFlags.NonPublic);
+            MethodInfo proxyInfo = graphViewHookType.GetMethod(nameof(UpdateContentZoomer_Proxy), BindingFlags.Instance | BindingFlags.NonPublic);
 
-            MethodHook hook = new MethodHook(methodInfo, hookInfo, null);
+            MethodHook hook = new(methodInfo, hookInfo, proxyInfo);
             hook.Install();
         }
 
-        private static void HookOnKeyDownShortcut(Type graphViewType)
+        private static void HookOnKeyDownShortcut(Type graphViewType, Type graphViewHookType)           
         {
             MethodInfo methodInfo = graphViewType.GetMethod("OnKeyDownShortcut", BindingFlags.Instance | BindingFlags.NonPublic);
 
-            Type graphViewHookType = typeof(GraphView_Hook);
             MethodInfo hookInfo = graphViewHookType.GetMethod(nameof(OnKeyDownShortcut_Hook), BindingFlags.Instance | BindingFlags.NonPublic);
+            MethodInfo proxyInfo = graphViewHookType.GetMethod(nameof(OnKeyDownShortcut_Proxy), BindingFlags.Instance | BindingFlags.NonPublic);
 
-            MethodHook hook = new MethodHook(methodInfo, hookInfo, null);
+            MethodHook hook = new(methodInfo, hookInfo, proxyInfo);
             hook.Install();
         }
 
         private void UpdateContentZoomer_Hook()
         {
-            object result = ReflectUtility.Invoke(this, "OverrideUpdateContentZoomer");
-            if (result is true) return;
-
-            if (minScale != maxScale)
-            {
-                if (zoomer_Internal == null)
-                {
-                    zoomer_Internal = new ContentZoomer();
-                    this.AddManipulator(zoomer_Internal);
-                }
-
-                zoomer_Internal.minScale = minScale;
-                zoomer_Internal.maxScale = maxScale;
-                zoomer_Internal.scaleStep = scaleStep;
-                zoomer_Internal.referenceScale = referenceScale;
-            }
-            else
-            {
-                if (zoomer_Internal != null) this.RemoveManipulator(zoomer_Internal);
-            }
-
-            ValidateTransform();
+            if (OverrideUpdateContentZoomer()) return;
+            UpdateContentZoomer_Proxy();
         }
+
+        private void UpdateContentZoomer_Proxy() { }
 
         private void OnKeyDownShortcut_Hook(KeyDownEvent evt)
         {
-            object result = ReflectUtility.Invoke(this, "OverrideOnKeyDownShortcut", new object[] {evt});
-            if (result is true) return;
-
-            if (! this.isReframable || this.panel.GetCapturingElement(PointerId.mousePointerId) != null) return;
-
-            EventPropagation eventPropagation = EventPropagation.Continue;
-            switch (evt.character)
-            {
-                case ' ':
-                    eventPropagation = this.OnInsertNodeKeyDown_Internals(evt);
-                    break;
-                case '[':
-                    eventPropagation = this.FramePrev();
-                    break;
-                case ']':
-                    eventPropagation = this.FrameNext();
-                    break;
-                case 'a':
-                    eventPropagation = this.FrameAll();
-                    break;
-                case 'o':
-                    eventPropagation = this.FrameOrigin();
-                    break;
-            }
-            if (eventPropagation != EventPropagation.Stop) return;
-            evt.StopPropagation();
-            if (evt.imguiEvent != null) evt.imguiEvent.Use();
+            if (OverrideOnKeyDownShortcut(evt)) return;
+            OnKeyDownShortcut_Proxy(evt);
         }
+
+        private void OnKeyDownShortcut_Proxy(KeyDownEvent evt) { }
 
         protected virtual bool OverrideUpdateContentZoomer() => false;
 
