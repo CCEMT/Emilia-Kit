@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using Emilia.Reflection.Editor;
 using MonoHook;
 using UnityEditor;
@@ -67,7 +68,11 @@ namespace Emilia.Kit.Editor
             else RebuildSearch_Proxy();
         }
 
-        private void RebuildSearch_Proxy() { }
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        private void RebuildSearch_Proxy()
+        {
+            Debug.Log(nameof(RebuildSearch_Proxy));
+        }
 
         protected virtual void OverrideRebuildSearch()
         {

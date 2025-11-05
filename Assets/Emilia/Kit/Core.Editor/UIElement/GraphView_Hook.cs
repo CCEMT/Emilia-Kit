@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using Emilia.Reflection.Editor;
 using MonoHook;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Emilia.Kit.Editor
@@ -31,7 +33,7 @@ namespace Emilia.Kit.Editor
             hook.Install();
         }
 
-        private static void HookOnKeyDownShortcut(Type graphViewType, Type graphViewHookType)           
+        private static void HookOnKeyDownShortcut(Type graphViewType, Type graphViewHookType)
         {
             MethodInfo methodInfo = graphViewType.GetMethod("OnKeyDownShortcut", BindingFlags.Instance | BindingFlags.NonPublic);
 
@@ -48,7 +50,11 @@ namespace Emilia.Kit.Editor
             UpdateContentZoomer_Proxy();
         }
 
-        private void UpdateContentZoomer_Proxy() { }
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        private void UpdateContentZoomer_Proxy()
+        {
+            Debug.Log(nameof(UpdateContentZoomer_Proxy));
+        }
 
         private void OnKeyDownShortcut_Hook(KeyDownEvent evt)
         {
@@ -56,7 +62,11 @@ namespace Emilia.Kit.Editor
             OnKeyDownShortcut_Proxy(evt);
         }
 
-        private void OnKeyDownShortcut_Proxy(KeyDownEvent evt) { }
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        private void OnKeyDownShortcut_Proxy(KeyDownEvent evt)
+        {
+            Debug.Log(nameof(OnKeyDownShortcut_Proxy));
+        }
 
         protected virtual bool OverrideUpdateContentZoomer() => false;
 

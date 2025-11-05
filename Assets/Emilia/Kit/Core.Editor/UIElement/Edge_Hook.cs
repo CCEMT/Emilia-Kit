@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using Emilia.Reflection.Editor;
 using MonoHook;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
+using UnityEngine;
 
 namespace Emilia.Kit.Editor
 {
@@ -35,7 +37,12 @@ namespace Emilia.Kit.Editor
             Ctor_Proxy();
         }
 
-        private void Ctor_Proxy() { }
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        private void Ctor_Proxy()
+        {
+            Debug.Log(nameof(Ctor_Proxy));
+        }
+
         protected virtual bool OverrideCtor() => false;
     }
 }
