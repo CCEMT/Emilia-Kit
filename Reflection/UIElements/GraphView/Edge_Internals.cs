@@ -14,6 +14,35 @@ namespace Emilia.Reflection.Editor
 
     public class Edge_Internals : Edge
     {
+        public static int s_DefaultEdgeWidth_Internal => s_DefaultEdgeWidth;
+        public static Color s_DefaultSelectedColor_Internal => s_DefaultSelectedColor;
+        public static Color s_DefaultColor_Internal => s_DefaultColor;
+        public static Color s_DefaultGhostColor_Internal => s_DefaultGhostColor;
+
+        public int m_EdgeWidth_Internal
+        {
+            get => m_EdgeWidth;
+            set => m_EdgeWidth = value;
+        }
+
+        public Color m_SelectedColor_Internal
+        {
+            get => m_SelectedColor;
+            set => m_SelectedColor = value;
+        }
+
+        public Color m_DefaultColor_Internal
+        {
+            get => m_DefaultColor;
+            set => m_DefaultColor = value;
+        }
+
+        public Color m_GhostColor_Internal
+        {
+            get => m_GhostColor;
+            set => m_GhostColor = value;
+        }
+
         public void UpdateEdgeControlColorsAndWidth_Internal() => UpdateEdgeControlColorsAndWidth();
 
         public Vector2 GetPortPosition_Internal(Port p) => GetPortPosition(p);
