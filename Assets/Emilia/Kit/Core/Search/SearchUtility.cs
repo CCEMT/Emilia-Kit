@@ -9,15 +9,15 @@ namespace Emilia.Kit
         public const int MinSearchScore = 0;
 
         /// <summary>
-        /// 搜索
+        /// 智能搜索
         /// </summary>
         /// <param name="target">目标文本</param>
         /// <param name="input">输入文本</param>
         /// <param name="inputNullResult">输入为空时的返回结果，默认为true</param>
         /// <param name="ignoreCase">是否忽略大小写，默认为true</param>
-        /// <param name="isPinYin">是否使用拼音搜索，默认为true</param>
+        /// <param name="pinYinWeight">拼音搜索权重</param>
         /// <returns>搜索分数0-100</returns>
-        public static int Search(string target, string input, bool inputNullResult = true, bool ignoreCase = true, bool isPinYin = true)
+        public static int SmartSearch(string target, string input, bool inputNullResult = true, bool ignoreCase = true, float pinYinWeight = 0.6f)
         {
             if (string.IsNullOrEmpty(input)) return inputNullResult ? MaxSearchScore : MinSearchScore;
             if (string.IsNullOrEmpty(target)) return MinSearchScore;
@@ -25,13 +25,33 @@ namespace Emilia.Kit
             string searchTarget = ignoreCase ? target.ToLower() : target;
             string searchInput = ignoreCase ? input.ToLower() : input;
 
-            int score = Fuzz.WeightedRatio(searchInput, searchTarget);
-            if (score > MinSearchScore) return score;
+            int directScore = Fuzz.WeightedRatio(searchInput, searchTarget);
 
-            if (isPinYin == false) return MinSearchScore;
+            if (pinYinWeight <= 0) return directScore;
 
             string pinYin = PinYinConverterUtility.ConvertToAllSpell(searchTarget);
-            return Fuzz.WeightedRatio(searchInput, pinYin);
+            int pinYinScore = Fuzz.WeightedRatio(searchInput, pinYin);
+            pinYinScore = (int) (pinYinScore * pinYinWeight);
+
+            return directScore > pinYinScore ? directScore : pinYinScore;
+
+        }
+
+        /// <summary>
+        /// 拼音搜索
+        /// </summary>
+        /// <param name="target">目标文本</param>
+        /// <param name="input">输入文本</param>
+        /// <param name="inputNullResult">输入为空时的返回值</param>
+        /// <returns>搜索分数0-100</returns>
+        public static int SearchPinYin(string target, string input, bool inputNullResult = true)
+        {
+            if (string.IsNullOrEmpty(input)) return inputNullResult ? MaxSearchScore : MinSearchScore;
+            if (string.IsNullOrEmpty(target)) return MinSearchScore;
+
+            string inputPinYin = PinYinConverterUtility.ConvertToAllSpell(input);
+            string targetPinYin = PinYinConverterUtility.ConvertToAllSpell(target);
+            return Fuzz.WeightedRatio(inputPinYin, targetPinYin);
         }
 
         /// <summary>
@@ -41,7 +61,7 @@ namespace Emilia.Kit
         /// <param name="input">输入文本</param>
         /// <param name="score">分数</param>
         /// <returns>结果</returns>
-        public static bool Matching(string target, string input, int score = MinSearchScore) => Search(target, input) > score;
+        public static bool Matching(string target, string input, int score = MinSearchScore) => SmartSearch(target, input) > score;
 
         /// <summary>
         /// 简单搜索
