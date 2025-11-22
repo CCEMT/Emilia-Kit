@@ -8,27 +8,27 @@ namespace Emilia.Kit
     /// <summary>
     /// ValueDropdown构建器，用于配置和生成下拉列表
     /// </summary>
-    public class DropdownBuilder<TResource, TOutput> where TResource : Object
+    public class ValueDropdownBuilder<TResource, TOutput> where TResource : Object
     {
         private Func<TResource, string> _getDescription;
         private Func<TResource, TOutput> _selector;
         private IEnumerable<TResource> _resources;
 
-        internal DropdownBuilder() { }
+        internal ValueDropdownBuilder() { }
 
-        public DropdownBuilder<TResource, TOutput> WithResources(IEnumerable<TResource> resources)
+        public ValueDropdownBuilder<TResource, TOutput> WithResources(IEnumerable<TResource> resources)
         {
             _resources = resources;
             return this;
         }
 
-        public DropdownBuilder<TResource, TOutput> WithDescription(Func<TResource, string> getDescription)
+        public ValueDropdownBuilder<TResource, TOutput> WithDescription(Func<TResource, string> getDescription)
         {
             _getDescription = getDescription;
             return this;
         }
 
-        public DropdownBuilder<TResource, TOutput> WithSelector(Func<TResource, TOutput> selector)
+        public ValueDropdownBuilder<TResource, TOutput> WithSelector(Func<TResource, TOutput> selector)
         {
             _selector = selector;
             return this;

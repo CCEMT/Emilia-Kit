@@ -34,7 +34,6 @@ namespace Emilia.Kit
             pinYinScore = (int) (pinYinScore * pinYinWeight);
 
             return directScore > pinYinScore ? directScore : pinYinScore;
-
         }
 
         /// <summary>
