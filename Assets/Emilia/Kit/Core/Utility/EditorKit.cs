@@ -139,6 +139,13 @@ namespace Emilia.Kit
             }
         }
         
+        public static string RemovePathPrefix(string fullPath, string prefix)
+        {
+            if (string.IsNullOrEmpty(prefix)) return fullPath;
+            if (fullPath.StartsWith(prefix)) return fullPath.Substring(prefix.Length);
+            return fullPath;
+        }
+        
         [HideMonoScript]
         private class SelectionContainer : TitleAsset
         {

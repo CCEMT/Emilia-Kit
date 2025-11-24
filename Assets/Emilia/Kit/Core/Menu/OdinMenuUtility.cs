@@ -6,21 +6,39 @@ namespace Emilia.Kit
     public static class OdinMenuUtility
     {
         public static OdinMenuBuilder<T, string> GetScriptableObjectName<T>() where T : ScriptableObject
-            => OdinMenuFactory.ScriptableObject<T, string>().WithSelector((x) => x.name);
+            => OdinMenuFactory.ScriptableObject<T, string>().WithSelector(x => x.name);
 
         public static OdinMenuBuilder<T, string> GetScriptableObjectName<T>(string path) where T : ScriptableObject
-            => OdinMenuFactory.ScriptableObjectAtPath<T, string>(path).WithSelector((x) => x.name);
+            => OdinMenuFactory.ScriptableObjectAtPath<T, string>(path).WithSelector(x => x.name);
 
-        public static OdinMenuBuilder<T, string> GetAScriptableObjectPath<T>() where T : ScriptableObject =>
-            OdinMenuFactory.ScriptableObject<T, string>().WithSelector(AssetDatabase.GetAssetPath);
+        public static OdinMenuBuilder<T, string> GetScriptableObjectPath<T>() where T : ScriptableObject
+            => OdinMenuFactory.ScriptableObject<T, string>().WithSelector(AssetDatabase.GetAssetPath);
 
-        public static OdinMenuBuilder<T, string> GetScriptableObjectPath<T>(string path) where T : ScriptableObject =>
-            OdinMenuFactory.ScriptableObjectAtPath<T, string>(path).WithSelector(AssetDatabase.GetAssetPath);
+        public static OdinMenuBuilder<T, string> GetScriptableObjectPathFilter<T>(string parent) where T : ScriptableObject
+            => OdinMenuFactory.ScriptableObject<T, string>().WithSelector(x => EditorKit.RemovePathPrefix(AssetDatabase.GetAssetPath(x), parent));
+
+        public static OdinMenuBuilder<T, string> GetScriptableObjectPath<T>(string path) where T : ScriptableObject
+            => OdinMenuFactory.ScriptableObjectAtPath<T, string>(path).WithSelector(AssetDatabase.GetAssetPath);
+
+        public static OdinMenuBuilder<T, string> GetScriptableObjectPath<T>(string path, string parent) where T : ScriptableObject
+            => OdinMenuFactory.ScriptableObjectAtPath<T, string>(path).WithSelector(x => EditorKit.RemovePathPrefix(AssetDatabase.GetAssetPath(x), parent));
 
         public static OdinMenuBuilder<GameObject, string> GetPrefabName(string path)
-            => OdinMenuFactory.Prefab<string>(path).WithSelector((x) => x.name);
+            => OdinMenuFactory.Prefab<string>(path).WithSelector(x => x.name);
 
         public static OdinMenuBuilder<GameObject, string> GetPrefabPath(string path)
             => OdinMenuFactory.Prefab<string>(path).WithSelector(AssetDatabase.GetAssetPath);
+
+        public static OdinMenuBuilder<GameObject, string> GetPrefabPath(string path, string parent)
+            => OdinMenuFactory.Prefab<string>(path).WithSelector(x => EditorKit.RemovePathPrefix(AssetDatabase.GetAssetPath(x), parent));
+
+        public static OdinMenuBuilder<T, string> GetAssetName<T>(string path, string searchPattern) where T : Object
+            => OdinMenuFactory.Asset<T, string>(path, searchPattern).WithSelector(x => x.name);
+
+        public static OdinMenuBuilder<T, string> GetAssetPath<T>(string path, string searchPattern) where T : Object
+            => OdinMenuFactory.Asset<T, string>(path, searchPattern).WithSelector(AssetDatabase.GetAssetPath);
+
+        public static OdinMenuBuilder<T, string> GetAssetPathFilter<T>(string path, string searchPattern, string parent) where T : Object
+            => OdinMenuFactory.Asset<T, string>(path, searchPattern).WithSelector(x => EditorKit.RemovePathPrefix(AssetDatabase.GetAssetPath(x), parent));
     }
 }
