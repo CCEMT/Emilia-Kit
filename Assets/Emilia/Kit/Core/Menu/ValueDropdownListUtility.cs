@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿#if UNITY_EDITOR
+using UnityEditor;
 using UnityEngine;
 
 namespace Emilia.Kit
@@ -42,3 +43,4 @@ namespace Emilia.Kit
             => ValueDropdownListFactory.Asset<T, string>(path, searchPattern).WithSelector(x => EditorKit.RemovePathPrefix(AssetDatabase.GetAssetPath(x), parent));
     }
 }
+#endif

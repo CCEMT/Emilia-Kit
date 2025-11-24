@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if UNITY_EDITOR
+using System;
 using System.Collections.Generic;
 using Emilia.Kit.Editor;
 using UnityEditor;
@@ -64,3 +65,4 @@ namespace Emilia.Kit
         }
     }
 }
+#endif
