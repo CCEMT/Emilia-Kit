@@ -6,6 +6,12 @@ namespace Emilia.Kit
 {
     public static class ValueDropdownListUtility
     {
+        public static ValueDropdownBuilder<T, T> GetScriptableObject<T>() where T : ScriptableObject
+            => ValueDropdownListFactory.ScriptableObject<T, T>().WithSelector(x => x);
+
+        public static ValueDropdownBuilder<T, T> GetScriptableObject<T>(string path) where T : ScriptableObject
+            => ValueDropdownListFactory.ScriptableObjectAtPath<T, T>(path).WithSelector(x => x);
+
         public static ValueDropdownBuilder<T, string> GetScriptableObjectName<T>() where T : ScriptableObject
             => ValueDropdownListFactory.ScriptableObject<T, string>().WithSelector(x => x.name);
 
@@ -24,6 +30,9 @@ namespace Emilia.Kit
         public static ValueDropdownBuilder<T, string> GetScriptableObjectPathFilter<T>(string path, string parent) where T : ScriptableObject
             => ValueDropdownListFactory.ScriptableObjectAtPath<T, string>(path).WithSelector(x => EditorKit.RemovePathPrefix(AssetDatabase.GetAssetPath(x), parent));
 
+        public static ValueDropdownBuilder<GameObject, GameObject> GetPrefab(string path)
+            => ValueDropdownListFactory.Prefab<GameObject>(path).WithSelector(x => x);
+
         public static ValueDropdownBuilder<GameObject, string> GetPrefabName(string path)
             => ValueDropdownListFactory.Prefab<string>(path).WithSelector(x => x.name);
 
@@ -32,6 +41,9 @@ namespace Emilia.Kit
 
         public static ValueDropdownBuilder<GameObject, string> GetPrefabPath(string path, string parent)
             => ValueDropdownListFactory.Prefab<string>(path).WithSelector(x => EditorKit.RemovePathPrefix(AssetDatabase.GetAssetPath(x), parent));
+
+        public static ValueDropdownBuilder<T, T> GetAsset<T>(string path, string searchPattern) where T : Object
+            => ValueDropdownListFactory.Asset<T, T>(path, searchPattern).WithSelector(x => x);
 
         public static ValueDropdownBuilder<T, string> GetAssetName<T>(string path, string searchPattern) where T : Object
             => ValueDropdownListFactory.Asset<T, string>(path, searchPattern).WithSelector(x => x.name);
