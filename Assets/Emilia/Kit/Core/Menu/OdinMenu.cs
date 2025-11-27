@@ -25,7 +25,7 @@ namespace Emilia.Kit
 
         public float defaultWidth { get; set; } = DefaultWidth;
 
-        public bool isEnablePinYinSearch { get; set; } = true;
+        public bool isEnablePinYinSearch { get; set; } = false;
 
         public OdinMenu(string name = DefaultName)
         {
