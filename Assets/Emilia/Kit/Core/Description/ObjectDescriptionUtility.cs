@@ -41,6 +41,32 @@ namespace Emilia.Kit
             }
         }
 
+        public static string GetGameObjectDescriptionFirst(GameObject gameObject, object owner = null, object userData = null)
+        {
+            List<string> descriptions = GetGameObjectDescriptions(gameObject, owner, userData);
+            return descriptions.Count > 0 ? descriptions[0] : string.Empty;
+        }
+
+        public static string GetGameObjectDescription(GameObject gameObject, string separator = ",", object owner = null, object userData = null)
+        {
+            List<string> descriptions = GetGameObjectDescriptions(gameObject, owner, userData);
+            return string.Join(separator, descriptions);
+        }
+
+        public static List<string> GetGameObjectDescriptions(GameObject gameObject, object owner = null, object userData = null)
+        {
+            Component[] components = gameObject.GetComponents<Component>();
+            List<string> descriptions = new();
+
+            foreach (Component component in components)
+            {
+                string description = GetDescription(component, owner, userData);
+                if (string.IsNullOrEmpty(description) == false) descriptions.Add(description);
+            }
+
+            return descriptions;
+        }
+
         public static string GetDescription(object obj, object owner = null, object userData = null)
         {
             if (obj == null) return string.Empty;

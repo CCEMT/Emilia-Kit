@@ -95,7 +95,7 @@ namespace Emilia.Kit.Editor
                 {
                     if (searchTreeEntry is SearchTreeGroupEntry) continue;
                     string entryName = searchTreeEntry.name;
-                    int source = SearchUtility.Search(entryName, search_Internals);
+                    int source = SearchUtility.SmartSearch(entryName, search_Internals);
                     if (source != 0) collection.Add((searchTreeEntry, source));
                 }
 
