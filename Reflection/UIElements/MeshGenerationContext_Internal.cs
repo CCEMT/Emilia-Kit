@@ -6,7 +6,7 @@ namespace Emilia.Reflection.Editor
 {
     public static class MeshGenerationContextExtension_Internal
     {
-        public static IStylePainterAgent_Internal painter_Internal(this MeshGenerationContext context) => new IStylePainterAgent_Internal(context.painter);
+        public static IStylePainterAgent_Internal GetPainter_Internal(this MeshGenerationContext context) => new IStylePainterAgent_Internal(context.painter);
 
         public static MeshWriteData Allocate(
             this MeshGenerationContext context,
