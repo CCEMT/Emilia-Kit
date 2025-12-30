@@ -1,4 +1,5 @@
-﻿#if !(UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX)
+﻿#if UNITY_EDITOR
+#if !(UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX)
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -53,7 +54,7 @@ namespace MonoHook
 #if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
             uint oldProtect;
             bool ret = VirtualProtect(ptr, (uint)size, Protection.PAGE_EXECUTE_READWRITE, out oldProtect);
-            UnityEngine.Debug.Assert(ret);
+            Debug.Assert(ret);
 #else
             SetMemPerms(ptr,(ulong)size,MmapProts.PROT_READ | MmapProts.PROT_WRITE | MmapProts.PROT_EXEC);
 #endif
@@ -110,7 +111,7 @@ namespace MonoHook
                     count++;
                 }
             }
-        END:;
+            END:;
             return sb.ToString();
         }
 
@@ -269,4 +270,5 @@ namespace MonoHook
     }
 }
 
+#endif
 #endif

@@ -1,4 +1,5 @@
-﻿/*
+﻿#if UNITY_EDITOR
+/*
  Desc: 一个可以运行时 Hook Mono 方法的工具，让你可以无需修改 UnityEditor.dll 等文件就可以重写其函数功能
  Author: Misaka Mikoto
  Github: https://github.com/Misaka-Mikoto-Tech/MonoHook
@@ -15,7 +16,7 @@ using UnityEditor;
 #endif
 using UnityEngine;
 using System.Runtime.CompilerServices;
-
+using Debug = UnityEngine.Debug;
 
 /*
 >>>>>>> 原始 UnityEditor.LogEntries.Clear 一型(.net 4.x)
@@ -199,7 +200,7 @@ namespace MonoHook
                 {
                     int codeSize = targetMethod.GetMethodBody().GetILAsByteArray().Length; // GetMethodBody can not call on il2cpp
                     if (codeSize < minMethodBodySize)
-                        UnityEngine.Debug.LogWarning($"WRANING: you can not hook method [{methodName}], cause its method body is too short({codeSize}), will random crash on IL2CPP release mode");
+                        Debug.LogWarning($"WRANING: you can not hook method [{methodName}], cause its method body is too short({codeSize}), will random crash on IL2CPP release mode");
                 }
             }
 
@@ -208,7 +209,7 @@ namespace MonoHook
                 methodName = $"{proxyMethod.DeclaringType.Name}.{proxyMethod.Name}";
                 int codeSize = proxyMethod.GetMethodBody().GetILAsByteArray().Length;
                 if (codeSize < minMethodBodySize)
-                    UnityEngine.Debug.LogWarning($"WRANING: size of method body[{methodName}] is too short({codeSize}), will random crash on IL2CPP release mode, please fill some dummy code inside");
+                    Debug.LogWarning($"WRANING: size of method body[{methodName}] is too short({codeSize}), will random crash on IL2CPP release mode, please fill some dummy code inside");
 
                 if ((proxyMethod.MethodImplementationFlags & MethodImplAttributes.NoOptimization) != MethodImplAttributes.NoOptimization)
                     throw new Exception($"WRANING: method [{methodName}] must has a Attribute `MethodImpl(MethodImplOptions.NoOptimization)` to prevent code call to this optimized by compiler(pass args by shared stack)");
@@ -379,3 +380,4 @@ namespace MonoHook
     }
 
 }
+#endif

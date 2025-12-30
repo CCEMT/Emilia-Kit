@@ -1,5 +1,7 @@
-﻿using System;
+﻿#if UNITY_EDITOR
+using System;
 using System.Runtime.InteropServices;
+using UnityEngine;
 
 namespace DotNetDetour
 {
@@ -664,7 +666,7 @@ namespace DotNetDetour
             if(s_isiOS.HasValue)
                 return s_isiOS.Value;
 
-            s_isiOS = UnityEngine.SystemInfo.operatingSystem.ToLower().Contains("ios");
+            s_isiOS = SystemInfo.operatingSystem.ToLower().Contains("ios");
             return s_isiOS.Value;
         }
 
@@ -901,3 +903,5 @@ namespace DotNetDetour
         }
     }
 }
+
+#endif
