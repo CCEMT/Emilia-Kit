@@ -5,8 +5,8 @@
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
         <IncludeSymbols>false</IncludeSymbols>
         <IncludeDebugSymbols>false</IncludeDebugSymbols>
-        <AssemblyName>Emilia.Reflection.Editor</AssemblyName>
-        <RootNamespace>Emilia.Reflection.Editor</RootNamespace>
+        <AssemblyName>Emilia.UnityReflection.Editor</AssemblyName>
+        <RootNamespace>Emilia.UnityReflection.Editor</RootNamespace>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">

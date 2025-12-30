@@ -1,5 +1,5 @@
-rd /s /q Reflection
+rd /s /q UnityReflection
 
-dotnet build ../Reflection/Reflection.csproj -c Debug -o Reflection
+dotnet build ../Reflection/UnityReflection.csproj -c Debug -o UnityReflection
 
-copy Reflection\Emilia.Reflection.Editor.dll ..\Assets\Emilia\Kit\Core\Reflection\Emilia.Reflection.Editor.dll
+copy UnityReflection\Emilia.UnityReflection.Editor.dll ..\Assets\Emilia\Kit\Core\Reflection\Emilia.UnityReflection.Editor.dll
