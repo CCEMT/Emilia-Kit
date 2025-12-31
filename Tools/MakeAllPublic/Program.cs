@@ -47,6 +47,8 @@ namespace MakeAllPublic
             Console.WriteLine("功能:");
             Console.WriteLine("  • 将所有类型(class/interface/struct/enum)改为public");
             Console.WriteLine("  • 将所有方法、字段、属性、事件改为public");
+            Console.WriteLine("  • 将所有sealed类改为非sealed (跳过static类)");
+            Console.WriteLine("  • 将所有sealed方法/属性改为可重写");
             Console.WriteLine("  • 跳过编译器生成的特殊成员");
             Console.WriteLine();
             Console.WriteLine("示例:");
@@ -118,6 +120,7 @@ namespace MakeAllPublic
             {
                 if (type.IsGlobalModuleType) continue;
                 if (MakeTypePublic(type)) modifiedCount++;
+                if (MakeTypeNotSealed(type)) modifiedCount++;
                 modifiedCount += MakeAllMembersPublic(type);
             }
 
@@ -153,6 +156,18 @@ namespace MakeAllPublic
             return modified;
         }
 
+        private bool MakeTypeNotSealed(TypeDef type)
+        {
+            // 跳过 static 类（IL 中 static class = sealed + abstract）
+            if (type.IsSealed && !type.IsAbstract)
+            {
+                type.Attributes &= ~TypeAttributes.Sealed;
+                Console.WriteLine($"  将类型 '{type.FullName}' 的 sealed 修饰符移除");
+                return true;
+            }
+            return false;
+        }
+
         private int MakeAllMembersPublic(TypeDef type)
         {
             int modifiedCount = 0;
@@ -184,6 +199,11 @@ namespace MakeAllPublic
                     string methodType = method.IsConstructor ? "构造函数" : "方法";
                     Console.WriteLine($"    将{methodType} '{type.FullName}.{method.Name}' 改为 public");
                 }
+                if (MakeMethodNotSealed(method))
+                {
+                    modifiedCount++;
+                    Console.WriteLine($"    将方法 '{type.FullName}.{method.Name}' 的 sealed 修饰符移除");
+                }
             }
 
             for (var i = 0; i < type.Properties.Count; i++)
@@ -193,6 +213,11 @@ namespace MakeAllPublic
                 {
                     modifiedCount++;
                     Console.WriteLine($"    将属性 '{type.FullName}.{property.Name}' 改为 public");
+                }
+                if (MakePropertyNotSealed(property))
+                {
+                    modifiedCount++;
+                    Console.WriteLine($"    将属性 '{type.FullName}.{property.Name}' 的 sealed 修饰符移除");
                 }
             }
 
@@ -241,12 +266,33 @@ namespace MakeAllPublic
             return false;
         }
 
+        private bool MakeMethodNotSealed(MethodDef method)
+        {
+            // sealed override 在 IL 中表现为 virtual + final
+            if (method.IsVirtual && method.IsFinal)
+            {
+                method.Attributes &= ~MethodAttributes.Final;
+                return true;
+            }
+            return false;
+        }
+
         private bool MakePropertyPublic(PropertyDef property)
         {
             bool modified = false;
 
             if (property.GetMethod != null && MakeMethodPublic(property.GetMethod)) modified = true;
             if (property.SetMethod != null && MakeMethodPublic(property.SetMethod)) modified = true;
+
+            return modified;
+        }
+
+        private bool MakePropertyNotSealed(PropertyDef property)
+        {
+            bool modified = false;
+
+            if (property.GetMethod != null && MakeMethodNotSealed(property.GetMethod)) modified = true;
+            if (property.SetMethod != null && MakeMethodNotSealed(property.SetMethod)) modified = true;
 
             return modified;
         }
