@@ -64,7 +64,7 @@ namespace Emilia.Kit.Editor
 
         private void RebuildSearch_Hook()
         {
-            if (CanSearchPro()) OverrideRebuildSearch();
+            if (ReflectUtility.Invoke(this, nameof(CanSearchPro), new object[] { }) is bool result && result) OverrideRebuildSearch();
             else RebuildSearch_Proxy();
         }
 

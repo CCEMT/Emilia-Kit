@@ -46,7 +46,7 @@ namespace Emilia.Kit.Editor
 
         private void UpdateContentZoomer_Hook()
         {
-            if (OverrideUpdateContentZoomer()) return;
+            if (ReflectUtility.Invoke(this, nameof(OverrideUpdateContentZoomer), new object[] { }) is bool result && result) return;
             UpdateContentZoomer_Proxy();
         }
 
@@ -58,7 +58,7 @@ namespace Emilia.Kit.Editor
 
         private void OnKeyDownShortcut_Hook(KeyDownEvent evt)
         {
-            if (OverrideOnKeyDownShortcut(evt)) return;
+            if (ReflectUtility.Invoke(this, nameof(OverrideOnKeyDownShortcut), new object[] { }) is bool result && result) return;
             OnKeyDownShortcut_Proxy(evt);
         }
 
