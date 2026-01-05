@@ -33,7 +33,7 @@ namespace Emilia.Kit.Editor
 
         private void Ctor_Hook()
         {
-            if (OverrideCtor()) return;
+            if (ReflectUtility.Invoke(this, nameof(OverrideCtor), new object[] { }) is bool result && result) return;
             Ctor_Proxy();
         }
 
