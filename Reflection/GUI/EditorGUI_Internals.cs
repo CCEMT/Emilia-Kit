@@ -37,5 +37,52 @@ namespace Emilia.Reflection.Editor
             EditorGUI.DelayedIntFieldInternal(position, label, value, style);
 
         public static string TextField_Internal(int id, Rect position, GUIContent label, string text, GUIStyle style) => EditorGUI.TextFieldInternal(id, position, label, text, style);
+
+        public static string ToolbarSearchField_Internal(
+            Rect position, 
+            string text, 
+            bool showWithPopupArrow) =>
+            EditorGUI.ToolbarSearchField(position, text, showWithPopupArrow);
+
+        public static string ToolbarSearchField(
+            int id,
+            Rect position,
+            string text,
+            bool showWithPopupArrow) =>
+            EditorGUI.ToolbarSearchField(id, position, text, showWithPopupArrow);
+
+        public static string ToolbarSearchField(
+            int id,
+            Rect position,
+            string text,
+            GUIStyle searchFieldStyle,
+            GUIStyle cancelButtonStyle) =>
+            EditorGUI.ToolbarSearchField(id, position, text, searchFieldStyle, cancelButtonStyle);
+
+        public static string ToolbarSearchField(
+            Rect position,
+            string[] searchModes,
+            ref int searchMode,
+            string text) =>
+            EditorGUI.ToolbarSearchField(position, searchModes, ref searchMode, text);
+
+        public static string ToolbarSearchField(
+            int id,
+            Rect position,
+            string[] searchModes,
+            ref int searchMode,
+            string text) =>
+            EditorGUI.ToolbarSearchField(id, position, searchModes, ref searchMode, text);
+
+        public static string ToolbarSearchField(
+            int id,
+            Rect position,
+            string[] searchModes,
+            ref int searchMode,
+            string text,
+            GUIStyle searchFieldWithPopupStyle,
+            GUIStyle searchFieldNoPopupStyle,
+            GUIStyle cancelButtonStyle) =>
+            EditorGUI.ToolbarSearchField(id, position, searchModes, ref searchMode, text, searchFieldWithPopupStyle, searchFieldNoPopupStyle, cancelButtonStyle);
     }
 }
