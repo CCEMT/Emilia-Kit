@@ -8,6 +8,8 @@ namespace Emilia.Reflection.Editor
         private Brush _brush;
 
         internal Brush Target_Internal => _brush;
+        
+        public ScriptableObject brushObject_Internal => _brush;
 
         public bool isValid_Internal => _brush != null;
 
