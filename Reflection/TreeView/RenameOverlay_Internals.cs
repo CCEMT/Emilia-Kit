@@ -7,6 +7,8 @@ namespace Emilia.Reflection.Editor
     {
         private RenameOverlay target;
 
+        internal RenameOverlay Target_Internal => target;
+
         public string name_Internal
         {
             get => target.name;
@@ -19,6 +21,7 @@ namespace Emilia.Reflection.Editor
         public bool isWaitingForDelay_Internal => target.isWaitingForDelay;
         public Rect editFieldRect_Internal => target.editFieldRect;
         public bool isRenamingFilename_Internal => target.isRenamingFilename;
+        public bool isRenaming_Internal => target.IsRenaming();
 
         public RenameOverlay_Internals(RenameOverlay renameOverlay)
         {

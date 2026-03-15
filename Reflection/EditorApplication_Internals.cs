@@ -195,5 +195,7 @@ namespace Emilia.Reflection.Editor
         }
 
         public static Action CallDelayed_Internals(EditorApplication.CallbackFunction action, double delaySeconds = 0.0) => EditorApplication.CallDelayed(action, delaySeconds);
+
+        public static bool ValidateMenuItem_Internal(string menuItemPath) => EditorApplication.ValidateMenuItem(menuItemPath);
     }
 }
