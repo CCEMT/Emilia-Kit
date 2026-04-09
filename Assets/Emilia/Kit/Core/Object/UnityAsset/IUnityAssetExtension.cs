@@ -101,6 +101,19 @@ namespace Emilia.Kit.Editor
 
             asset.SetChildren(pasteList);
         }
+
+        public static void DestroyImmediateAll(this IUnityAsset asset, bool allowDestroyingAssets = false)
+        {
+            List<Object> childAssets = asset.GetChildren();
+            if (childAssets == null) return;
+
+            for (var i = childAssets.Count - 1; i >= 0; i--)
+            {
+                Object childAsset = childAssets[i];
+                if (childAsset == null) continue;
+                Object.DestroyImmediate(childAsset, allowDestroyingAssets);
+            }
+        }
     }
 }
 #endif
