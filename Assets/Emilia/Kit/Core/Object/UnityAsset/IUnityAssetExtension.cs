@@ -55,13 +55,23 @@ namespace Emilia.Kit.Editor
 
         public static void OnlySaveAll(this IUnityAsset unityAsset)
         {
+            HashSet<string> paths = new();
+
             List<Object> allAsset = unityAsset.CollectAsset();
             int count = allAsset.Count;
             for (int i = 0; i < count; i++)
             {
                 Object asset = allAsset[i];
                 EditorUtility.SetDirty(asset);
-                AssetDatabase.SaveAssetIfDirty(asset);
+
+                string path = AssetDatabase.GetAssetPath(asset);
+                paths.Add(path);
+            }
+
+            foreach (string path in paths)
+            {
+                GUID guid = AssetDatabase.GUIDFromAssetPath(path);
+                AssetDatabase.SaveAssetIfDirty(guid);
             }
         }
 
