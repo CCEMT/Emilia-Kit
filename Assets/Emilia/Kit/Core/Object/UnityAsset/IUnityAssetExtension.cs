@@ -75,6 +75,27 @@ namespace Emilia.Kit.Editor
             }
         }
 
+        public static void SaveAssetIfDirtyAll(this IUnityAsset unityAsset)
+        {
+            HashSet<string> paths = new();
+
+            List<Object> allAsset = unityAsset.CollectAsset();
+            int count = allAsset.Count;
+            for (int i = 0; i < count; i++)
+            {
+                Object asset = allAsset[i];
+
+                string path = AssetDatabase.GetAssetPath(asset);
+                paths.Add(path);
+            }
+
+            foreach (string path in paths)
+            {
+                GUID guid = AssetDatabase.GUIDFromAssetPath(path);
+                AssetDatabase.SaveAssetIfDirty(guid);
+            }
+        }
+
         public static void PasteChild(this IUnityAsset asset)
         {
             List<Object> pasteList = new List<Object>();
