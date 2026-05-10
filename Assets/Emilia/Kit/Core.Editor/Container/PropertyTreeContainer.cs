@@ -4,72 +4,119 @@ using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
 using Sirenix.Serialization;
 using UnityEditor;
-using UnityEngine;
 
 namespace Emilia.Kit.Editor
 {
     [Serializable]
     public class PropertyTreeContainer
     {
+        private const string TargetPropertyName = "_target";
+
         [Serializable]
-        private class Drawer : SerializedScriptableObject
+        private abstract class DrawerBase
         {
-            [NonSerialized, OdinSerialize, HideReferenceObjectPicker, HideLabel]
-            public object _target;
+            public abstract object target { get; set; }
         }
 
-        private Dictionary<object, PropertyTree> _propertyTrees = new Dictionary<object, PropertyTree>();
+        [Serializable]
+        private class Drawer<T> : DrawerBase
+        {
+            [OdinSerialize, HideReferenceObjectPicker, HideLabel]
+            public T _target;
+
+            public override object target
+            {
+                get => _target;
+                set => _target = value is T typedValue ? typedValue : default;
+            }
+        }
+
+        private sealed class TreeState
+        {
+            public DrawerBase drawer;
+            public PropertyTree propertyTree;
+
+            public void Dispose()
+            {
+                propertyTree?.Dispose();
+                propertyTree = null;
+                drawer = null;
+            }
+        }
+
+        private Dictionary<object, TreeState> _propertyTrees = new Dictionary<object, TreeState>();
 
         public void DrawTargetCheck(object target, Action<PropertyTree, InspectorProperty> onCheck = null)
         {
             if (target == null) return;
-            PropertyTree propertyTree = GetPropertyTree(target);
+            TreeState state = GetTreeState(target);
+            PropertyTree propertyTree = state.propertyTree;
+            InspectorProperty targetProperty = propertyTree.RootProperty.Children[TargetPropertyName];
+            if (targetProperty == null) return;
+
             propertyTree.BeginDraw(false);
-            foreach (InspectorProperty property in propertyTree.EnumerateTree(false, true))
+            EditorGUI.BeginChangeCheck();
+            targetProperty.Draw();
+            if (EditorGUI.EndChangeCheck())
             {
-                EditorGUI.BeginChangeCheck();
-                property.Draw();
-                if (EditorGUI.EndChangeCheck()) onCheck?.Invoke(propertyTree, property);
+                state.drawer.target = targetProperty.ValueEntry?.WeakSmartValue;
+                onCheck?.Invoke(propertyTree, targetProperty);
             }
 
             propertyTree.EndDraw();
         }
 
-        PropertyTree GetPropertyTree(object target)
+        TreeState GetTreeState(object target)
         {
-            if (_propertyTrees == null) _propertyTrees = new Dictionary<object, PropertyTree>();
-            if (this._propertyTrees.TryGetValue(target, out PropertyTree propertyTree))
+            if (_propertyTrees == null) _propertyTrees = new Dictionary<object, TreeState>();
+            if (_propertyTrees.TryGetValue(target, out TreeState state))
             {
-                if (target != propertyTree.RootProperty.ValueEntry.WeakSmartValue) propertyTree = ResetPropertyTree(target);
-                return propertyTree;
+                if (ReferenceEquals(target, state.drawer.target) == false) state = ResetTreeState(target);
+                return state;
             }
-            Drawer drawer = ScriptableObject.CreateInstance<Drawer>();
-            drawer._target = target;
-            propertyTree = PropertyTree.Create(drawer);
-            this._propertyTrees.Add(target, propertyTree);
-            return propertyTree;
+
+            state = CreateTreeState(target);
+            _propertyTrees.Add(target, state);
+            return state;
         }
 
         public PropertyTree ResetPropertyTree(object target)
         {
+            return ResetTreeState(target)?.propertyTree;
+        }
+
+        private TreeState ResetTreeState(object target)
+        {
             if (_propertyTrees == null) return null;
-            if (_propertyTrees.TryGetValue(target, out PropertyTree propertyTree)) propertyTree.Dispose();
-            PropertyTree newPropertyTree = PropertyTree.Create(target);
-            _propertyTrees[target] = newPropertyTree;
-            return newPropertyTree;
+            if (_propertyTrees.TryGetValue(target, out TreeState state)) state.Dispose();
+            TreeState newState = CreateTreeState(target);
+            _propertyTrees[target] = newState;
+            return newState;
+        }
+
+        private static TreeState CreateTreeState(object target)
+        {
+            Type drawerType = typeof(Drawer<>).MakeGenericType(target.GetType());
+            DrawerBase drawer = (DrawerBase) Activator.CreateInstance(drawerType, true);
+            drawer.target = target;
+
+            return new TreeState {
+                drawer = drawer,
+                propertyTree = PropertyTree.Create(drawer)
+            };
         }
 
         public void DisposeTarget(object target)
         {
             if (_propertyTrees == null) return;
-            if (_propertyTrees.TryGetValue(target, out PropertyTree propertyTree)) propertyTree.Dispose();
+            if (_propertyTrees.TryGetValue(target, out TreeState state)) state.Dispose();
             _propertyTrees.Remove(target);
         }
 
         public void Dispose()
         {
             if (this._propertyTrees == null) return;
-            foreach (var propertyTree in _propertyTrees.Values) propertyTree.Dispose();
+            foreach (TreeState state in _propertyTrees.Values) state?.Dispose();
             _propertyTrees.Clear();
         }
     }
