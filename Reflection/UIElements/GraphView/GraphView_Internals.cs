@@ -30,6 +30,9 @@ namespace Emilia.Reflection.Editor
             set => clipboard = value;
         }
 
+        public GraphViewUndoRedoSelection_Internals m_GraphViewUndoRedoSelection_Internals => new GraphViewUndoRedoSelection_Internals(m_GraphViewUndoRedoSelection);
+        public GraphView_PersistedSelection_Internals m_PersistedSelection_Internal => new GraphView_PersistedSelection_Internals(m_PersistedSelection);
+
         public string SerializedDataMimeType_Internal => m_SerializedDataMimeType;
 
         public string GetSerializedData_Internal() => clipboard.StartsWith(SerializedDataMimeType_Internal) ? clipboard.Substring(SerializedDataMimeType_Internal.Length + 1) : clipboard;
@@ -79,6 +82,18 @@ namespace Emilia.Reflection.Editor
         public void OnExecuteCommand_Internals(ExecuteCommandEvent evt)
         {
             OnExecuteCommand(evt);
+        }
+
+        public bool ShouldRecordUndo_Internals() => ShouldRecordUndo();
+
+        public void RecordSelectionUndoPre_Internals()
+        {
+            RecordSelectionUndoPre();
+        }
+
+        public void RecordSelectionUndoPost_Internals()
+        {
+            RecordSelectionUndoPost();
         }
     }
 }
