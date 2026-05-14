@@ -68,25 +68,21 @@ namespace Emilia.Kit.Editor
                 if (scriptInfo != null)
                 {
                     string path = AssetDatabase.GUIDToAssetPath(typeInfo.guid);
-                    string fullPath = string.IsNullOrEmpty(path) ? null : Path.GetFullPath(path);
-
-                    if (fullPath == null || ! File.Exists(fullPath))
+                    if (string.IsNullOrEmpty(path) || TryLoadScriptCode(path, out string code, out string contentHash) == false)
                     {
                         FullRefresh(cache, fullName, type);
                         return;
                     }
 
-                    long currentTicks = File.GetLastWriteTimeUtc(fullPath).Ticks;
-
-                    if (scriptInfo.lastWriteTimeTicks == currentTicks)
+                    if (scriptInfo.contentHash == contentHash)
                     {
                         MonoScript mono = AssetDatabase.LoadAssetAtPath<MonoScript>(path);
                         if (mono != null) AssetDatabase.OpenAsset(mono, typeInfo.line);
-                        
+
                         return;
                     }
 
-                    RefreshSingleScript(cache, scriptInfo, path, () => {
+                    RefreshSingleScript(cache, scriptInfo, path, code, contentHash, () => {
                         TypeInfo updated = cache.typeInfos.GetValueOrDefault(fullName);
 
                         if (updated == null) FullRefresh(cache, fullName, type);
@@ -98,7 +94,7 @@ namespace Emilia.Kit.Editor
                         }
 
                     });
-                    
+
                     return;
                 }
             }
@@ -127,9 +123,8 @@ namespace Emilia.Kit.Editor
 
         private static ConcurrentDictionary<string, string[]> assemblyDefineCache = new();
 
-        static void RefreshSingleScript(OpenScriptCache cache, ScriptInfo scriptInfo, string assetPath, Action onCompleted)
+        static void RefreshSingleScript(OpenScriptCache cache, ScriptInfo scriptInfo, string assetPath, string code, string contentHash, Action onCompleted)
         {
-            string fullPath = Path.GetFullPath(assetPath);
             string assemblyName = CompilationPipeline.GetAssemblyNameFromScriptPath(assetPath);
 
             if (string.IsNullOrEmpty(assemblyName))
@@ -148,7 +143,6 @@ namespace Emilia.Kit.Editor
             }
 
             Task.Run(() => {
-                string code = File.ReadAllText(fullPath);
                 string[] defines = assemblyDefineCache.GetOrAdd(csprojPath, p => {
                     string text = File.ReadAllText(p);
                     return text.Split(new[] {"<DefineConstants>"}, StringSplitOptions.None)[1]
@@ -171,13 +165,12 @@ namespace Emilia.Kit.Editor
                     typeInfos.Add(ti);
                 });
 
-                scriptInfo.lastWriteTimeTicks = File.GetLastWriteTimeUtc(fullPath).Ticks;
-
                 EditorApplication_Internals.CallDelayed_Internals(() => {
                     int oldCount = scriptInfo.typeInfos.Count;
                     for (int i = 0; i < oldCount; i++) cache.typeInfos.Remove(scriptInfo.typeInfos[i].typeFullName);
 
                     scriptInfo.typeInfos = typeInfos;
+                    scriptInfo.contentHash = contentHash;
                     int newCount = typeInfos.Count;
                     for (int i = 0; i < newCount; i++) cache.typeInfos[typeInfos[i].typeFullName] = typeInfos[i];
 
@@ -191,7 +184,8 @@ namespace Emilia.Kit.Editor
         {
             OpenScriptCache openScriptCache = OpenScriptCache.Get();
 
-            List<(ScriptInfo info, string assetPath)> refreshList = new();
+            List<(ScriptInfo info, string assetPath, string code, string contentHash)> refreshList = new();
+            List<(ScriptInfo info, string assetPath, string code, string contentHash)> allScripts = new();
 
             EditorUtility.DisplayProgressBar("刷新脚本缓存", "正在刷新脚本缓存", 0);
 
@@ -204,27 +198,24 @@ namespace Emilia.Kit.Editor
                 activeGuids.Add(guid);
 
                 string path = AssetDatabase.GUIDToAssetPath(guid);
-                string fullPath = Path.GetFullPath(path);
-
-                if (File.Exists(fullPath) == false) continue;
-
-                long currentTicks = File.GetLastWriteTimeUtc(fullPath).Ticks;
+                if (TryLoadScriptCode(path, out string code, out string contentHash) == false) continue;
 
                 ScriptInfo scriptInfo = openScriptCache.scriptInfos.GetValueOrDefault(guid);
                 if (scriptInfo == null)
                 {
                     ScriptInfo createScriptInfo = new();
                     createScriptInfo.guid = guid;
-                    createScriptInfo.lastWriteTimeTicks = currentTicks;
                     openScriptCache.scriptInfos[guid] = createScriptInfo;
+                    scriptInfo = createScriptInfo;
 
-                    refreshList.Add((createScriptInfo, path));
+                    refreshList.Add((scriptInfo, path, code, contentHash));
                 }
-                else if (scriptInfo.lastWriteTimeTicks != currentTicks)
+                else if (scriptInfo.contentHash != contentHash)
                 {
-                    scriptInfo.lastWriteTimeTicks = currentTicks;
-                    refreshList.Add((scriptInfo, path));
+                    refreshList.Add((scriptInfo, path, code, contentHash));
                 }
+
+                allScripts.Add((scriptInfo, path, code, contentHash));
             }
 
             List<string> staleKeys = new();
@@ -241,31 +232,32 @@ namespace Emilia.Kit.Editor
                 openScriptCache.scriptInfos.Remove(staleKey);
             }
 
+            bool hasTarget = targetFullName != null;
+
             if (refreshList.Count == 0)
             {
                 if (staleKeys.Count > 0) OpenScriptCache.Save();
+
+                if (hasTarget && openScriptCache.typeInfos.ContainsKey(targetFullName) == false)
+                {
+                    var fallbackList = SortTargetRefreshList(allScripts, targetAssemblyName, targetTypeName);
+                    ProcessSequentialRefresh(openScriptCache, fallbackList, 0, fallbackList.Count, targetFullName, onCompleted);
+                    return;
+                }
+
                 onCompleted?.Invoke();
                 EditorUtility.ClearProgressBar();
                 return;
             }
 
-            bool hasTarget = targetFullName != null;
-
             if (hasTarget)
             {
-                var sortedList = refreshList.Select(item => {
-                        string fileName = Path.GetFileNameWithoutExtension(item.assetPath);
-                        string assemblyName = CompilationPipeline.GetAssemblyNameFromScriptPath(item.assetPath)?.Replace(".dll", "");
-                        bool isSameAssembly = assemblyName == targetAssemblyName;
-                        int similarityScore = Fuzz.WeightedRatio(fileName, targetTypeName);
-                        return (item.info, item.assetPath, isSameAssembly, similarityScore);
-                    })
-                    .OrderByDescending(x => x.isSameAssembly)
-                    .ThenByDescending(x => x.similarityScore)
-                    .ToList();
+                var sortedList = SortTargetRefreshList(refreshList, targetAssemblyName, targetTypeName);
+                var fallbackList = SortTargetRefreshList(allScripts, targetAssemblyName, targetTypeName);
 
                 int totalCount = sortedList.Count;
-                ProcessSequentialRefresh(openScriptCache, sortedList, 0, totalCount, targetFullName, onCompleted);
+                ProcessSequentialRefresh(openScriptCache, sortedList, 0, totalCount, targetFullName, onCompleted,
+                    () => { ProcessSequentialRefresh(openScriptCache, fallbackList, 0, fallbackList.Count, targetFullName, onCompleted); });
             }
             else
             {
@@ -274,8 +266,8 @@ namespace Emilia.Kit.Editor
 
                 for (int i = 0; i < totalCount; i++)
                 {
-                    var (info, assetPath) = refreshList[i];
-                    RefreshCache(openScriptCache, info, assetPath, () => OnCompleted(info, totalCount));
+                    var (info, assetPath, code, contentHash) = refreshList[i];
+                    RefreshCache(openScriptCache, info, assetPath, code, contentHash, () => OnCompleted(info, totalCount));
                 }
 
                 void OnCompleted(ScriptInfo scriptInfo, int total)
@@ -293,27 +285,51 @@ namespace Emilia.Kit.Editor
             }
         }
 
+        static List<(ScriptInfo info, string assetPath, string code, string contentHash, bool isSameAssembly, int similarityScore)> SortTargetRefreshList(
+            List<(ScriptInfo info, string assetPath, string code, string contentHash)> refreshList,
+            string targetAssemblyName,
+            string targetTypeName)
+        {
+            return refreshList.Select(item => {
+                    string fileName = Path.GetFileNameWithoutExtension(item.assetPath);
+                    string assemblyName = CompilationPipeline.GetAssemblyNameFromScriptPath(item.assetPath)?.Replace(".dll", "");
+                    bool isSameAssembly = assemblyName == targetAssemblyName;
+                    int similarityScore = Fuzz.WeightedRatio(fileName, targetTypeName);
+                    return (item.info, item.assetPath, item.code, item.contentHash, isSameAssembly, similarityScore);
+                })
+                .OrderByDescending(x => x.isSameAssembly)
+                .ThenByDescending(x => x.similarityScore)
+                .ToList();
+        }
+
         static void ProcessSequentialRefresh(
             OpenScriptCache cache,
-            List<(ScriptInfo info, string assetPath, bool isSameAssembly, int similarityScore)> sortedList,
+            List<(ScriptInfo info, string assetPath, string code, string contentHash, bool isSameAssembly, int similarityScore)> sortedList,
             int index,
             int totalCount,
             string targetFullName,
-            Action onCompleted)
+            Action onCompleted,
+            Action onNotFound = null)
         {
             if (index >= sortedList.Count)
             {
+                if (onNotFound != null)
+                {
+                    onNotFound.Invoke();
+                    return;
+                }
+
                 OpenScriptCache.Save();
                 onCompleted?.Invoke();
                 EditorUtility.ClearProgressBar();
                 return;
             }
 
-            var (info, assetPath, _, _) = sortedList[index];
-            float t = (float) index / totalCount;
+            var (info, assetPath, code, contentHash, _, _) = sortedList[index];
+            float t = totalCount == 0 ? 1f : (float) index / totalCount;
             EditorUtility.DisplayProgressBar("刷新脚本缓存", $"正在刷新脚本缓存({index}/{totalCount})", t);
 
-            RefreshCache(cache, info, assetPath, () => {
+            RefreshCache(cache, info, assetPath, code, contentHash, () => {
                 if (cache.typeInfos.ContainsKey(targetFullName))
                 {
                     OpenScriptCache.Save();
@@ -322,13 +338,12 @@ namespace Emilia.Kit.Editor
                     return;
                 }
 
-                ProcessSequentialRefresh(cache, sortedList, index + 1, totalCount, targetFullName, onCompleted);
+                ProcessSequentialRefresh(cache, sortedList, index + 1, totalCount, targetFullName, onCompleted, onNotFound);
             });
         }
 
-        static void RefreshCache(OpenScriptCache openScriptCache, ScriptInfo scriptInfo, string assetPath, Action onCompleted = null)
+        static void RefreshCache(OpenScriptCache openScriptCache, ScriptInfo scriptInfo, string assetPath, string code, string contentHash, Action onCompleted = null)
         {
-            string fullPath = Path.GetFullPath(assetPath);
             string assemblyName = CompilationPipeline.GetAssemblyNameFromScriptPath(assetPath);
 
             if (string.IsNullOrEmpty(assemblyName))
@@ -347,8 +362,6 @@ namespace Emilia.Kit.Editor
             }
 
             Task.Run(() => {
-                string code = File.ReadAllText(fullPath);
-
                 List<TypeInfo> typeInfos = new();
 
                 string[] defines = assemblyDefineCache.GetOrAdd(csprojPath, p => {
@@ -377,12 +390,28 @@ namespace Emilia.Kit.Editor
                     for (int j = 0; j < oldCount; j++) openScriptCache.typeInfos.Remove(scriptInfo.typeInfos[j].typeFullName);
 
                     scriptInfo.typeInfos = typeInfos;
+                    scriptInfo.contentHash = contentHash;
                     int newCount = typeInfos.Count;
                     for (int j = 0; j < newCount; j++) openScriptCache.typeInfos[typeInfos[j].typeFullName] = typeInfos[j];
 
                     onCompleted?.Invoke();
                 }, 0.001d);
             });
+        }
+
+        static bool TryLoadScriptCode(string assetPath, out string code, out string contentHash)
+        {
+            code = null;
+            contentHash = null;
+
+            if (string.IsNullOrEmpty(assetPath)) return false;
+
+            MonoScript monoScript = AssetDatabase.LoadAssetAtPath<MonoScript>(assetPath);
+            if (monoScript == null) return false;
+
+            code = monoScript.text ?? string.Empty;
+            contentHash = Hash128.Compute(code).ToString();
+            return true;
         }
 
         static void BuildTypeInfo(SyntaxNode syntaxNode, SyntaxNode parent, string fullName, Action<string, int> onAddTypeInfo)

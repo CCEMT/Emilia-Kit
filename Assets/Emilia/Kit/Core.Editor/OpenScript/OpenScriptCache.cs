@@ -58,7 +58,7 @@ namespace Emilia.Kit.Editor
     public class ScriptInfo
     {
         public string guid;
-        public long lastWriteTimeTicks;
+        public string contentHash;
         public List<TypeInfo> typeInfos = new List<TypeInfo>();
     }
 }

@@ -25,6 +25,8 @@ namespace Emilia.Kit
 
         public float defaultWidth { get; set; } = DefaultWidth;
 
+        public bool isSmartSearch { get; set; }
+
         public OdinMenu(string name = DefaultName)
         {
             title = name;
@@ -68,12 +70,15 @@ namespace Emilia.Kit
 
             GenericSelector<Action> customGenericSelector = new(title, false, customCollection);
 
-            customGenericSelector.SelectionTree.SetSearchFunction(item => {
-                string target = item.SearchString;
-                string input = customGenericSelector.SelectionTree.Config.SearchTerm;
-                return SearchUtility.SmartSearch(target, input);
-            });
-
+            if (isSmartSearch)
+            {
+                customGenericSelector.SelectionTree.SetSearchFunction(item => {
+                    string target = item.SearchString;
+                    string input = customGenericSelector.SelectionTree.Config.SearchTerm;
+                    return SearchUtility.SmartSearch(target, input);
+                });
+            }
+        
             customGenericSelector.EnableSingleClickToSelect();
 
             customGenericSelector.SelectionChanged += ints => {
