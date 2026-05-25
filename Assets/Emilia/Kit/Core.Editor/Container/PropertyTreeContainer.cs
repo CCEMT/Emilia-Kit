@@ -12,7 +12,7 @@ namespace Emilia.Kit.Editor
     {
         private const string TargetPropertyName = "_target";
 
-        [Serializable]
+        [Serializable, ShowOdinSerializedPropertiesInInspector]
         private abstract class DrawerBase
         {
             public abstract object target { get; set; }
@@ -21,7 +21,7 @@ namespace Emilia.Kit.Editor
         [Serializable]
         private class Drawer<T> : DrawerBase
         {
-            [OdinSerialize, HideReferenceObjectPicker, HideLabel]
+            [OdinSerialize, NonSerialized, HideReferenceObjectPicker, HideLabel]
             public T _target;
 
             public override object target
@@ -44,7 +44,7 @@ namespace Emilia.Kit.Editor
             }
         }
 
-        private Dictionary<object, TreeState> _propertyTrees = new Dictionary<object, TreeState>();
+        private Dictionary<object, TreeState> _propertyTrees = new();
 
         public void DrawTargetCheck(object target, Action<PropertyTree, InspectorProperty> onCheck = null)
         {
@@ -80,10 +80,7 @@ namespace Emilia.Kit.Editor
             return state;
         }
 
-        public PropertyTree ResetPropertyTree(object target)
-        {
-            return ResetTreeState(target)?.propertyTree;
-        }
+        public PropertyTree ResetPropertyTree(object target) => ResetTreeState(target)?.propertyTree;
 
         private TreeState ResetTreeState(object target)
         {
