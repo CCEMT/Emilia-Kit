@@ -13,6 +13,20 @@ namespace Emilia.Reflection.Editor
 
         public TreeViewController_Internals(EditorWindow editorWindow, TreeViewState treeViewState) : base(editorWindow, treeViewState) { }
 
+        public void InitProjectBrowserColumnOne_Internal(Rect rect, bool skipHiddenPackages)
+        {
+            ProjectBrowserColumnOneTreeViewDataSource dataSource = new ProjectBrowserColumnOneTreeViewDataSource(this, skipHiddenPackages);
+            ProjectBrowserColumnOneTreeViewGUI treeGUI = new ProjectBrowserColumnOneTreeViewGUI(this);
+            ProjectBrowserColumnOneTreeViewDragging treeDragging = new ProjectBrowserColumnOneTreeViewDragging(this);
+            Init(rect, dataSource, treeGUI, treeDragging);
+        }
+
+        public IList<TreeViewItem> GetRows_Internal() => data != null ? data.GetRows() : null;
+
+        public Rect GetRowRect_Internal(int row, float rowWidth) => gui != null ? gui.GetRowRect(row, rowWidth) : Rect.zero;
+
+        public Vector2 GetTotalSize_Internal() => gui != null ? gui.GetTotalSize() : Vector2.zero;
+
         public Action<int[]> selectionChangedCallback_Internal
         {
             get => selectionChangedCallback;

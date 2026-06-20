@@ -1,4 +1,5 @@
-﻿using UnityEditor.IMGUI.Controls;
+﻿using UnityEditor;
+using UnityEditor.IMGUI.Controls;
 
 namespace Emilia.Reflection.Editor
 {
@@ -17,6 +18,15 @@ namespace Emilia.Reflection.Editor
         public virtual void OnAwake_Internal()
         {
             base.OnAwake();
+        }
+    }
+
+    public class TreeViewStateWithAssetUtility_Internal : TreeViewStateWithAssetUtility
+    {
+        public CreateAssetUtility_Internal createAssetUtility_Internal
+        {
+            get => new CreateAssetUtility_Internal(createAssetUtility);
+            set => createAssetUtility = value.Target_Internal;
         }
     }
 }

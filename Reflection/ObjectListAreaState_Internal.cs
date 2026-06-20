@@ -60,6 +60,18 @@ namespace Emilia.Reflection.Editor
             set => this.m_GridSize = value;
         }
 
+        public RenameOverlay_Internals GetRenameOverlay_Internal() => new RenameOverlay_Internals(this.m_RenameOverlay);
+
+        public CreateAssetUtility_Internal GetCreateAssetUtility_Internal() => new CreateAssetUtility_Internal(this.m_CreateAssetUtility);
+
+        public CreateAssetUtility_Internal EnsureCreateAssetUtility_Internal()
+        {
+            if (this.m_CreateAssetUtility == null)
+                this.m_CreateAssetUtility = new CreateAssetUtility();
+
+            return new CreateAssetUtility_Internal(this.m_CreateAssetUtility);
+        }
+
         public void OnAwake_Internal() => OnAwake();
     }
 }
