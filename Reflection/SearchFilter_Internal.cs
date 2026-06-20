@@ -111,6 +111,8 @@ namespace Emilia.Reflection.Editor
 
         public bool SetNewFilter_Internal(SearchFilter_Internal newFilter) => SetNewFilter(newFilter);
 
+        public bool SetNewFilter_Internal(SearchFilter newFilter) => SetNewFilter(newFilter);
+
         public string FilterToSearchFieldString_Internal() => FilterToSearchFieldString();
 
         public void SearchFieldStringToFilter_Internal(string searchFieldString)

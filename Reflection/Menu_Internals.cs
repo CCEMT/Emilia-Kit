@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEditor;
 
 namespace Emilia.Reflection.Editor
@@ -27,6 +28,11 @@ namespace Emilia.Reflection.Editor
         public static bool GetChecked_Internal(string menuPath) => Menu.GetChecked(menuPath);
 
         public static bool GetEnabled_Internal(string menuPath) => Menu.GetEnabled(menuPath);
+
+        public static void GetMenuItemDefaultShortcuts_Internal(List<string> outItemNames, List<string> outItemDefaultShortcuts)
+        {
+            Menu.GetMenuItemDefaultShortcuts(outItemNames, outItemDefaultShortcuts);
+        }
 
         public static ScriptingMenuItem_Internal[] GetMenuItems_Internal(string menuPath, bool includeSeparators, bool localized)
         {

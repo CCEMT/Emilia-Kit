@@ -54,6 +54,17 @@ namespace Emilia.Reflection.Editor
             set => _state.m_CreateAssetUtility = value.Target_Internal;
         }
 
+        public RenameOverlay_Internals GetRenameOverlay_Internal() => new RenameOverlay_Internals(_state.m_RenameOverlay);
+
+        public CreateAssetUtility_Internal GetCreateAssetUtility_Internal() => new CreateAssetUtility_Internal(_state.m_CreateAssetUtility);
+
+        public CreateAssetUtility_Internal EnsureCreateAssetUtility_Internal()
+        {
+            if (_state.m_CreateAssetUtility == null)
+                _state.m_CreateAssetUtility = new CreateAssetUtility();
+
+            return new CreateAssetUtility_Internal(_state.m_CreateAssetUtility);
+        }
         public int m_NewAssetIndexInList_Internal
         {
             get => _state.m_NewAssetIndexInList;
