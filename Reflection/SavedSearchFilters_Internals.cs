@@ -15,6 +15,21 @@ namespace Emilia.Reflection.Editor
 
         public static void RemoveSavedFilter_Internal(int instanceID) => SavedSearchFilters.RemoveSavedFilter(instanceID);
 
+        public static bool TryApplyFilter_Internal(int instanceID, SearchFilter_Internal destination, out string displayName)
+        {
+            displayName = string.Empty;
+            if (destination == null || !SavedSearchFilters.IsSavedFilter(instanceID))
+                return false;
+
+            SearchFilter filter = SavedSearchFilters.GetFilter(instanceID);
+            if (filter == null)
+                return false;
+
+            destination.SetNewFilter_Internal(filter);
+            displayName = SavedSearchFilters.GetName(instanceID) ?? string.Empty;
+            return true;
+        }
+
         public static TreeViewItem ConvertToTreeView_Internal() => SavedSearchFilters.ConvertToTreeView();
     }
 }
