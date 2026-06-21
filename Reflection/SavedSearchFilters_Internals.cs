@@ -13,6 +13,8 @@ namespace Emilia.Reflection.Editor
 
         public static string GetName_Internal(int instanceID) => SavedSearchFilters.GetName(instanceID);
 
+        public static void RemoveSavedFilter_Internal(int instanceID) => SavedSearchFilters.RemoveSavedFilter(instanceID);
+
         public static TreeViewItem ConvertToTreeView_Internal() => SavedSearchFilters.ConvertToTreeView();
     }
 }
