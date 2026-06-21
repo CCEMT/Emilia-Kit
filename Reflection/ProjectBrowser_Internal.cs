@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
@@ -98,6 +99,14 @@ namespace Emilia.Reflection.Editor
         public bool isValid_Internal => _projectBrowser != null;
 
         public static Type projectBrowserType_Internal => typeof(ProjectBrowser);
+
+        public static Color GetAssetItemColor_Internal(int instanceID) => ProjectBrowser.GetAssetItemColor(instanceID);
+
+        public static MethodInfo GetAssetItemColorMethod_Internal()
+        {
+            Func<int, Color> target = ProjectBrowser.GetAssetItemColor;
+            return target.Method;
+        }
 
         public static ProjectBrowser_Internal s_LastInteractedProjectBrowser_Internal
         {
