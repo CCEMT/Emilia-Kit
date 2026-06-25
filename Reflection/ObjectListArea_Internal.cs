@@ -154,6 +154,35 @@ namespace Emilia.Reflection.Editor
             }
         }
 
+        public float GetScrollContentHeight_Internal(bool forceReflow)
+        {
+            SetupData(forceReflow);
+
+            if (m_Groups == null)
+                return 0f;
+
+            float height = 0f;
+            ObjectListArea.LocalGroup localAssets = m_LocalAssets;
+            bool showLocalAssetsOnly = m_ShowLocalAssetsOnly;
+
+            for (int i = 0; i < m_Groups.Count; i++)
+            {
+                ObjectListArea.Group group = m_Groups[i];
+                if (group == null)
+                    continue;
+
+                bool isLocalAssets = localAssets != null && ReferenceEquals(group, localAssets);
+                if (!showLocalAssetsOnly && isLocalAssets)
+                    continue;
+
+                height += group.Height;
+                if (isLocalAssets && localAssets.ShowNone)
+                    break;
+            }
+
+            return height;
+        }
+
         public int m_MaxGridSize_Internal
         {
             get => m_MaxGridSize;
