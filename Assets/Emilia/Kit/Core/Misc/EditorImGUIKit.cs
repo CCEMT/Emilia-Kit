@@ -159,6 +159,33 @@ namespace Emilia.Kit.Editor
             window = OdinEditorWindow.InspectObjectInDropDown(inputData, rect, width);
         }
 
+        public static void InputWindowAtScreenPosition(
+            Action<string> inputCallback,
+            string startInput,
+            Vector2 screenPosition,
+            string titleString = "输入",
+            float width = 300)
+        {
+            if (screenPosition == Vector2.zero)
+            {
+                EditorWindow focusedWindow = EditorWindow.focusedWindow;
+                screenPosition = focusedWindow != null ? focusedWindow.position.center : GUIHelper.GetEditorWindowRect().center;
+            }
+
+            Rect position = new(screenPosition.x - width / 2f, screenPosition.y, width, 100);
+
+            OdinEditorWindow window = null;
+            inputCallback += (_) => window?.Close();
+
+            InputContainer inputData = new();
+            inputData.inputCallback = inputCallback;
+            inputData.inputString = startInput;
+            window = OdinEditorWindow.InspectObject(inputData);
+            window.titleContent = new GUIContent(titleString);
+            window.position = position;
+            window.Focus();
+        }
+
         public static void InputWindow(Action<string> inputCallback, string startInput = "", string titleString = "输入", float width = 300)
         {
             Rect position = GUIHelper.GetEditorWindowRect().AlignCenter(width, 100);
