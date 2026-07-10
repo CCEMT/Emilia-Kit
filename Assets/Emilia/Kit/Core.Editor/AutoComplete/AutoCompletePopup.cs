@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -10,12 +11,12 @@ namespace Emilia.Kit.Editor
     /// </summary>
     public class AutoCompletePopup
     {
-        private List<string> _suggestions;
+        private List<AutoCompleteSuggestion> _suggestions;
         private int _selectedIndex;
         private Vector2 _scrollPosition;
-        private Rect _popupRect;
+        private Rect _popupScreenRect;
         private bool _isVisible;
-        private Action<string> _onSelect;
+        private Action<AutoCompleteSuggestion> _onSelect;
 
         private AutoCompleteStyles _styles;
 
@@ -33,6 +34,18 @@ namespace Emilia.Kit.Editor
         /// </summary>
         public void Show(List<string> suggestions, Rect anchorRect, Action<string> onSelect)
         {
+            List<AutoCompleteSuggestion> convertedSuggestions = suggestions?
+                .Select(value => new AutoCompleteSuggestion(value, value, 0, int.MaxValue))
+                .ToList();
+
+            Show(convertedSuggestions, anchorRect, suggestion => onSelect?.Invoke(suggestion.insertText));
+        }
+
+        /// <summary>
+        /// 显示弹窗
+        /// </summary>
+        public void Show(List<AutoCompleteSuggestion> suggestions, Rect anchorRect, Action<AutoCompleteSuggestion> onSelect)
+        {
             if (suggestions == null || suggestions.Count == 0)
             {
                 Hide();
@@ -47,7 +60,8 @@ namespace Emilia.Kit.Editor
 
             float itemHeight = EditorGUIUtility.singleLineHeight + 2;
             float popupHeight = Mathf.Min(suggestions.Count * itemHeight + 4, 150);
-            _popupRect = new Rect(anchorRect.x, anchorRect.yMax + 1, anchorRect.width, popupHeight);
+            Vector2 screenPosition = GUIUtility.GUIToScreenPoint(new Vector2(anchorRect.x, anchorRect.yMax + 1));
+            _popupScreenRect = new Rect(screenPosition.x, screenPosition.y, anchorRect.width, popupHeight);
         }
 
         /// <summary>
@@ -59,13 +73,29 @@ namespace Emilia.Kit.Editor
             _suggestions = null;
         }
 
+        public bool ContainsMousePosition(Vector2 mousePosition)
+        {
+            return _isVisible && GetPopupRect().Contains(mousePosition);
+        }
+
         /// <summary>
         /// 处理弹窗内的键盘导航
         /// </summary>
         /// <returns>是否已处理事件</returns>
         public bool HandleKeyDown(Event e, out string selectedValue)
         {
-            selectedValue = null;
+            bool handled = HandleKeyDown(e, out AutoCompleteSuggestion selectedSuggestion);
+            selectedValue = selectedSuggestion?.insertText;
+            return handled;
+        }
+
+        /// <summary>
+        /// 处理弹窗内的键盘导航
+        /// </summary>
+        /// <returns>是否已处理事件</returns>
+        public bool HandleKeyDown(Event e, out AutoCompleteSuggestion selectedSuggestion)
+        {
+            selectedSuggestion = null;
 
             if (!_isVisible || _suggestions == null || _suggestions.Count == 0)
             {
@@ -86,7 +116,7 @@ namespace Emilia.Kit.Editor
                 case KeyCode.KeypadEnter:
                     if (_selectedIndex >= 0 && _selectedIndex < _suggestions.Count)
                     {
-                        selectedValue = _suggestions[_selectedIndex];
+                        selectedSuggestion = _suggestions[_selectedIndex];
                     }
                     Hide();
                     return true;
@@ -112,9 +142,10 @@ namespace Emilia.Kit.Editor
             _styles.Init();
 
             Event e = Event.current;
+            Rect popupRect = GetPopupRect();
 
             // 点击弹窗外部关闭
-            if (e.type == EventType.MouseDown && !_popupRect.Contains(e.mousePosition))
+            if (e.type == EventType.MouseDown && !popupRect.Contains(e.mousePosition))
             {
                 Hide();
                 RequestRepaint();
@@ -122,11 +153,11 @@ namespace Emilia.Kit.Editor
             }
 
             // 绘制背景和边框
-            EditorGUI.DrawRect(_popupRect, AutoCompleteStyles.PopupBackgroundColor);
-            DrawBorder(_popupRect, AutoCompleteStyles.PopupBorderColor);
+            EditorGUI.DrawRect(popupRect, AutoCompleteStyles.PopupBackgroundColor);
+            DrawBorder(popupRect, AutoCompleteStyles.PopupBorderColor);
 
             // 绘制列表
-            Rect innerRect = new Rect(_popupRect.x + 1, _popupRect.y + 1, _popupRect.width - 2, _popupRect.height - 2);
+            Rect innerRect = new Rect(popupRect.x + 1, popupRect.y + 1, popupRect.width - 2, popupRect.height - 2);
             GUILayout.BeginArea(innerRect);
             _scrollPosition = EditorGUILayout.BeginScrollView(_scrollPosition);
 
@@ -147,16 +178,44 @@ namespace Emilia.Kit.Editor
                     style = _styles.SelectedItemStyle;
                 }
 
-                if (GUI.Button(rect, _suggestions[i], style))
+                if (GUI.Button(rect, GUIContent.none, style))
                 {
                     _onSelect?.Invoke(_suggestions[i]);
                     Hide();
                     break;
                 }
+
+                DrawSuggestion(rect, _suggestions[i], i == _selectedIndex);
             }
 
             EditorGUILayout.EndScrollView();
             GUILayout.EndArea();
+        }
+
+        private Rect GetPopupRect()
+        {
+            Vector2 guiPosition = GUIUtility.ScreenToGUIPoint(_popupScreenRect.position);
+            return new Rect(guiPosition.x, guiPosition.y, _popupScreenRect.width, _popupScreenRect.height);
+        }
+
+        private void DrawSuggestion(Rect rect, AutoCompleteSuggestion suggestion, bool selected)
+        {
+            if (suggestion == null) return;
+
+            GUIStyle itemStyle = selected ? _styles.SelectedItemStyle : _styles.ItemStyle;
+            if (string.IsNullOrEmpty(suggestion.comment))
+            {
+                GUI.Label(rect, suggestion.displayText, itemStyle);
+                return;
+            }
+
+            GUIStyle commentStyle = selected ? _styles.SelectedCommentStyle : _styles.CommentStyle;
+            float commentWidth = Mathf.Min(rect.width * 0.45f, commentStyle.CalcSize(new GUIContent(suggestion.comment)).x + 12f);
+            Rect nameRect = new Rect(rect.x, rect.y, rect.width - commentWidth, rect.height);
+            Rect commentRect = new Rect(rect.xMax - commentWidth, rect.y, commentWidth, rect.height);
+
+            GUI.Label(nameRect, suggestion.displayText, itemStyle);
+            GUI.Label(commentRect, suggestion.comment, commentStyle);
         }
 
         private static void DrawBorder(Rect rect, Color color)

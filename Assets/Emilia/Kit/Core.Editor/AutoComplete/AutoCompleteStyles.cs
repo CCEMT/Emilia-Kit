@@ -11,10 +11,14 @@ namespace Emilia.Kit.Editor
         private GUIStyle _textFieldStyle;
         private GUIStyle _itemStyle;
         private GUIStyle _selectedItemStyle;
+        private GUIStyle _commentStyle;
+        private GUIStyle _selectedCommentStyle;
 
         public GUIStyle TextFieldStyle => _textFieldStyle;
         public GUIStyle ItemStyle => _itemStyle;
         public GUIStyle SelectedItemStyle => _selectedItemStyle;
+        public GUIStyle CommentStyle => _commentStyle;
+        public GUIStyle SelectedCommentStyle => _selectedCommentStyle;
 
         public void Init()
         {
@@ -45,6 +49,23 @@ namespace Emilia.Kit.Editor
                         : new Color(0.3f, 0.5f, 0.85f)
                 );
                 _selectedItemStyle.normal.textColor = Color.white;
+            }
+
+            if (_commentStyle == null)
+            {
+                _commentStyle = new GUIStyle(_itemStyle)
+                {
+                    alignment = TextAnchor.MiddleRight
+                };
+                _commentStyle.normal.textColor = EditorGUIUtility.isProSkin
+                    ? new Color(0.62f, 0.62f, 0.62f)
+                    : new Color(0.42f, 0.42f, 0.42f);
+            }
+
+            if (_selectedCommentStyle == null)
+            {
+                _selectedCommentStyle = new GUIStyle(_commentStyle);
+                _selectedCommentStyle.normal.textColor = new Color(0.88f, 0.93f, 1f);
             }
         }
 
