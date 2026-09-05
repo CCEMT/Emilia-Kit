@@ -26,9 +26,11 @@ namespace Emilia.Kit
             return preferences;
         }
 
-        public static Object[] GetEditorResources(Type type)
+        public static Object[] GetEditorResources(Type type) => GetEditorResources(type.Name);
+
+        public static Object[] GetEditorResources(string typeName)
         {
-            string typeSearchString = $" t:{type.Name}";
+            string typeSearchString = $" t:{typeName}";
             string[] guids = AssetDatabase.FindAssets(typeSearchString);
             Object[] preferences = new Object[guids.Length];
             for (int i = 0; i < guids.Length; i++)

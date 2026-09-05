@@ -12,6 +12,7 @@ namespace Emilia.Kit.Editor
         private int _selectIndex;
         private double _cursorBlinkTime;
         private bool _cursorVisible = true;
+        private bool _isDragging;
 
         private const float CursorBlinkRate = 0.5f;
 
@@ -29,6 +30,8 @@ namespace Emilia.Kit.Editor
 
         public bool CursorVisible => _cursorVisible;
 
+        public bool IsDragging => _isDragging;
+
         public bool HasSelection => _cursorIndex != _selectIndex;
 
         public int SelectionStart => Mathf.Min(_cursorIndex, _selectIndex);
@@ -38,10 +41,41 @@ namespace Emilia.Kit.Editor
         /// <summary>
         /// 处理鼠标点击，设置光标位置
         /// </summary>
-        public void HandleMouseDown(string text, Rect textFieldRect, Vector2 mousePosition)
+        public void HandleMouseDown(string text, Rect textFieldRect, Vector2 mousePosition, int clickCount = 1)
         {
+            text ??= string.Empty;
             _cursorIndex = GetCursorIndexFromPosition(text, textFieldRect, mousePosition);
-            _selectIndex = _cursorIndex;
+            _isDragging = clickCount <= 1;
+
+            if (clickCount >= 3)
+            {
+                _selectIndex = 0;
+                _cursorIndex = text.Length;
+            }
+            else if (clickCount == 2)
+            {
+                SelectWord(text, _cursorIndex);
+            }
+            else
+            {
+                _selectIndex = _cursorIndex;
+            }
+
+            ResetCursorBlink();
+        }
+
+        public void HandleMouseDrag(string text, Rect textFieldRect, Vector2 mousePosition)
+        {
+            if (!_isDragging) return;
+
+            text ??= string.Empty;
+            _cursorIndex = GetCursorIndexFromPosition(text, textFieldRect, mousePosition);
+            ResetCursorBlink();
+        }
+
+        public void HandleMouseUp()
+        {
+            _isDragging = false;
             ResetCursorBlink();
         }
 
@@ -221,6 +255,18 @@ namespace Emilia.Kit.Editor
         }
 
         /// <summary>
+        /// 设置光标位置并清空选区
+        /// </summary>
+        public void SetCursor(string text, int cursorIndex)
+        {
+            int textLength = string.IsNullOrEmpty(text) ? 0 : text.Length;
+            _cursorIndex = Mathf.Clamp(cursorIndex, 0, textLength);
+            _selectIndex = _cursorIndex;
+            _isDragging = false;
+            ResetCursorBlink();
+        }
+
+        /// <summary>
         /// 删除选中的文本
         /// </summary>
         public string DeleteSelection(string text)
@@ -242,6 +288,43 @@ namespace Emilia.Kit.Editor
             int start = Mathf.Min(_cursorIndex, _selectIndex);
             int end = Mathf.Max(_cursorIndex, _selectIndex);
             EditorGUIUtility.systemCopyBuffer = text.Substring(start, end - start);
+        }
+
+        private void SelectWord(string text, int cursorIndex)
+        {
+            if (string.IsNullOrEmpty(text))
+            {
+                _selectIndex = 0;
+                _cursorIndex = 0;
+                return;
+            }
+
+            int index = Mathf.Clamp(cursorIndex, 0, text.Length - 1);
+            if (!IsWordCharacter(text[index]) && index > 0 && IsWordCharacter(text[index - 1]))
+                index--;
+
+            if (!IsWordCharacter(text[index]))
+            {
+                _selectIndex = index;
+                _cursorIndex = Mathf.Min(index + 1, text.Length);
+                return;
+            }
+
+            int start = index;
+            while (start > 0 && IsWordCharacter(text[start - 1]))
+                start--;
+
+            int end = index + 1;
+            while (end < text.Length && IsWordCharacter(text[end]))
+                end++;
+
+            _selectIndex = start;
+            _cursorIndex = end;
+        }
+
+        private static bool IsWordCharacter(char character)
+        {
+            return char.IsLetterOrDigit(character) || character == '_';
         }
 
         private int GetCursorIndexFromPosition(string text, Rect textFieldRect, Vector2 mousePos)

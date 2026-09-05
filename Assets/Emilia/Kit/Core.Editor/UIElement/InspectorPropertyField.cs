@@ -100,6 +100,8 @@ namespace Emilia.Kit.Editor
                 _inspectorProperty.Tree.EndDraw();
             });
 
+            imguiContainer.cullingEnabled = true;
+            
             Add(imguiContainer);
         }
 

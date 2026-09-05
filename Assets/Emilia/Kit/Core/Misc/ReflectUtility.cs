@@ -37,7 +37,14 @@ namespace Emilia.Kit.Editor
         public static T GetAttribute<T>(Type type) where T : Attribute
         {
             Attribute[] customAttributes = GetAttributes(type);
-            return customAttributes.FirstOrDefault(x => x is T) as T;
+            if (customAttributes == null) return null;
+
+            for (int i = 0; i < customAttributes.Length; i++)
+            {
+                if (customAttributes[i] is T attribute) return attribute;
+            }
+
+            return null;
         }
 
         public static T[] GetAttributes<T>(Type type) where T : Attribute
@@ -49,7 +56,9 @@ namespace Emilia.Kit.Editor
         public static Attribute[] GetAttributes(Type type)
         {
             if (type == null) return null;
-            Attribute[] customAttributes = type.GetCustomAttributes().ToArray();
+            if (typeAttributeCache.TryGetValue(type, out Attribute[] cachedAttributes)) return cachedAttributes;
+
+            Attribute[] customAttributes = Attribute.GetCustomAttributes(type, true);
             typeAttributeCache[type] = customAttributes;
             return customAttributes;
         }
