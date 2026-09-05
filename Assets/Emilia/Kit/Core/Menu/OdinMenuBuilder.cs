@@ -17,8 +17,6 @@ namespace Emilia.Kit
         private Func<TResource, TOutput> _selector;
         private IEnumerable<TResource> _resources;
 
-        internal OdinMenuBuilder() { }
-
         public OdinMenuBuilder<TResource, TOutput> WithResources(IEnumerable<TResource> resources)
         {
             _resources = resources;
