@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using UnityEditor;
 
 namespace Emilia.RemoteDebug.Editor
@@ -8,11 +11,23 @@ namespace Emilia.RemoteDebug.Editor
     {
         private static RemoteDebugClient _native, _local;
         private static IDisposable _localLease;
+        private static RemoteDebugConnectionManager _connections;
+        private const string LastAddressPreference = "Emilia.RemoteDebug.LastSuccessfulAddress";
         public static Action<Exception> Log { get; set; }
         public static RemoteDebugClient ExistingClient => _native;
 
         public static RemoteDebugClient Client => _native ??= new RemoteDebugClient(EditorConnectionRemoteDebugTransport.Create(),
             () => EditorApplication.timeSinceStartup, log: error => Log?.Invoke(error));
+
+        public static RemoteDebugConnectionManager Connections => _connections ??= new RemoteDebugConnectionManager(
+            new UnityRemoteDebugConnectionBackend(Client), () => EditorApplication.timeSinceStartup,
+            EditorPrefs.GetString(LastAddressPreference, string.Empty), address => EditorPrefs.SetString(LastAddressPreference, address));
+        public static IReadOnlyList<RemoteDebugConnectionTarget> ConnectionTargets => Connections.Targets;
+        public static void RefreshConnectionTargets() => Connections.Refresh();
+        public static Task<RemoteDebugTarget> ConnectPlayerAsync(RemoteDebugConnectionTarget target, string serviceId, int version,
+            CancellationToken cancellationToken = default) => Connections.ConnectPlayerAsync(target, serviceId, version, cancellationToken);
+        public static Task<RemoteDebugTarget> ConnectAddressAsync(string address, string serviceId, int version,
+            CancellationToken cancellationToken = default) => Connections.ConnectAddressAsync(address, serviceId, version, cancellationToken);
 
         public static RemoteDebugClient LocalClient
         {
@@ -40,6 +55,7 @@ namespace Emilia.RemoteDebug.Editor
         {
             _native?.Tick();
             _local?.Tick();
+            _connections?.Tick();
         }
 
         private static void PlayModeChanged(PlayModeStateChange state)
@@ -61,6 +77,8 @@ namespace Emilia.RemoteDebug.Editor
 
         public static void Dispose()
         {
+            _connections?.Dispose();
+            _connections = null;
             DisposeLocal();
             _native?.Dispose();
             _native = null;
