@@ -24,6 +24,14 @@ namespace Emilia.Reflection.Editor
             set => m_MaxScale = value;
         }
 
+        public bool frameAnimate_Internal
+        {
+            get => m_FrameAnimate;
+            set => m_FrameAnimate = value;
+        }
+
+        public int frameBorder_Internal => k_FrameBorder;
+
         public string clipboard_Internal
         {
             get => clipboard;
@@ -71,6 +79,8 @@ namespace Emilia.Reflection.Editor
         {
             DuplicateSelectionCallback();
         }
+
+        public EventPropagation Frame_Internals(FrameType frameType) => Frame(frameType);
 
         public EventPropagation OnInsertNodeKeyDown_Internals(KeyDownEvent evt) => OnInsertNodeKeyDown(evt);
 
