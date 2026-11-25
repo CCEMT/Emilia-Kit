@@ -1,15 +1,29 @@
 ﻿using Sirenix.OdinInspector.Editor;
 using UnityEditor;
 using UnityEngine;
+using System.Linq;
 using SerializationUtility = Sirenix.Serialization.SerializationUtility;
 
 namespace Emilia.Variables.Editor
 {
+    public interface IEditorParameterEditPolicy
+    {
+        bool CanEditParameterStructure { get; }
+        bool CanEditParameterValues { get; }
+    }
+
     public class EditorParameterDrawer : OdinValueDrawer<EditorParameter>
     {
         protected override void DrawPropertyLayout(GUIContent label)
         {
             EditorParameter parameter = this.ValueEntry.SmartValue;
+
+            IEditorParameterEditPolicy policy = Property.Tree.WeakTargets.OfType<IEditorParameterEditPolicy>().FirstOrDefault();
+            if (policy != null && !policy.CanEditParameterStructure)
+            {
+                using (new EditorGUI.DisabledScope(!policy.CanEditParameterValues)) CallNextDrawer(label);
+                return;
+            }
 
             GUILayout.BeginHorizontal();
 

@@ -65,7 +65,7 @@ namespace Emilia.Kit.Editor
                 EditorUtility.SetDirty(asset);
 
                 string path = AssetDatabase.GetAssetPath(asset);
-                paths.Add(path);
+                if (! string.IsNullOrEmpty(path)) paths.Add(path);
             }
 
             foreach (string path in paths)
@@ -86,7 +86,7 @@ namespace Emilia.Kit.Editor
                 Object asset = allAsset[i];
 
                 string path = AssetDatabase.GetAssetPath(asset);
-                paths.Add(path);
+                if (! string.IsNullOrEmpty(path)) paths.Add(path);
             }
 
             foreach (string path in paths)

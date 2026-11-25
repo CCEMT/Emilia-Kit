@@ -20,6 +20,7 @@ namespace Emilia.Kit.Editor
 
             HookUpdateContentZoomer(graphViewType, graphViewHookType);
             HookOnKeyDownShortcut(graphViewType, graphViewHookType);
+            HookFrame(graphViewType, graphViewHookType);
         }
 
         private static void HookUpdateContentZoomer(Type graphViewType, Type graphViewHookType)
@@ -39,6 +40,17 @@ namespace Emilia.Kit.Editor
 
             MethodInfo hookInfo = graphViewHookType.GetMethod(nameof(OnKeyDownShortcut_Hook), BindingFlags.Instance | BindingFlags.NonPublic);
             MethodInfo proxyInfo = graphViewHookType.GetMethod(nameof(OnKeyDownShortcut_Proxy), BindingFlags.Instance | BindingFlags.NonPublic);
+
+            MethodHook hook = new(methodInfo, hookInfo, proxyInfo);
+            hook.Install();
+        }
+
+        private static void HookFrame(Type graphViewType, Type graphViewHookType)
+        {
+            MethodInfo methodInfo = graphViewType.GetMethod("Frame", BindingFlags.Instance | BindingFlags.NonPublic, null, new[] { typeof(FrameType) }, null);
+
+            MethodInfo hookInfo = graphViewHookType.GetMethod(nameof(Frame_Hook), BindingFlags.Instance | BindingFlags.NonPublic);
+            MethodInfo proxyInfo = graphViewHookType.GetMethod(nameof(Frame_Proxy), BindingFlags.Instance | BindingFlags.NonPublic);
 
             MethodHook hook = new(methodInfo, hookInfo, proxyInfo);
             hook.Install();
@@ -67,6 +79,21 @@ namespace Emilia.Kit.Editor
         {
             Debug.Log(nameof(OnKeyDownShortcut_Proxy));
         }
+
+        private EventPropagation Frame_Hook(FrameType frameType)
+        {
+            if (ReflectUtility.Invoke(this, nameof(OverrideFrame), new object[] { frameType }) is EventPropagation result) return result;
+            return Frame_Proxy(frameType);
+        }
+
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        private EventPropagation Frame_Proxy(FrameType frameType)
+        {
+            Debug.Log(nameof(Frame_Proxy));
+            return EventPropagation.Continue;
+        }
+
+        protected virtual EventPropagation OverrideFrame(FrameType frameType) => Frame_Proxy(frameType);
 
         protected virtual bool OverrideUpdateContentZoomer() => false;
 
